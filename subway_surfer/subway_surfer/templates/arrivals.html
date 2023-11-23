@@ -1,0 +1,28 @@
+{% load static %}
+
+{% block content %}
+<h1 id = "station">Train Information for {{ station }}</h1>
+
+<script type="text/javascript">
+    update_table("{{ csrf_token }}", "{{ station }}");
+</script>
+
+    <table id="arrivals">
+        <thead>
+            <tr>
+                <th>Departure Time</th>
+                <th>Train No.</th>
+                <th>Line</th>
+                <th>Destination</th>
+                <th>Origin</th>
+                <th>Status</th>
+                <th>Track</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% include 'table_rows.html' with arrivals_info=arrival_context %}
+        </tbody>
+    </table>
+
+    {% include "select.html" %}
+    {% endblock %}

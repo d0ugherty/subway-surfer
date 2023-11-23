@@ -1,0 +1,13 @@
+{% block content %}
+{% for arrival in arrivals_info.arrivals_info %}
+    <tr>
+        <td>{{ arrival.depart_time}}</td>
+        <td>{{ arrival.train_id }}</td>
+        <td>{{ arrival.line }}</td>
+        <td>{{ arrival.destination }}</td>
+        <td>{{ arrival.origin }}</td>
+        <td>{{ arrival.status }}</td>
+        <td>{{ arrival.track }}</td>
+    </tr>
+{% endfor %}
+{% endblock %}
