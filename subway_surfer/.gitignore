@@ -141,3 +141,5 @@ GitHub.sublime-settings
 *.zip
 gtfs_data
 data
+subway_surfer/__pycache__
+subway_surfer/migrations
