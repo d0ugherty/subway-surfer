@@ -32,7 +32,7 @@ def get_arrivals(station):
                                 "status": arrival["status"],
                                 "service_type": arrival["service_type"],
                                 "next_station": arrival["next_station"],    
-                                "sched_time": arrival["sched_time"],        #TO DO: Format times
+                                "sched_time": arrival["sched_time"], 
                                 "depart_time": format_time(arrival["depart_time"]),
                                 "track": arrival["track"],
                             }

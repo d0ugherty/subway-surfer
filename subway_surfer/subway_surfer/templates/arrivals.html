@@ -1,5 +1,10 @@
 {% load static %}
 
+{% block extra_head %}
+    <!-- Include jQuery -->
+    <!-- Include your JavaScript file -->
+    <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
+{% endblock %}
 {% block content %}
 <h1 id = "station">Train Information for {{ station }}</h1>
 

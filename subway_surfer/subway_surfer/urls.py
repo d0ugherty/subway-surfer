@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('arrivals/<str:station>/',views.load_arrivals, name='load_arrivals'),
-    path('update_arrivals_table/', views.update_arrivals_table, name='update_arrivals_table')
+    path('update_arrivals_table/', views.update_arrivals_table, name='update_arrivals_table'),
+    #path('map/', views.render_map, name='map')
 ]
