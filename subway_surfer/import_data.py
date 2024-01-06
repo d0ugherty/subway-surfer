@@ -18,8 +18,8 @@ def clear_existing_data():
     Trip.objects.all().delete()
     print('Clearing stop times...')
     Stop_Time.objects.all().delete()
-    print('Clearing shape data...')
-    Shape.objects.all().delete()
+    #print('Clearing shape data...')
+    #Shape.objects.all().delete()
 
 def import_stop_data(csv_file_path):
     print("Importing Regional Rail stops...")
@@ -122,7 +122,7 @@ def import_trip_data(file_path):
                 trip_headsign = row['trip_headsign'],
                 block_id = row['block_id'],
                 trip_short_name = row['trip_short_name'],
-                shape = Shape.objects.get(shape_id=row['shape_id']),
+                shape_id = row['shape_id'],
                 direction_id = row['direction_id']
             )
 
@@ -132,6 +132,7 @@ def import_stop_time_data(file_path):
         reader = csv.DictReader(csvfile)
         i = 0
         for row in reader:
+            i += 1
             print(f'{" " * 20}Importing row {i}', end='\r')
             Stop_Time.objects.create(
                 trip = Trip.objects.get(trip_id=row['trip_id']),
@@ -170,7 +171,7 @@ if __name__ == '__main__':
     print("[4/8]\n")
     import_fare_attributes('data/fare_attributes.csv')
     print("[5/8]\n")
-    import_shape_data('data/shapes.csv')
+    #import_shape_data('data/shapes.csv')
     print("[6/8]\n")
     import_trip_data('data/trips.csv')
     print("[7/8]\n")

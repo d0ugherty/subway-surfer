@@ -62,7 +62,7 @@ class Trip(models.Model):
     trip_headsign = models.CharField(max_length=50) 
     block_id = models.IntegerField()
     trip_short_name = models.IntegerField()
-    shape = models.ForeignKey(Shape, on_delete=models.CASCADE)
+    shape_id = models.IntegerField()
     direction_id = models.IntegerField()
 
 class Stop_Time(models.Model):
