@@ -12,7 +12,7 @@ function update_table(csrf_token, station) {
                     'csrfmiddlewaretoken': csrf_token},
         })
         .done(function(response) {
-            $('#arrivals tbody').html(response.html);
+            $('#' + tableId + ' tbody').html(response.html);
         });
     }, 2000);  
 }
