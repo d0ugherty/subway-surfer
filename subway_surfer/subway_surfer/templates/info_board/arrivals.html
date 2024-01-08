@@ -3,7 +3,7 @@
 {% block extra_head %}
     <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
 {% endblock %}
-{% block content %}
+
 <h1 id = "station">Train Information for {{ station }}</h1>
 
 <script type="text/javascript">
@@ -11,22 +11,155 @@
 </script>
 
     <table id="arrivals">
-        <thead>
-            <tr>
-                <th>Departure Time</th>
-                <th>Train No.</th>
-                <th>Line</th>
-                <th>Destination</th>
-                <th>Origin</th>
-                <th>Status</th>
-                <th>Track</th>
-            </tr>
-        </thead>
+        {% include 'info_board/header.html' %}
         <tbody>
             {% include 'info_board/table_rows.html' with arrivals=all_arrivals %}
         </tbody>
     </table>
 
     {% include "info_board/select.html" %}
-    {% include "info_board/lines.html" %}
-    {% endblock %}
+    <div>
+        <h>AIRPORT</h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=air_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h>CHESTNUT HILL EAST</h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=che_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h>CHESTNUT HILL WEST</h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=chw_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h>
+            LANDSALE
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=lan_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h>
+            MEDIA
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=med_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div>
+        <h>
+            FOXCHASE
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=med_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div>
+        <h>
+            NORRISTOWN
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=nor_arrivals %}
+            </tbody>
+        </table>
+    </DIV>
+    
+    <div>
+        <h>
+            PAOLI/THORNDALE
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=pao_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div>
+        <h>
+            CYNWYD
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=cyn_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div>
+        <h>
+            TRENTON
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=tre_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div>
+        <h>
+            WARMINSTER
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=war_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div>
+        <h>
+            NEWARK
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=wil_arrivals %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div>
+        <h>
+            WEST TRENTON
+        </h>
+        <table id="arrivals">
+            {% include 'info_board/header.html' %}
+            <tbody>
+                {% include 'info_board/table_rows.html' with arrivals=wtr_arrivals %}
+            </tbody>
+        </table>
+    </div>
