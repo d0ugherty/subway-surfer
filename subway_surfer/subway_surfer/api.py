@@ -56,6 +56,8 @@ def get_arrivals(station):
                                 line = train["line"]
                                 all_arrivals.append(train_info)
                                 arrivals_by_line[line].append(train_info)
+
+                                #TO-DO: SET CONDITIONS FOR AIRPORT THROUGH-ROUTING TO WAR AND FOX
                     else: 
                         pass 
 

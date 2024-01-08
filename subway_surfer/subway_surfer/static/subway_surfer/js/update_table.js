@@ -10,9 +10,10 @@ function update_table(csrf_token, station, tableId) {
             url: "/update_arrivals_table/",
             data: { 'station': station,
                     'csrfmiddlewaretoken': csrf_token},
+            cache: false
         })
         .done(function(response) {
             $('#' + tableId + ' tbody').html(response.html);
         });
-    }, 2000);  
+    }, 5000);  
 }

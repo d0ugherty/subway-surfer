@@ -1,16 +1,31 @@
-{% load static %}
 
+{% load static %}
 {% block extra_head %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
     <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
+
 {% endblock %}
 
 <h1 id = "station">Train Information for {{ station }}</h1>
 
 <script type="text/javascript">
-    update_table("{{ csrf_token }}", "{{ station }}", "arriva");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_all_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_air_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_che_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_chw_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_lan_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_med_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_fox_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_nor_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_pao_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_cyn_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_war_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wil_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_tre_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");
 </script>
-
-    <table id="all-arrivals">
+    <table id="tbl_all_arrivals">
         {% include 'info_board/header.html' %}
         <tbody>
             {% include 'info_board/table_rows.html' with arrivals=all_arrivals %}
@@ -18,9 +33,11 @@
     </table>
 
     {% include "info_board/select.html" %}
+
+<div id="info_by_route">
     <div>
         <h>AIRPORT</h>
-        <table id="tbl-air-arrivals">
+        <table id="tbl_air_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=air_arrivals %}
@@ -29,7 +46,7 @@
     </div>
     <div>
         <h>CHESTNUT HILL EAST</h>
-        <table id="tbl-che-arrivals">
+        <table id="tbl_che_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=che_arrivals %}
@@ -38,7 +55,7 @@
     </div>
     <div>
         <h>CHESTNUT HILL WEST</h>
-        <table id="tbl-chw-arrivals">
+        <table id="tbl_chw_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=chw_arrivals %}
@@ -49,7 +66,7 @@
         <h>
             LANDSALE
         </h>
-        <table id="tbl-lan-arrivals">
+        <table id="tbl_lan_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=lan_arrivals %}
@@ -60,7 +77,7 @@
         <h>
             MEDIA
         </h>
-        <table id="tbl-med-arrivals">
+        <table id="tbl_med_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=med_arrivals %}
@@ -72,7 +89,7 @@
         <h>
             FOX CHASE
         </h>
-        <table id="tbl-fox-arrivals">
+        <table id="tbl_fox_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=fox_arrivals %}
@@ -84,7 +101,7 @@
         <h>
             NORRISTOWN
         </h>
-        <table id="tbl-nor-arrivals">
+        <table id="tbl_nor_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=nor_arrivals %}
@@ -96,7 +113,7 @@
         <h>
             PAOLI/THORNDALE
         </h>
-        <table id="tbl-pao-arrivals">
+        <table id="tbl_pao_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=pao_arrivals %}
@@ -108,7 +125,7 @@
         <h>
             CYNWYD
         </h>
-        <table id="tbl-cyn-arrivals">
+        <table id="tbl_cyn_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=cyn_arrivals %}
@@ -120,7 +137,7 @@
         <h>
             TRENTON
         </h>
-        <table id="tbl-tre-arrivals">
+        <table id="tbl_tre_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=tre_arrivals %}
@@ -132,7 +149,7 @@
         <h>
             WARMINSTER
         </h>
-        <table id="tbl-war-arrivals">
+        <table id="tbl_war_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=war_arrivals %}
@@ -144,7 +161,7 @@
         <h>
             NEWARK/WILMINGTON
         </h>
-        <table id="tbl-wil-arrivals">
+        <table id="tbl_wil_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=wil_arrivals %}
@@ -156,10 +173,11 @@
         <h>
             WEST TRENTON
         </h>
-        <table id="tbl-wtr-arrivals">
+        <table id="tbl_wtr_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=wtr_arrivals %}
             </tbody>
         </table>
     </div>
+</div>
