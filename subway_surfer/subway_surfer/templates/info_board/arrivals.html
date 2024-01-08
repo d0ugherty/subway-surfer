@@ -7,10 +7,10 @@
 <h1 id = "station">Train Information for {{ station }}</h1>
 
 <script type="text/javascript">
-    update_table("{{ csrf_token }}", "{{ station }}");
+    update_table("{{ csrf_token }}", "{{ station }}", "arriva");
 </script>
 
-    <table id="arrivals">
+    <table id="all-arrivals">
         {% include 'info_board/header.html' %}
         <tbody>
             {% include 'info_board/table_rows.html' with arrivals=all_arrivals %}
@@ -20,7 +20,7 @@
     {% include "info_board/select.html" %}
     <div>
         <h>AIRPORT</h>
-        <table id="arrivals">
+        <table id="tbl-air-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=air_arrivals %}
@@ -29,7 +29,7 @@
     </div>
     <div>
         <h>CHESTNUT HILL EAST</h>
-        <table id="arrivals">
+        <table id="tbl-che-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=che_arrivals %}
@@ -38,7 +38,7 @@
     </div>
     <div>
         <h>CHESTNUT HILL WEST</h>
-        <table id="arrivals">
+        <table id="tbl-chw-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=chw_arrivals %}
@@ -49,7 +49,7 @@
         <h>
             LANDSALE
         </h>
-        <table id="arrivals">
+        <table id="tbl-lan-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=lan_arrivals %}
@@ -60,7 +60,7 @@
         <h>
             MEDIA
         </h>
-        <table id="arrivals">
+        <table id="tbl-med-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=med_arrivals %}
@@ -70,12 +70,12 @@
     
     <div>
         <h>
-            FOXCHASE
+            FOX CHASE
         </h>
-        <table id="arrivals">
+        <table id="tbl-fox-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=med_arrivals %}
+                {% include 'info_board/table_rows.html' with arrivals=fox_arrivals %}
             </tbody>
         </table>
     </div>
@@ -84,7 +84,7 @@
         <h>
             NORRISTOWN
         </h>
-        <table id="arrivals">
+        <table id="tbl-nor-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=nor_arrivals %}
@@ -96,7 +96,7 @@
         <h>
             PAOLI/THORNDALE
         </h>
-        <table id="arrivals">
+        <table id="tbl-pao-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=pao_arrivals %}
@@ -108,7 +108,7 @@
         <h>
             CYNWYD
         </h>
-        <table id="arrivals">
+        <table id="tbl-cyn-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=cyn_arrivals %}
@@ -120,7 +120,7 @@
         <h>
             TRENTON
         </h>
-        <table id="arrivals">
+        <table id="tbl-tre-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=tre_arrivals %}
@@ -132,7 +132,7 @@
         <h>
             WARMINSTER
         </h>
-        <table id="arrivals">
+        <table id="tbl-war-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=war_arrivals %}
@@ -142,9 +142,9 @@
     
     <div>
         <h>
-            NEWARK
+            NEWARK/WILMINGTON
         </h>
-        <table id="arrivals">
+        <table id="tbl-wil-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=wil_arrivals %}
@@ -156,7 +156,7 @@
         <h>
             WEST TRENTON
         </h>
-        <table id="arrivals">
+        <table id="tbl-wtr-arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
                 {% include 'info_board/table_rows.html' with arrivals=wtr_arrivals %}
