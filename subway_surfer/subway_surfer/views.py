@@ -24,8 +24,6 @@ def home(request):
         form = StationSlctForm()
 
     stops = Stop.objects.all()
-
-    # Include 'station' in the context dictionary
     context = {'form': form, 'stops': stops, 'station': station}
 
     return render(request, 'home.html', context)
@@ -42,15 +40,29 @@ def select_stop(request):
     else:
         form = StationSlctForm()
     stops = Stop.objects.all()
-    return render(request, 'arrivals.html', {'form': form,
-                                    'stops': stops})
+    return render(request, 'arrivals.html', {'form': form, 'stops': stops})
 
 """Render the Arrivals and Departures Table"""
 def load_arrivals(request, station):
     arrival_context = get_arrivals(station)
+    print(arrival_context['arrivals_by_line']['Paoli/Thorndale'])
+
     form = StationSlctForm() 
     return render(request, 'arrivals.html', {
-        'arrivals_info': arrival_context,
+        'all_arrivals': arrival_context['all_arrivals'],
+        'air_arrivals': arrival_context['arrivals_by_line']['Airport'],
+        'che_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill East'],
+        'chw_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill West'],
+        'lan_arrivals': arrival_context['arrivals_by_line']['Lansdale/Doylestown'],
+        'med_arrivals': arrival_context['arrivals_by_line']['Media/Wawa'],
+        'fox_arrivals': arrival_context['arrivals_by_line']['Fox Chase'],
+        'nor_arrivals': arrival_context['arrivals_by_line']['Manayunk/Norristown'],
+        'pao_arrivals': arrival_context['arrivals_by_line']['Paoli/Thorndale'],
+        'cyn_arrivals': arrival_context['arrivals_by_line']['Cynwyd'],
+        'tre_arrivals': arrival_context['arrivals_by_line']['Trenton'],
+        'war_arrivals': arrival_context['arrivals_by_line']['Warminster'],
+        'wil_arrivals': arrival_context['arrivals_by_line']['Wilmington/Newark'],
+        'wtr_arrivals': arrival_context['arrivals_by_line']['West Trenton'],
         'station': station,
         'form': form 
     })
@@ -59,5 +71,5 @@ def load_arrivals(request, station):
 def update_arrivals_table(request):
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = get_arrivals(station)
-    html = render_to_string('table_rows.html', {'arrivals_info': arrival_context})
+    html = render_to_string('table_rows.html', {'all_arrivals': arrival_context['all_arrivals']})
     return JsonResponse({'html': html})

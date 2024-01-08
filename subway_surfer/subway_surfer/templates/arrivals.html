@@ -1,8 +1,6 @@
 {% load static %}
 
 {% block extra_head %}
-    <!-- Include jQuery -->
-    <!-- Include your JavaScript file -->
     <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
 {% endblock %}
 {% block content %}
@@ -25,9 +23,10 @@
             </tr>
         </thead>
         <tbody>
-            {% include 'table_rows.html' with arrivals_info=arrival_context %}
+            {% include 'table_rows.html' with arrivals=all_arrivals %}
         </tbody>
     </table>
 
     {% include "select.html" %}
+    {% include "lines.html" %}
     {% endblock %}
