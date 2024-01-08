@@ -23,10 +23,10 @@
             </tr>
         </thead>
         <tbody>
-            {% include 'table_rows.html' with arrivals=all_arrivals %}
+            {% include 'info_board/table_rows.html' with arrivals=all_arrivals %}
         </tbody>
     </table>
 
-    {% include "select.html" %}
-    {% include "lines.html" %}
+    {% include "info_board/select.html" %}
+    {% include "info_board/lines.html" %}
     {% endblock %}

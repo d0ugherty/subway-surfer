@@ -1,7 +1,7 @@
 import requests
 from .bcolors import bcolors
 from django.http import JsonResponse
-from .utils import format_time, sort_arrivals
+from .utils import format_time
 
 """Make API call to retrieve Arrival information"""
 def get_arrivals(station):

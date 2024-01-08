@@ -40,7 +40,7 @@ def select_stop(request):
     else:
         form = StationSlctForm()
     stops = Stop.objects.all()
-    return render(request, 'arrivals.html', {'form': form, 'stops': stops})
+    return render(request, 'info_board/arrivals.html', {'form': form, 'stops': stops})
 
 """Render the Arrivals and Departures Table"""
 def load_arrivals(request, station):
@@ -48,7 +48,7 @@ def load_arrivals(request, station):
     print(arrival_context['arrivals_by_line']['Paoli/Thorndale'])
 
     form = StationSlctForm() 
-    return render(request, 'arrivals.html', {
+    return render(request, 'info_board/arrivals.html', {
         'all_arrivals': arrival_context['all_arrivals'],
         'air_arrivals': arrival_context['arrivals_by_line']['Airport'],
         'che_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill East'],
@@ -71,5 +71,5 @@ def load_arrivals(request, station):
 def update_arrivals_table(request):
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = get_arrivals(station)
-    html = render_to_string('table_rows.html', {'all_arrivals': arrival_context['all_arrivals']})
+    html = render_to_string('info_board/table_rows.html', {'all_arrivals': arrival_context['all_arrivals']})
     return JsonResponse({'html': html})
