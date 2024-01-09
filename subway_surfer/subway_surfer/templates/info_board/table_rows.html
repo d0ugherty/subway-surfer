@@ -1,5 +1,6 @@
 {% block content %}
-{% for arrival in arrivals %}
+
+{% for arrival in arrival_ctx.arrivals %}
     <tr>
         <td>{{ arrival.depart_time}}</td>
         <td>{{ arrival.train_id }}</td>

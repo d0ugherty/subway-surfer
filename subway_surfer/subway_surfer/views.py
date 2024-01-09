@@ -40,29 +40,18 @@ def select_stop(request):
     else:
         form = StationSlctForm()
     stops = Stop.objects.all()
-    return render(request, 'info_board/arrivals.html', {'form': form, 'stops': stops})
+    return render(request, 'info_board/arrivals.html', {
+        'form': form, 
+        'stops': stops})
 
 """Render the Arrivals and Departures Table"""
 def load_arrivals(request, station):
     arrival_context = get_arrivals(station)
-    print(arrival_context['arrivals_by_line']['Paoli/Thorndale'])
+  #  print(arrival_context['arrivals_by_line']['Paoli/Thorndale'])
 
     form = StationSlctForm() 
     return render(request, 'info_board/arrivals.html', {
-        'all_arrivals': arrival_context['all_arrivals'],
-        'air_arrivals': arrival_context['arrivals_by_line']['Airport'],
-        'che_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill East'],
-        'chw_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill West'],
-        'lan_arrivals': arrival_context['arrivals_by_line']['Lansdale/Doylestown'],
-        'med_arrivals': arrival_context['arrivals_by_line']['Media/Wawa'],
-        'fox_arrivals': arrival_context['arrivals_by_line']['Fox Chase'],
-        'nor_arrivals': arrival_context['arrivals_by_line']['Manayunk/Norristown'],
-        'pao_arrivals': arrival_context['arrivals_by_line']['Paoli/Thorndale'],
-        'cyn_arrivals': arrival_context['arrivals_by_line']['Cynwyd'],
-        'tre_arrivals': arrival_context['arrivals_by_line']['Trenton'],
-        'war_arrivals': arrival_context['arrivals_by_line']['Warminster'],
-        'wil_arrivals': arrival_context['arrivals_by_line']['Wilmington/Newark'],
-        'wtr_arrivals': arrival_context['arrivals_by_line']['West Trenton'],
+        'arrival_ctx': arrival_context,
         'station': station,
         'form': form 
     })
@@ -71,19 +60,7 @@ def load_arrivals(request, station):
 def update_arrivals_table(request):
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = get_arrivals(station)
-    html = render_to_string('info_board/table_rows.html', {'all_arrivals': arrival_context['all_arrivals'],
-        'air_arrivals': arrival_context['arrivals_by_line']['Airport'],
-        'che_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill East'],
-        'chw_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill West'],
-        'lan_arrivals': arrival_context['arrivals_by_line']['Lansdale/Doylestown'],
-        'med_arrivals': arrival_context['arrivals_by_line']['Media/Wawa'],
-        'fox_arrivals': arrival_context['arrivals_by_line']['Fox Chase'],
-        'nor_arrivals': arrival_context['arrivals_by_line']['Manayunk/Norristown'],
-        'pao_arrivals': arrival_context['arrivals_by_line']['Paoli/Thorndale'],
-        'cyn_arrivals': arrival_context['arrivals_by_line']['Cynwyd'],
-        'tre_arrivals': arrival_context['arrivals_by_line']['Trenton'],
-        'war_arrivals': arrival_context['arrivals_by_line']['Warminster'],
-        'wil_arrivals': arrival_context['arrivals_by_line']['Wilmington/Newark'],
-        'wtr_arrivals': arrival_context['arrivals_by_line']['West Trenton'],
+    html = render_to_string('info_board/table_rows.html', {
+        'arrival_ctx': arrival_context,
         'station': station,})
     return JsonResponse({'html': html})
