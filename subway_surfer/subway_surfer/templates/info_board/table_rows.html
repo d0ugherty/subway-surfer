@@ -10,5 +10,9 @@
         <td>{{ arrival.status }}</td>
         <td>{{ arrival.track }}</td>
     </tr>
-{% endfor %}
-{% endblock %}
+    {% endfor %}
+{% else %}
+    <tr><td colspan="7">No arrivals found</td></tr>
+{% endif %}
+
+</tbody>

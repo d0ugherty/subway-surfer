@@ -58,6 +58,7 @@ def load_arrivals(request, station):
 
 """Update Arrivals"""
 def update_arrivals_table(request):
+    print(request.method)
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = get_arrivals(station)
     html = render_to_string('info_board/table_rows.html', {

@@ -2,11 +2,9 @@
 {% load static %}
 {% block extra_head %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
-    <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
+    <script src="https://unpkg.com/htmx.org"></script>
 
 {% endblock %}
-
 <h1 id = "station">Train Information for {{ station }}</h1>
 
 <script type="text/javascript">
@@ -34,7 +32,7 @@
 
     {% include "info_board/select.html" %}
 
-<div id="info_by_route">
+<!--<div id="info_by_route">
     <div>
         <h>AIRPORT</h>
         <table id="tbl_air_arrivals">
@@ -180,4 +178,4 @@
             </tbody>
         </table>
     </div>
-</div>
+</div>-->

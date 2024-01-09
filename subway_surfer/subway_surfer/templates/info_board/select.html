@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form method = "POST" action = "{% url 'home' %}"> 
+<form method = "post" action = "{% url 'home' %}"> 
     {% csrf_token %}
     {{ form.as_p }} 
     <button type = "submit" value = "Submit"> Get Arrivals </button>
