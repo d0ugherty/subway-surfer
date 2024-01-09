@@ -1,5 +1,5 @@
-{% block content %}
 
+{% if arrival_ctx %}
 {% for arrival in arrival_ctx.arrivals %}
     <tr>
         <td>{{ arrival.depart_time}}</td>
@@ -15,4 +15,3 @@
     <tr><td colspan="7">No arrivals found</td></tr>
 {% endif %}
 
-</tbody>

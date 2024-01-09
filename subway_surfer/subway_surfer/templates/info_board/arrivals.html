@@ -3,13 +3,17 @@
 {% block extra_head %}
 
     <script src="https://unpkg.com/htmx.org"></script>
-
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Include your JavaScript file -->
+    <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
+    
 {% endblock %}
 <h1 id = "station">Train Information for {{ station }}</h1>
 
 <script type="text/javascript">
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_all_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_air_arrivals");
+   /** update_table("{{ csrf_token }}", "{{ station }}", "tbl_air_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_che_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_chw_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_lan_arrivals");
@@ -21,7 +25,7 @@
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_war_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_wil_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_tre_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");**/
 </script>
     <table id="tbl_all_arrivals">
         {% include 'info_board/header.html' %}
