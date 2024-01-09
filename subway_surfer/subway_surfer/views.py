@@ -47,14 +47,28 @@ def select_stop(request):
 """Render the Arrivals and Departures Table"""
 def load_arrivals(request, station):
     arrival_context = get_arrivals(station)
-  #  print(arrival_context['arrivals_by_line']['Paoli/Thorndale'])
+    print(arrival_context['arrivals_by_line_ctx']['Paoli/Thorndale'])
 
     form = StationSlctForm() 
     return render(request, 'info_board/arrivals.html', {
-        'arrival_ctx': arrival_context,
+        'all_arrivals_ctx': arrival_context['all_arrivals_ctx'],
+        'air_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Airport'],
+        'che_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill East'],
+        'chw_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill West'],
+        'lan_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Lansdale/Doylestown'],
+        'med_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Media/Wawa'],
+        'fox_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Fox Chase'],
+        'nor_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Manayunk/Norristown'],
+        'pao_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Paoli/Thorndale'],
+        'cyn_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Cynwyd'],
+        'tre_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Trenton'],
+        'war_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Warminster'],
+        'wil_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Wilmington/Newark'],
+        'wtr_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['West Trenton'],
         'station': station,
         'form': form 
     })
+
 
 """Update Arrivals"""
 def update_arrivals_table(request):
@@ -62,6 +76,19 @@ def update_arrivals_table(request):
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = get_arrivals(station)
     html = render_to_string('info_board/table_rows.html', {
-        'arrival_ctx': arrival_context,
+        'all_arrivals_ctx': arrival_context['all_arrivals_ctx'],
+        'air_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Airport'],
+        'che_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill East'],
+        'chw_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill West'],
+        'lan_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Lansdale/Doylestown'],
+        'med_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Media/Wawa'],
+        'fox_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Fox Chase'],
+        'nor_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Manayunk/Norristown'],
+        'pao_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Paoli/Thorndale'],
+        'cyn_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Cynwyd'],
+        'tre_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Trenton'],
+        'war_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Warminster'],
+        'wil_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Wilmington/Newark'],
+        'wtr_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['West Trenton'],
         'station': station,})
     return JsonResponse({'html': html})

@@ -13,7 +13,7 @@
 
 <script type="text/javascript">
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_all_arrivals");
-   /** update_table("{{ csrf_token }}", "{{ station }}", "tbl_air_arrivals");
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_air_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_che_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_chw_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_lan_arrivals");
@@ -25,24 +25,25 @@
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_war_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_wil_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_tre_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");**/
+    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");
 </script>
     <table id="tbl_all_arrivals">
         {% include 'info_board/header.html' %}
         <tbody>
-            {% include 'info_board/table_rows.html' with arrival_ctx=arrival_ctx %}
+            {{all_arrivals_ctx}}
+            {% include 'info_board/table_rows.html' with arrival_ctx=all_arrivals_ctx %}
         </tbody>
     </table>
 
     {% include "info_board/select.html" %}
 
-<!--<div id="info_by_route">
+<div id="info_by_route">
     <div>
         <h>AIRPORT</h>
         <table id="tbl_air_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=air_arrivals %}
+            {% include 'info_board/table_rows.html' with arrival_ctx=air_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -51,7 +52,7 @@
         <table id="tbl_che_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=che_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=che_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -60,7 +61,7 @@
         <table id="tbl_chw_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=chw_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=chw_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -71,7 +72,7 @@
         <table id="tbl_lan_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=lan_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=lan_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -82,7 +83,7 @@
         <table id="tbl_med_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=med_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=med_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -94,7 +95,7 @@
         <table id="tbl_fox_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=fox_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=fox_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -106,7 +107,7 @@
         <table id="tbl_nor_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=nor_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=nor_arrivals_ctx %}
             </tbody>
         </table>
     </DIV>
@@ -118,7 +119,7 @@
         <table id="tbl_pao_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=pao_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=pao_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -130,7 +131,7 @@
         <table id="tbl_cyn_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=cyn_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=cyn_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -142,7 +143,7 @@
         <table id="tbl_tre_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=tre_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=tre_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -154,7 +155,7 @@
         <table id="tbl_war_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=war_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=war_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -166,7 +167,7 @@
         <table id="tbl_wil_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=wil_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=wil_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -178,8 +179,8 @@
         <table id="tbl_wtr_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=wtr_arrivals %}
+                {% include 'info_board/table_rows.html' with arrival_ctx=wtr_arrivals_ctx %}
             </tbody>
         </table>
     </div>
-</div>-->
+</div>
