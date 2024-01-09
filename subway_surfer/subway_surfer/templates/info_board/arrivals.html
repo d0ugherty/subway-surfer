@@ -2,39 +2,31 @@
 {% load static %}
 {% block extra_head %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
-    <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
+    <script src="https://unpkg.com/htmx.org"></script>
 
 {% endblock %}
-
 <h1 id = "station">Train Information for {{ station }}</h1>
 
-<script type="text/javascript">
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_all_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_air_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_che_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_chw_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_lan_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_med_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_fox_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_nor_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_pao_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_cyn_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_war_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wil_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_tre_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");
-</script>
-    <table id="tbl_all_arrivals">
-        {% include 'info_board/header.html' %}
-        <tbody>
-            {% include 'info_board/table_rows.html' with arrivals=all_arrivals %}
-        </tbody>
-    </table>
+{% csrf_token %}
+
+<table id="tbl_all_arrivals" hx-get="/update_arrivals_table/" hx-trigger="every 2s" hx-swap="afterend" hx-include="[name='csrfmiddlewaretoken']">
+    <thead>
+        <tr>
+            <th>Departure Time</th>
+            <th>Train No.</th>
+            <th>Line</th>
+            <th>Destination</th>
+            <th>Origin</th>
+            <th>Status</th>
+            <th>Track</th>
+        </tr>
+    </thead>
+        {% include 'info_board/table_rows.html' with arrivals=all_arrivals %}
+</table>
 
     {% include "info_board/select.html" %}
 
-<div id="info_by_route">
+<!--<div id="info_by_route">
     <div>
         <h>AIRPORT</h>
         <table id="tbl_air_arrivals">
@@ -180,4 +172,4 @@
             </tbody>
         </table>
     </div>
-</div>
+</div>-->

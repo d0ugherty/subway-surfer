@@ -4,7 +4,7 @@ from datetime import datetime
 what their API endpoint expects lol"""
 def validate_station_name(station_name):
     match station_name:
-        case "Gray 30th Streeet":
+        case "Gray 30th Street":
             return "30th Street Station"
         case "49th Street":
             return "49th St"

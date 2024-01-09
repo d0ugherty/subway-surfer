@@ -1,5 +1,9 @@
-{% block content %}
-{% for arrival in arrivals %}
+
+<tbody id="tbl_all_arrivals_body">
+
+{% if arrivals %}
+    {% for arrival in arrivals %}
+    {{arrival.train_id}}
     <tr>
         <td>{{ arrival.depart_time}}</td>
         <td>{{ arrival.train_id }}</td>
@@ -9,5 +13,9 @@
         <td>{{ arrival.status }}</td>
         <td>{{ arrival.track }}</td>
     </tr>
-{% endfor %}
-{% endblock %}
+    {% endfor %}
+{% else %}
+    <tr><td colspan="7">No arrivals found</td></tr>
+{% endif %}
+
+</tbody>

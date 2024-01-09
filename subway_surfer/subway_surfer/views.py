@@ -69,21 +69,9 @@ def load_arrivals(request, station):
 
 """Update Arrivals"""
 def update_arrivals_table(request):
+    print(request.method)
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = get_arrivals(station)
-    html = render_to_string('info_board/table_rows.html', {'all_arrivals': arrival_context['all_arrivals'],
-        'air_arrivals': arrival_context['arrivals_by_line']['Airport'],
-        'che_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill East'],
-        'chw_arrivals': arrival_context['arrivals_by_line']['Chestnut Hill West'],
-        'lan_arrivals': arrival_context['arrivals_by_line']['Lansdale/Doylestown'],
-        'med_arrivals': arrival_context['arrivals_by_line']['Media/Wawa'],
-        'fox_arrivals': arrival_context['arrivals_by_line']['Fox Chase'],
-        'nor_arrivals': arrival_context['arrivals_by_line']['Manayunk/Norristown'],
-        'pao_arrivals': arrival_context['arrivals_by_line']['Paoli/Thorndale'],
-        'cyn_arrivals': arrival_context['arrivals_by_line']['Cynwyd'],
-        'tre_arrivals': arrival_context['arrivals_by_line']['Trenton'],
-        'war_arrivals': arrival_context['arrivals_by_line']['Warminster'],
-        'wil_arrivals': arrival_context['arrivals_by_line']['Wilmington/Newark'],
-        'wtr_arrivals': arrival_context['arrivals_by_line']['West Trenton'],
-        'station': station,})
-    return JsonResponse({'html': html})
+    print(arrival_context)
+    return render(request, 'info_board/table_rows.html', {'all_arrivals': arrival_context['all_arrivals'],
+        'station': station})
