@@ -47,7 +47,7 @@ def select_stop(request):
 """Render the Arrivals and Departures Table"""
 def load_arrivals(request, station):
     arrival_context = get_arrivals(station)
-    print(f'FROM LOAD: {arrival_context}')
+    #print(f'FROM LOAD: {arrival_context}')
 
     form = StationSlctForm() 
     return render(request, 'info_board/arrivals.html', {
@@ -75,7 +75,7 @@ def update_arrivals_table(request):
     print(request.method)
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = get_arrivals(station)
-    print(f'FROM UPDATE: {arrival_context}')
+   # print(f'FROM UPDATE: {arrival_context}')
     html = render_to_string('info_board/table_rows.html', {
         'all_arrivals_ctx': arrival_context['all_arrivals_ctx'],
         'air_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Airport'],
