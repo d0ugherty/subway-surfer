@@ -11,7 +11,6 @@ from django.shortcuts import redirect
 
 def home(request):
     station = "30th Street Station"
-    print("this print statement is from home() function")
     print(request.method)
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
@@ -30,7 +29,6 @@ def home(request):
 
 
 def select_stop(request):
-    print("this print statement is from select_stop() !!")
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
         if form.is_valid():
@@ -44,7 +42,9 @@ def select_stop(request):
         'form': form, 
         'stops': stops})
 
-"""Render the Arrivals and Departures Table"""
+"""
+Render the Arrivals and Departures Table
+"""
 def load_arrivals(request, station):
     arrival_context = get_arrivals(station)
     #print(f'FROM LOAD: {arrival_context}')
