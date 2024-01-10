@@ -42,7 +42,9 @@ def select_stop(request):
         'form': form, 
         'stops': stops})
 
-"""Render the Arrivals and Departures Table"""
+"""
+Render the Arrivals and Departures Table
+"""
 def load_arrivals(request, station):
     arrival_context = get_arrivals(station)
     #print(f'FROM LOAD: {arrival_context}')
