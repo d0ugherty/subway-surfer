@@ -85,7 +85,7 @@ def update_arrivals_table(request, table_id):
         case 'tbl_chw_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['Chestnut Hill West']
         case 'tbl_lan_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Lansdale/Doylesdown']
+            data = arrival_context['arrivals_by_line_ctx']['Lansdale/Doylestown']
         case 'tbl_med_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['Media/Wawa']
         case 'tbl_fox_arrivals':

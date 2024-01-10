@@ -30,7 +30,7 @@
     <table id="tbl_all_arrivals">
         {% include 'info_board/header.html' %}
         <tbody>
-            {% include 'info_board/table_rows.html' with arrivals=arrivals_ctx %}
+            {% include 'info_board/table_rows.html' with arrivals=all_arrivals_ctx %}
         </tbody>
     </table>
 
@@ -42,7 +42,7 @@
         <table id="tbl_air_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-            {% include 'info_board/table_rows.html' with arrivals=arrivals_ctx %}
+            {% include 'info_board/table_rows.html' with arrivals=air_arrivals_ctx %}
             </tbody>
         </table>
     </div>
@@ -51,7 +51,7 @@
         <table id="tbl_che_arrivals">
             {% include 'info_board/header.html' %}
             <tbody>
-                {% include 'info_board/table_rows.html' with arrivals=arrivals_ctx %}
+                {% include 'info_board/table_rows.html' with arrivals=che_arrivals_ctx %}
             </tbody>
         </table>
     </div>
