@@ -7,7 +7,7 @@ function update_table(csrf_token, station, tableId) {
     setInterval(function() {
         $.ajax({
             type: "POST",
-            url: "/update_arrivals_table/",
+            url: "/update_arrivals_table/" + tableId + "/",
             data: { 'station': station,
                     'csrfmiddlewaretoken': csrf_token},
             cache: false

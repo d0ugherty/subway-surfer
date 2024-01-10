@@ -102,8 +102,8 @@ def update_arrivals_table(request, table_id):
             data = arrival_context['arrivals_by_line_ctx']['Warminster']
         case 'tbl_wil_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['Wilmington/Newark']
-        case 'tnl_wtr_arrivals':
+        case 'tbl_wtr_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['West Trenton']
-                
+
     html = render_to_string('info_board/table_rows.html', {'arrivals' : data})
     return JsonResponse({'html': html})
