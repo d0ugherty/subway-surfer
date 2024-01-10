@@ -15,5 +15,5 @@ function update_table(csrf_token, station, tableId) {
         .done(function(response) {
             $('#' + tableId + ' tbody').html(response.html);
         });
-    }, 2000);  
+    }, 10000);  
 }
