@@ -64,6 +64,11 @@ def process_arrivals_json(response, context):
                         arrivals_by_line[line].append(train_info)
 
                         #TO-DO: SET LOGIC FOR AIRPORT THROUGH-ROUTING TO WAR AND FOX
+
+                        if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
+                            arrivals_by_line['Fox Chase'].append(train_info)
+                        if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
+                            arrivals_by_line['Warminster'].append(train_info) 
             else: 
                 pass 
 
@@ -73,3 +78,4 @@ def process_arrivals_json(response, context):
         'optText' : 'Train Information'
     }
     return context
+

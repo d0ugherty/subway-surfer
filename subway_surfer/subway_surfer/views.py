@@ -6,7 +6,7 @@ from .forms import StationSlctForm
 from .models import Stop
 from .utils import validate_station_name
 from .api import get_arrivals
-
+import datetime
 from django.shortcuts import redirect
 
 def home(request):
