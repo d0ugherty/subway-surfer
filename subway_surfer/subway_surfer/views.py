@@ -11,7 +11,6 @@ from django.shortcuts import redirect
 
 def home(request):
     station = "30th Street Station"
-    print("this print statement is from home() function")
     print(request.method)
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
@@ -30,7 +29,6 @@ def home(request):
 
 
 def select_stop(request):
-    print("this print statement is from select_stop() !!")
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
         if form.is_valid():
