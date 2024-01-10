@@ -1,6 +1,6 @@
 
-{% if all_arrivals_ctx %}
-{% for arrival in all_arrivals_ctx %}
+{% if arrivals %}
+{% for arrival in arrivals %}
     <tr>
         <td>{{ arrival.depart_time}}</td>
         <td>{{ arrival.train_id }}</td>
@@ -14,4 +14,5 @@
 {% else %}
     <tr><td colspan="7">No arrivals found</td></tr>
 {% endif %}
+
 

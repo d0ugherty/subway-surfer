@@ -77,7 +77,7 @@ def update_arrivals_table(request):
     arrival_context = get_arrivals(station)
    # print(f'FROM UPDATE: {arrival_context}')
     html = render_to_string('info_board/table_rows.html', {
-        'all_arrivals_ctx': arrival_context['all_arrivals_ctx'],
+        'arrivals': arrival_context['all_arrivals_ctx'],
         'air_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Airport'],
         'che_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill East'],
         'chw_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill West'],
