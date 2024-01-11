@@ -2,6 +2,7 @@ import requests
 from .bcolors import bcolors
 from django.http import JsonResponse
 from .utils import format_time
+from .models import Trip, Route
 
 """Make API call to retrieve Arrival information"""
 def get_arrivals(station):
@@ -63,10 +64,14 @@ def process_arrivals_json(response, context):
                         all_arrivals.append(train_info)
                         arrivals_by_line[line].append(train_info)
 
+                        train_info['route'] = get_route(train_info)
+
                         if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
                             arrivals_by_line['Fox Chase'].append(train_info)
                         if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
-                            arrivals_by_line['Warminster'].append(train_info) 
+                            arrivals_by_line['Warminster'].append(train_info)
+                        if train_info['destination'] == 'Airport':
+                            arrivals_by_line['Airport'].append(train_info)
             else: 
                 pass 
 
@@ -77,3 +82,9 @@ def process_arrivals_json(response, context):
     }
     return context
 
+def get_route(train_info):
+    trips_queryset = Trip.objects.filter(block_id=int(train_info['train_id']))
+    print(trips_queryset)
+    return 
+    
+        
