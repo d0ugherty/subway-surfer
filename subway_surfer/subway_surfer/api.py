@@ -18,19 +18,19 @@ def get_arrivals(station):
     
 def process_arrivals_json(response, context):
     all_arrivals = []
-    arrivals_by_line = {'Airport' : [], 
-                        'Chestnut Hill East' : [],
-                        'Chestnut Hill West' : [],
-                        'Lansdale/Doylestown': [],
-                        'Media/Wawa' : [],
-                        'Fox Chase' : [],
-                        'Manayunk/Norristown' : [],
-                        'Paoli/Thorndale' : [],
-                        'Cynwyd' : [],
-                        'Trenton' : [],
-                        'Warminster' : [],
-                        'Wilmington/Newark' : [],
-                        'West Trenton' : []
+    arrivals_by_line = {'Airport Line' : [], 
+                        'Chestnut Hill East Line' : [],
+                        'Chestnut Hill West Line' : [],
+                        'Lansdale/Doylestown Line': [],
+                        'Media/Wawa Line' : [],
+                        'Fox Chase Line' : [],
+                        'Manayunk/Norristown Line' : [],
+                        'Paoli/Thorndale Line' : [],
+                        'Cynwyd Line' : [],
+                        'Trenton Line' : [],
+                        'Warminster Line' : [],
+                        'Wilmington/Newark Line' : [],
+                        'West Trenton Line' : []
                     }
     parsed_data = response.json()
             #print(f'{bcolors.WARNING}{parsed_data}{bcolors.RESET}') 
@@ -60,18 +60,17 @@ def process_arrivals_json(response, context):
                             "track": train["track"],
                         }
                         #print(train_info)
-                        line = train["line"]
+                        #line = train["line"]
                         all_arrivals.append(train_info)
-                        arrivals_by_line[line].append(train_info)
+                        #arrivals_by_line[line].append(train_info)
+                        train["route"] = get_route(train_info)
+                        route = train["route"]
+                        arrivals_by_line[route].append(train_info)
 
-                        train_info['route'] = get_route(train_info)
-
-                        if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
-                            arrivals_by_line['Fox Chase'].append(train_info)
-                        if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
-                            arrivals_by_line['Warminster'].append(train_info)
-                        if train_info['destination'] == 'Airport':
-                            arrivals_by_line['Airport'].append(train_info)
+                       # if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
+                        #    arrivals_by_line['FOX'].append(train_info)
+                        #if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
+                         #   arrivals_by_line['WAR'].append(train_info)
             else: 
                 pass 
 
@@ -83,8 +82,9 @@ def process_arrivals_json(response, context):
     return context
 
 def get_route(train_info):
-    trips_queryset = Trip.objects.filter(block_id=int(train_info['train_id']))
-    print(trips_queryset)
-    return 
-    
+    trip= Trip.objects.filter(block_id=int(train_info['train_id'])).latest('block_id')
+    trip_route = trip.route.route_short_name
+    print(trip_route)
+    return trip_route
+
         
