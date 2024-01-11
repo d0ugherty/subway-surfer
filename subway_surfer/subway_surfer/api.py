@@ -6,7 +6,8 @@ from .models import Trip, Route
 
 """Make API call to retrieve Arrival information"""
 def get_arrivals(station):
-        api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}'
+        results = 30
+        api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}'
         response = requests.get(api_url)
         context = {}
         if response.status_code == 200:
@@ -67,15 +68,15 @@ def process_arrivals_json(response, context):
                         route = train["route"]
                         arrivals_by_line[route].append(train_info)
 
-                       # if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
-                        #    arrivals_by_line['FOX'].append(train_info)
-                        #if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
-                         #   arrivals_by_line['WAR'].append(train_info)
+                        if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
+                            arrivals_by_line['Fox Chase Line'].append(train_info)
+                        if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
+                            arrivals_by_line['Warminster Line'].append(train_info)
             else: 
                 pass 
 
     context = {
-        'all_arrivals_ctx' : all_arrivals,
+        'all_arrivals_ctx' : all_arrivals[:10],
         'arrivals_by_line_ctx' : arrivals_by_line,
         'optText' : 'Train Information'
     }
