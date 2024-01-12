@@ -77,6 +77,7 @@ def update_arrivals_table(request, table_id):
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = Consumer.get_arrivals(station)
    # print(f'FROM UPDATE: {arrival_context}')
+    data = []
     match table_id:
         case 'tbl_all_arrivals':
             data = arrival_context['all_arrivals_ctx']
@@ -107,5 +108,6 @@ def update_arrivals_table(request, table_id):
         case 'tbl_wtr_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['West Trenton Line']
 
-    html = render_to_string('info_board/table_rows.html', {'arrivals' : data})
-    return JsonResponse({'html': html})
+    #html = render_to_string('info_board/table_rows.html', {'arrivals' : data})
+    #return JsonResponse({'html': html})
+    return render(request, 'info_board/table_rows.html', {'arrivals': data})

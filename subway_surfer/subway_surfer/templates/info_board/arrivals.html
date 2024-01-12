@@ -15,7 +15,7 @@
 <h1 id = "station">Train Information for {{ station }}</h1>
 
 <script type="text/javascript">
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_all_arrivals");
+  /**  update_table("{{ csrf_token }}", "{{ station }}", "tbl_all_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_air_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_che_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_chw_arrivals");
@@ -29,6 +29,7 @@
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_wil_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_tre_arrivals");
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");
+    **/
 </script>
     <table id="tbl_all_arrivals">
         <thead>
@@ -42,7 +43,7 @@
                 <th>Track</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody hx-get="/update_arrivals_table/tbl_all_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
             {% include 'info_board/table_rows.html' with arrivals=all_arrivals_ctx %}
         </tbody>
     </table>
@@ -56,7 +57,7 @@
             <h2>AIRPORT</h>
             <table id="tbl_air_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_air_arrivals_body" hx-get="/update_arrivals_table/tbl_air_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                 {% include 'info_board/table_rows.html' with arrivals=air_arrivals_ctx %}
                 </tbody>
             </table>
@@ -66,7 +67,7 @@
             <h2>CHESTNUT HILL EAST</h>
             <table id="tbl_che_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_che_arrivals_body" hx-get="/update_arrivals_table/tbl_che_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=che_arrivals_ctx %}
                 </tbody>
             </table>
@@ -78,7 +79,7 @@
             <h2>CHESTNUT HILL WEST</h>
             <table id="tbl_chw_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_chw_arrivals_body" hx-get="/update_arrivals_table/tbl_chw_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=chw_arrivals_ctx %}
                 </tbody>
             </table>
@@ -92,7 +93,7 @@
             </h>
             <table id="tbl_lan_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_lan_arrivals_body" hx-get="/update_arrivals_table/tbl_lan_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=lan_arrivals_ctx %}
                 </tbody>
             </table>
@@ -105,7 +106,7 @@
             </h>
             <table id="tbl_med_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_med_arrivals_body" hx-get="/update_arrivals_table/tbl_med_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=med_arrivals_ctx %}
                 </tbody>
             </table>
@@ -119,7 +120,7 @@
             </h>
             <table id="tbl_fox_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_fox_arrivals_body" hx-get="/update_arrivals_table/tbl_fox_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=fox_arrivals_ctx %}
                 </tbody>
             </table>
@@ -133,7 +134,7 @@
             </h>
             <table id="tbl_nor_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_nor_arrivals_body" hx-get="/update_arrivals_table/tbl_nor_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=nor_arrivals_ctx %}
                 </tbody>
             </table>
@@ -147,7 +148,7 @@
             </h>
             <table id="tbl_pao_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_pao_arrivals_body" hx-get="/update_arrivals_table/tbl_pao_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=pao_arrivals_ctx %}
                 </tbody>
             </table>
@@ -161,7 +162,7 @@
         </h>
         <table id="tbl_cyn_arrivals">
             {% include 'info_board/header.html' %}
-            <tbody>
+            <tbody id = "tbl_cyn_arrivals_body" hx-get="/update_arrivals_table/tbl_cyn_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                 {% include 'info_board/table_rows.html' with arrivals=cyn_arrivals_ctx %}
             </tbody>
         </table>
@@ -175,7 +176,7 @@
             </h>
             <table id="tbl_tre_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_tre_arrivals_body" hx-get="/update_arrivals_table/tbl_tre_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=tre_arrivals_ctx %}
                 </tbody>
             </table>
@@ -189,7 +190,7 @@
             </h>
             <table id="tbl_war_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_war_arrivals_body" hx-get="/update_arrivals_table/tbl_war_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=war_arrivals_ctx %}
                 </tbody>
             </table>
@@ -203,7 +204,7 @@
             </h>
             <table id="tbl_wil_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_wil_arrivals_body" hx-get="/update_arrivals_table/tbl_wil_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=wil_arrivals_ctx %}
                 </tbody>
             </table>
@@ -217,7 +218,7 @@
             </h>
             <table id="tbl_wtr_arrivals">
                 {% include 'info_board/header.html' %}
-                <tbody>
+                <tbody id = "tbl_wtr_arrivals_body" hx-get="/update_arrivals_table/tbl_wtr_arrivals/" hx-trigger="every 5s" hx-swap="innerHTML">
                     {% include 'info_board/table_rows.html' with arrivals=wtr_arrivals_ctx %}
                 </tbody>
             </table>
