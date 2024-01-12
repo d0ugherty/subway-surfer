@@ -109,7 +109,3 @@ def update_arrivals_table(request, table_id):
 
     html = render_to_string('info_board/table_rows.html', {'arrivals' : data})
     return JsonResponse({'html': html})
-    
-def current_time(request):
-    current_time = datetime.datetime.utcnow().replace(tzinfo=utc)
-    return render('info_board/arrivals.html', {'current_time': current_time})

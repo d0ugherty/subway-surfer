@@ -41,39 +41,10 @@ class Consumer:
                 #print(f'{bcolors.WARNING}{parsed_data}{bcolors.RESET}') 
                 
         for key, value in parsed_data.items():
-            
             if isinstance(value, list) and not value:
                 continue
-            
-            for item in value:
-                if isinstance(item, dict):
-                    for direction, next_to_arrive in item.items():
-                        #print(f'{bcolors.WARNING}{item.items()}{bcolors.RESET}')
-                        for train in next_to_arrive:
-                        # print(f'{bcolors.WARNING}{arrival}{bcolors.RESET}')
-                            train_info = {
-                                "direction": train["direction"],
-                                "train_id": train["train_id"],
-                                "origin": train["origin"],
-                                "destination": train["destination"],
-                                "line": train["line"],
-                                "status": train["status"],
-                                "service_type": train["service_type"],
-                                "next_station": train["next_station"],    
-                                "sched_time": train["sched_time"], 
-                                "depart_time": format_time(train["depart_time"]),
-                                "track": train["track"],
-                            }
-                            
-                            all_arrivals.append(train_info)
-                            train["route"] = Consumer._get_route(train_info)
-                            route = train["route"]
-                            arrivals_by_line[route].append(train_info)
+            Consumer._process_train_data(value, all_arrivals, arrivals_by_line)
 
-                            arrivals_by_line = Consumer._handle_thru_routing(train_info, arrivals_by_line)
-
-                else: 
-                    pass 
 
         context = {
             'all_arrivals_ctx' : all_arrivals[:10],
@@ -100,3 +71,54 @@ class Consumer:
         if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
             arrivals_by_line['Warminster Line'].append(train_info)
         return arrivals_by_line
+    
+    @staticmethod
+    def _initialize_arrivals_by_line():
+        return {'Airport Line' : [], 
+                'Chestnut Hill East Line' : [],
+                'Chestnut Hill West Line' : [],
+                'Lansdale/Doylestown Line': [],
+                'Media/Wawa Line' : [],
+                'Fox Chase Line' : [],
+                'Manayunk/Norristown Line' : [],
+                'Paoli/Thorndale Line' : [],
+                'Cynwyd Line' : [],
+                'Trenton Line' : [],
+                'Warminster Line' : [],
+                'Wilmington/Newark Line' : [],
+                'West Trenton Line' : [],
+                'Express' : []
+            }
+
+    @staticmethod
+    def _process_train_data(train_data, all_arrivals, arrivals_by_line):
+        for item in train_data:
+            if not isinstance(item, dict):
+                continue
+            for next_to_arrive in item.values():
+                for train in next_to_arrive:
+                    train_info = Consumer._parse_train_info(train)
+                    all_arrivals.append(train_info)
+                    Consumer._update_arrivals_by_line(train_info, arrivals_by_line)
+
+    @staticmethod
+    def _parse_train_info(train):
+        return {
+            "direction": train["direction"],
+            "train_id": train["train_id"],
+            "origin": train["origin"],
+            "destination": train["destination"],
+            "line": train["line"],
+            "status": train["status"],
+            "service_type": train["service_type"],
+            "next_station": train["next_station"],
+            "sched_time": train["sched_time"],
+            "depart_time": format_time(train["depart_time"]),
+            "track": train["track"],
+        }
+
+    @staticmethod
+    def _update_arrivals_by_line(train_info, arrivals_by_line):
+        route = Consumer._get_route(train_info)
+        arrivals_by_line[route].append(train_info)
+        arrivals_by_line = Consumer._handle_thru_routing(train_info, arrivals_by_line)
