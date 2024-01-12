@@ -96,6 +96,7 @@ class Consumer:
     def _handle_thru_routing(train_info, arrivals_by_line):
         if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
             arrivals_by_line['Fox Chase Line'].append(train_info)
+       # if train_info['destination'] == 'Airport' and train_info['']
         if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
             arrivals_by_line['Warminster Line'].append(train_info)
         return arrivals_by_line

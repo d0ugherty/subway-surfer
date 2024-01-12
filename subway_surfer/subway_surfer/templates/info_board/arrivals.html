@@ -31,7 +31,17 @@
     update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");
 </script>
     <table id="tbl_all_arrivals">
-        {% include 'info_board/header.html' %}
+        <thead>
+            <tr>
+                <th>Departure Time</th>
+                <th>Train No.</th>
+                <th>Line</th>
+                <th>Destination</th>
+                <!--<th>Origin</th>-->
+                <th>Status</th>
+                <th>Track</th>
+            </tr>
+        </thead>
         <tbody>
             {% include 'info_board/table_rows.html' with arrivals=all_arrivals_ctx %}
         </tbody>
@@ -80,7 +90,7 @@
     <div>
         {% if lan_arrivals_ctx %}
             <h2>
-                LANDSALE
+                LANSDALE
             </h>
             <table id="tbl_lan_arrivals">
                 {% include 'info_board/header.html' %}
