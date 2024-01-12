@@ -22,21 +22,7 @@ class Consumer:
     @staticmethod
     def _process_arrivals_json(response, context):
         all_arrivals = []
-        arrivals_by_line = {'Airport Line' : [], 
-                            'Chestnut Hill East Line' : [],
-                            'Chestnut Hill West Line' : [],
-                            'Lansdale/Doylestown Line': [],
-                            'Media/Wawa Line' : [],
-                            'Fox Chase Line' : [],
-                            'Manayunk/Norristown Line' : [],
-                            'Paoli/Thorndale Line' : [],
-                            'Cynwyd Line' : [],
-                            'Trenton Line' : [],
-                            'Warminster Line' : [],
-                            'Wilmington/Newark Line' : [],
-                            'West Trenton Line' : [],
-                            'Express' : []
-                        }
+        arrivals_by_line = Consumer._initialize_arrivals_by_line()
         parsed_data = response.json()
                 #print(f'{bcolors.WARNING}{parsed_data}{bcolors.RESET}') 
                 
