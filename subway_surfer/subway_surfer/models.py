@@ -60,7 +60,7 @@ class Trip(models.Model):
     service_id = models.CharField(max_length=25)
     trip_id = models.CharField(max_length=25)
     trip_headsign = models.CharField(max_length=50) 
-    block_id = models.IntegerField()
+    block_id = models.CharField(max_length=10)
     trip_short_name = models.IntegerField()
     shape_id = models.IntegerField()
     direction_id = models.IntegerField()

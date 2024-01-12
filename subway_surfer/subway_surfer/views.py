@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from .forms import StationSlctForm
 from .models import Stop
 from .utils import validate_station_name
-from .api import get_arrivals
+from .consumer import Consumer
 import datetime
 from django.shortcuts import redirect
 
@@ -46,7 +46,7 @@ def select_stop(request):
 Render the Arrivals and Departures Table
 """
 def load_arrivals(request, station):
-    arrival_context = get_arrivals(station)
+    arrival_context = Consumer.get_arrivals(station)
     #print(f'FROM LOAD: {arrival_context}')
 
     form = StationSlctForm() 
@@ -73,7 +73,7 @@ def load_arrivals(request, station):
 """Update Arrivals"""
 def update_arrivals_table(request, table_id):
     station = request.POST.get('station', "30th Street Station") 
-    arrival_context = get_arrivals(station)
+    arrival_context = Consumer.get_arrivals(station)
    # print(f'FROM UPDATE: {arrival_context}')
     match table_id:
         case 'tbl_all_arrivals':
