@@ -1,6 +1,6 @@
 
-{% if arrivals %}
-{% for arrival in arrivals %}
+{% if all_arrivals %}
+    {% for arrival in arrivals %}
     <tr>
         <td>{{ arrival.depart_time}}</td>
         <td>{{ arrival.train_id }}</td>
@@ -12,7 +12,21 @@
     </tr>
     {% endfor %}
 {% else %}
-    <tr><td colspan="7">No arrivals found</td></tr>
+    {% if arrivals %}
+        {% for arrival in arrivals %}
+        <tr>
+            <td>{{ arrival.depart_time}}</td>
+            <td>{{ arrival.train_id }}</td>
+            <!--<td>{{ arrival.line }}</td>-->
+            <td>{{ arrival.destination }}</td>
+            <!--<td>{{ arrival.origin }}</td>-->
+            <td>{{ arrival.status }}</td>
+            <td>{{ arrival.track }}</td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr><td colspan="7">No arrivals found</td></tr>
+    {% endif %}
 {% endif %}
 
 

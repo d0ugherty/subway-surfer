@@ -1,14 +1,11 @@
 from .bcolors import bcolors
 from django.shortcuts import render
-from django.template.loader import render_to_string
-from django.http import JsonResponse, HttpResponse
-import datetime
+#from django.http import JsonResponse, HttpResponse
 from django.utils.timezone import utc
 from .forms import StationSlctForm
 from .models import Stop
 from .utils import validate_station_name
 from .consumer import Consumer
-import datetime
 from django.shortcuts import redirect
 
 def home(request):
@@ -49,8 +46,6 @@ Render the Arrivals and Departures Table
 """
 def load_arrivals(request, station):
     arrival_context = Consumer.get_arrivals(station)
-    #print(f'FROM LOAD: {arrival_context}')
-
     form = StationSlctForm() 
     return render(request, 'info_board/arrivals.html', {
         'all_arrivals_ctx': arrival_context['all_arrivals_ctx'],
@@ -76,11 +71,12 @@ def load_arrivals(request, station):
 def update_arrivals_table(request, table_id):
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = Consumer.get_arrivals(station)
-   # print(f'FROM UPDATE: {arrival_context}')
     data = []
+    all_arrivals = False # controls which columns appear in the table header
     match table_id:
         case 'tbl_all_arrivals':
             data = arrival_context['all_arrivals_ctx']
+            all_arrivals = True
         case 'tbl_air_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['Airport Line'] 
         case 'tbl_che_arrivals':
@@ -107,7 +103,4 @@ def update_arrivals_table(request, table_id):
             data = arrival_context['arrivals_by_line_ctx']['Wilmington/Newark Line']
         case 'tbl_wtr_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['West Trenton Line']
-
-    #html = render_to_string('info_board/table_rows.html', {'arrivals' : data})
-    #return JsonResponse({'html': html})
-    return render(request, 'info_board/table_rows.html', {'arrivals': data})
+    return render(request, 'info_board/table_rows.html', {'arrivals': data, 'all_arrivals': all_arrivals})
