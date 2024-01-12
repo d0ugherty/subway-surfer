@@ -29,3 +29,10 @@ def format_time(depart_time):
     depart_time_dt = datetime.strptime(depart_time, '%Y-%m-%d %H:%M:%S')
     formatted_depart_time = depart_time_dt.strftime('%I:%M %p')
     return formatted_depart_time
+
+def clean_string(s):
+    if s is not None:
+        return s.strip().rstrip('.')
+    else:
+        return None
+    

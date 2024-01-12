@@ -1,7 +1,7 @@
 import requests
 from .bcolors import bcolors
 from django.http import JsonResponse
-from .utils import format_time
+from .utils import format_time, clean_string
 from .models import Trip, Route
 
 
@@ -104,21 +104,24 @@ class Consumer:
     @staticmethod
     def _parse_train_info(train):
         return {
-            "direction": train["direction"],
-            "train_id": train["train_id"],
-            "origin": train["origin"],
-            "destination": train["destination"],
-            "line": train["line"],
-            "status": train["status"],
-            "service_type": train["service_type"],
-            "next_station": train["next_station"],
-            "sched_time": train["sched_time"],
-            "depart_time": format_time(train["depart_time"]),
-            "track": train["track"],
-        }
+            "direction": clean_string(train["direction"]),
+            "train_id": clean_string(train["train_id"]),
+            "origin": clean_string(train["origin"]),
+            "destination": clean_string(train["destination"]),
+            "line": clean_string(train["line"]),
+            "status": clean_string(train["status"]),
+            "service_type": clean_string(train["service_type"]),
+            "next_station": clean_string(train["next_station"]),
+            "sched_time": clean_string(train["sched_time"]),
+            "depart_time": format_time(clean_string(train["depart_time"])),
+            "track": clean_string(train["track"])
+          }
 
+
+    
     @staticmethod
     def _update_arrivals_by_line(train_info, arrivals_by_line):
         route = Consumer._get_route(train_info)
         arrivals_by_line[route].append(train_info)
         arrivals_by_line = Consumer._handle_thru_routing(train_info, arrivals_by_line)
+
