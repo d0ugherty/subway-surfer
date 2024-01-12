@@ -3,7 +3,7 @@
  * 
  *  This replaces the table body without having to refresh the page
  * 
- * TO DO: Replace this with HTMX
+ *  Replaced by HTMX, keeping it around just in case though
  */
 function update_table(csrf_token, station, tableId) {
     setInterval(function() {

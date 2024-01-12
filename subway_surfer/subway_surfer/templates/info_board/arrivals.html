@@ -6,31 +6,18 @@
     <!-- Include jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Include your JavaScript file -->
-    <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
+    <!--<script src="{% static 'subway_surfer/js/update_table.js' %}"></script>-->
+    <script src="{% static 'subway_surfer/js/update_time.js' %}"></script>
     
 {% endblock %}
 <div id="time">
-    <h3> Current Time: {% now "h:i" %}</h3>
+    <script type="text/javascript">
+        update_time();
+    </script>
+    <h3 id="current-time">{{current_time}}</h3>
 </div>
 <h1 id = "station">Train Information for {{ station }}</h1>
 
-<script type="text/javascript">
-  /**  update_table("{{ csrf_token }}", "{{ station }}", "tbl_all_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_air_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_che_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_chw_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_lan_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_med_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_fox_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_nor_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_pao_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_cyn_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_war_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wil_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_tre_arrivals");
-    update_table("{{ csrf_token }}", "{{ station }}", "tbl_wtr_arrivals");
-    **/
-</script>
     <table id="tbl_all_arrivals">
         <thead>
             <tr>
