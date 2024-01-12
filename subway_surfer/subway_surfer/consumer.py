@@ -18,6 +18,7 @@ class Consumer:
                 return context
             else:
                 return JsonResponse({'error': 'API request failed'}, status=500)
+            
     @staticmethod
     def _process_arrivals_json(response, context):
         all_arrivals = []

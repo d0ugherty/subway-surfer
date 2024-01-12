@@ -1,7 +1,9 @@
 from .bcolors import bcolors
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+import datetime
+from django.utils.timezone import utc
 from .forms import StationSlctForm
 from .models import Stop
 from .utils import validate_station_name
@@ -107,3 +109,7 @@ def update_arrivals_table(request, table_id):
 
     html = render_to_string('info_board/table_rows.html', {'arrivals' : data})
     return JsonResponse({'html': html})
+    
+def current_time(request):
+    current_time = datetime.datetime.utcnow().replace(tzinfo=utc)
+    return render('info_board/arrivals.html', {'current_time': current_time})

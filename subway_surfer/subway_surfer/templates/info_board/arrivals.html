@@ -9,6 +9,9 @@
     <script src="{% static 'subway_surfer/js/update_table.js' %}"></script>
     
 {% endblock %}
+<div id="time">
+    <h3> Current Time: {% now "h:i" %}</h3>
+</div>
 <h1 id = "station">Train Information for {{ station }}</h1>
 
 <script type="text/javascript">
