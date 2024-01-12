@@ -2,7 +2,7 @@ from .bcolors import bcolors
 from django.shortcuts import render
 #from django.http import JsonResponse, HttpResponse
 from django.utils.timezone import utc
-from .forms import StationSlctForm
+from .forms import *
 from .models import Stop
 from .utils import validate_station_name
 from .consumer import Consumer
@@ -104,3 +104,25 @@ def update_arrivals_table(request, table_id):
         case 'tbl_wtr_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['West Trenton Line']
     return render(request, 'info_board/table_rows.html', {'arrivals': data, 'all_arrivals': all_arrivals})
+
+def fare_calculator(request):
+    if request.method == 'POST':
+        agency_slct_form = AgencySlctForm()
+        route_slct_form = RouteSlctForm()
+
+        if agency_slct_form.is_valid():
+            agency = agency_slct_form['agency_choice']
+        
+        if route_slct_form.is_valid():
+            route = route_slct_form['route_choice']
+            return redirect('fare_calculator', { 
+                'agency': agency,
+                'route': route })
+    else:
+        agency_slct_form = AgencySlctForm()
+        route_slct_form = RouteSlctForm()
+
+    return render(request, 'fare/fare.html', {
+        'agency_slct_form' : agency_slct_form, 
+        'route_slct_form' : route_slct_form 
+        })

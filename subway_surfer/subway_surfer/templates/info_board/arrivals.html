@@ -41,11 +41,9 @@
     {% include "info_board/select.html" %}
 
 <div id="info_by_route">
-
-    
         {% if air_arrivals_ctx %}
             <h2>AIRPORT</h>
-            <table id="tbl_air_arrivals">[]
+            <table id="tbl_air_arrivals">
                 {% include 'info_board/header.html' %}
                 <tbody id = "tbl_air_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_air_arrivals/" 
