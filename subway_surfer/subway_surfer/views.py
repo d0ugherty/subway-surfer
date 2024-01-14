@@ -105,24 +105,41 @@ def update_arrivals_table(request, table_id):
             data = arrival_context['arrivals_by_line_ctx']['West Trenton Line']
     return render(request, 'info_board/table_rows.html', {'arrivals': data, 'all_arrivals': all_arrivals})
 
+
+"""
+    Section for Fare Calculation
+
+"""
 def fare_calculator(request):
-    if request.method == 'POST':
-        agency_slct_form = AgencySlctForm()
-        route_slct_form = RouteSlctForm()
+    agency_form = AgencySlctForm(request.POST or None)
+    route_form = None
 
-        if agency_slct_form.is_valid():
-            agency = agency_slct_form['agency_choice']
-        
-        if route_slct_form.is_valid():
-            route = route_slct_form['route_choice']
-            return redirect('fare_calculator', { 
-                'agency': agency,
-                'route': route })
-    else:
-        agency_slct_form = AgencySlctForm()
-        route_slct_form = RouteSlctForm()
+    if request.method == 'POST' and agency_form.is_valid():
+        agency = agency_form.cleaned_data['agency_choice']
+        route_form = RouteSlctForm(agency, request.POST or None) 
 
+        if route_form.is_valid():
+            print('route form valid')
+            
     return render(request, 'fare/fare.html', {
-        'agency_slct_form' : agency_slct_form, 
-        'route_slct_form' : route_slct_form 
+        'agency_slct_form' : agency_form,
+        'route_slct_form' : route_form
         })
+
+"""
+def select_route(request, agency):
+    route_form = RouteSlctForm(agency)
+    if request.method == 'POST':
+        if route_form.is_valid():
+            route = route_form['route_choice']
+            return redirect('fare_calculator', { 
+                        'agency': agency,
+                        'route': route })
+        else:
+            print(route_form.errors)
+
+    else:
+        return render(request, 'fare/fare.html', {
+        'route_slct_form' : route_form
+        })
+"""
