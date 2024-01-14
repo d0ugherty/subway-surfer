@@ -84,6 +84,7 @@ class Consumer:
             for next_to_arrive in item.values():
                 for train in next_to_arrive:
                     train_info = Consumer._parse_train_info(train)
+                    train_info['headsign'] = Consumer._get_headsign(train_info)
                     all_arrivals.append(train_info)
                     Consumer._update_arrivals_by_line(train_info, arrivals_by_line)
 
@@ -110,4 +111,13 @@ class Consumer:
         route = Consumer._get_route(train_info)
         arrivals_by_line[route].append(train_info)
         arrivals_by_line = Consumer._handle_thru_routing(train_info, arrivals_by_line)
+
+    @staticmethod
+    def _get_headsign(train_info):
+        try:
+            trip = Trip.objects.filter(block_id=train_info['train_id']).latest('block_id')
+        except Trip.DoesNotExist:
+            print(f'Trip {train_info["train_id"]} does not exist.')
+            return None
+        return trip.headsign
 

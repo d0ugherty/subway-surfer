@@ -24,6 +24,9 @@ class Agency(models.Model):
     agency_lang = models.CharField(max_length=10)
     agency_email = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.agency_name
+
 class Route(models.Model):
     route_id = models.CharField(max_length=10)
     route_short_name = models.CharField(max_length=100)
@@ -35,6 +38,9 @@ class Route(models.Model):
     route_text_color = models.CharField(max_length=10)
     route_url = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.route_long_name
+    
 """These draw the routes onto the map"""
 class Shape(models.Model):
     shape_id = models.IntegerField()
