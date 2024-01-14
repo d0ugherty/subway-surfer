@@ -31,7 +31,6 @@ class Consumer:
                 continue
             Consumer._process_train_data(value, all_arrivals, arrivals_by_line)
 
-
         context = {
             'all_arrivals_ctx' : all_arrivals[:10],
             'arrivals_by_line_ctx' : arrivals_by_line,
@@ -44,18 +43,20 @@ class Consumer:
         try:
             trip = Trip.objects.filter(block_id=train_info['train_id']).latest('block_id')
         except Trip.DoesNotExist:
-            print(f'Trip {train_info["train_id"]} does not exist.')
-            return None
+            trip_route = train_info['line'] + ' Line'
+            return trip_route
         trip_route = trip.route.route_short_name
         return trip_route
     
     @staticmethod
     def _handle_thru_routing(train_info, arrivals_by_line):
         if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
-            arrivals_by_line['Fox Chase Line'].append(train_info)
+            if train_info not in arrivals_by_line['Fox Chase Line']:
+                arrivals_by_line['Fox Chase Line'].append(train_info)
        # if train_info['destination'] == 'Airport' and train_info['']
         if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
-            arrivals_by_line['Warminster Line'].append(train_info)
+            if train_info not in arrivals_by_line['Warminster Line']:
+                arrivals_by_line['Warminster Line'].append(train_info)
         return arrivals_by_line
     
     @staticmethod
@@ -109,6 +110,8 @@ class Consumer:
     @staticmethod
     def _update_arrivals_by_line(train_info, arrivals_by_line):
         route = Consumer._get_route(train_info)
+        train_info['headsign'] = Consumer._get_headsign(train_info)
+
         arrivals_by_line[route].append(train_info)
         arrivals_by_line = Consumer._handle_thru_routing(train_info, arrivals_by_line)
 
@@ -119,5 +122,5 @@ class Consumer:
         except Trip.DoesNotExist:
             print(f'Trip {train_info["train_id"]} does not exist.')
             return None
-        return trip.headsign
+        return trip.trip_headsign
 
