@@ -113,21 +113,22 @@ def update_arrivals_table(request, table_id):
 def fare_calculator(request):
     agency_form = AgencySlctForm(request.POST or None)
     route_form = None
-    origin_form = None
+   # origin_form = None
     dest_form = None
 
     if request.method == 'POST' and agency_form.is_valid():
         agency = agency_form.cleaned_data['agency_choice']
         route_form = RouteSlctForm(agency, request.POST or None) 
 
-    if request.method == 'POST' and route_form.is_valid():
-        print('route form valid')
-        origin_form = OriginForm(request.POST or None)
-        origin = origin_form.cleaned_data['origin_choice']
+        if request.method == 'POST' and route_form.is_valid():
+            print('route form valid')
+            
+            origin = origin_form.cleaned_data['origin_choice']
+
+    origin_form = OriginForm(request.POST or None)
+    dest_form = DestForm(origin, request.POST or None)
 
     if request.method == 'POST' and origin_form.is_valid():
-        dest_form = DestForm(origin, request.POST or None)
-
         if dest_form.is_valid():
             print('destination form valid')
             
