@@ -9,7 +9,6 @@ class StationSlctForm(forms.Form):
                                          required=False)
 
 """
-    TO DO: Display routes depending on the Agency selected
     TO DO: Display stops depending on route selected
 """
 
@@ -27,22 +26,21 @@ class RouteSlctForm(forms.Form):
         )
 
 
-    """ 
-    route_choice = forms.ModelChoiceField(queryset=Route.objects.all(),
-                                          label = "Select Route",
-                                          to_field_name='route_long_name',
-                                          required=True)
-                                          """
-
-    """   
-    origin = forms.ModelChoiceField(queryset=Stop.objects.all(), 
+class OriginForm(forms.Form):
+       
+    origin_choice = forms.ModelChoiceField(queryset=Stop.objects.all(), 
                                          label = "Select Origin: ",
                                          to_field_name='stop_name',
                                          required=False)
     
-    destination = forms.ModelChoiceField(queryset=Stop.objects.all(), 
+class DestForm(forms.Form):
+
+    def __init__(self, origin, *args, **kwargs):
+        super(DestForm, self).__init__(*args, **kwargs)
+        self.fields['stops'] = forms.ModelChoiceField(
+            queryset=Stop.objects.all().exclude(stop_id=origin), 
                                          label = "Select Destination: ",
                                          to_field_name='stop_name',
                                          required=False)
-"""
+
     

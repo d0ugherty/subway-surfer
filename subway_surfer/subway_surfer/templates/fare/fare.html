@@ -17,4 +17,20 @@
         <button type = "submit" value = "Submit"> Submit </button>
     </form>
 {% endif %}
+
+{% if origin_form %}
+    <form method="post" action="{% url 'fare_calculator' %}">
+        {% csrf_token %}
+        {{ origin_form }}
+        <button type = "submit" value = "Submit"> Submit </button>
+    </form>
+{% endif %}
+
+{% if dest_form %}
+    <form method="post" action="{% url 'fare_calculator' %}">
+        {% csrf_token %}
+        {{ dest_form }}
+        <button type = "submit" value = "Submit"> Submit </button>
+    </form>
+{% endif %}
 {% endblock %}
