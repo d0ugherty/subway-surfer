@@ -19,17 +19,7 @@
 <h1 id = "station">Train Information for {{ station }}</h1>
 
     <table id="tbl_all_arrivals">
-        <thead>
-            <tr>
-                <th>Departure Time</th>
-                <th>Train No.</th>
-                <th>Line</th>
-                <th>Destination</th>
-                <!--<th>Origin</th>-->
-                <th>Status</th>
-                <th>Track</th>
-            </tr>
-        </thead>
+            {% include 'info_board/header.html' with all_arrivals=True %}
         <tbody hx-post="/update_arrivals_table/tbl_all_arrivals/" 
             hx-trigger="every 5s" 
             hx-swap="innerHTML" 

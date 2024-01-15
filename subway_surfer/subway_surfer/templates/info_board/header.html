@@ -2,7 +2,9 @@
     <tr>
         <th>Departure Time</th>
         <th>Train No.</th>
-        <!--<th>Line</th>-->
+        {% if all_arrivals %}
+            <th>Line</th>
+        {% endif %}
         <th>Destination</th>
         <!--<th>Origin</th>-->
         <th>Status</th>
