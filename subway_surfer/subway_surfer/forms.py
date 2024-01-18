@@ -22,9 +22,10 @@ class RouteSlctForm(forms.Form):
     def __init__(self, agency, *args, **kwargs):
         super(RouteSlctForm, self).__init__(*args, **kwargs)
         self.fields['routes'] = forms.ModelChoiceField(
-            queryset=Route.objects.filter(agency_id=agency)
+            queryset=Route.objects.filter(agency_id=agency),
+            required=False
         )
-
+    
 
 class OriginForm(forms.Form):
        
