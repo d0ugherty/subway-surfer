@@ -113,21 +113,41 @@ def update_arrivals_table(request, table_id):
 
 def fare_calculator(request):
     agency_form = AgencySlctForm(request.POST or None)
-    route_form = RouteSlctForm(request.session.get('agency_choice'), request.POST or None)
+    route_form = None
+    origin_form = None
+    dest_form = None
 
     if request.method == 'POST':
         form_type = request.POST.get('form_type', None)
+        
         if form_type == 'agency' and agency_form.is_valid():
             agency = agency_form.cleaned_data['agency_choice']
             request.session['agency_choice'] = agency.id
-        elif form_type == 'route' and route_form.is_valid():
-            pass
+            route_form = RouteSlctForm(agency)
+
+        elif form_type == 'route':
+            agency_id = request.session.get('agency_choice')
+            route_form = RouteSlctForm(agency_id, request.POST)
+            #route = route_form.cleaned_data['route_choice']
+            if route_form.is_valid():
+                origin_form = OriginForm()
+            else:
+                print(route_form.errors)
+            
+        elif form_type == 'origin':
+            origin_form = OriginForm(request.POST)
+            if origin_form.is_valid():
+                origin = origin_form.cleaned_data['origin_choice']
+                request.session['origin_choice'] = origin.id
+                dest_form = DestForm(origin.id)
 
             
 
     return render(request, 'fare/fare.html', {
         'agency_slct_form': agency_form,
-        'route_slct_form': route_form
+        'route_slct_form': route_form,
+        'origin_form': origin_form,
+        'dest_form' : dest_form
     })
 
 

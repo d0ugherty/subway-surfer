@@ -16,7 +16,7 @@ class AgencySlctForm(forms.Form):
     agency_choice = forms.ModelChoiceField(queryset=Agency.objects.all(),
                                            label = "Select Agency",
                                            to_field_name='agency_name',
-                                           required=True)
+                                           required=False)
     form_type = forms.CharField(widget=forms.HiddenInput(), initial='agency')
     
 class RouteSlctForm(forms.Form):
