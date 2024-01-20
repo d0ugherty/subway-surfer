@@ -17,6 +17,7 @@ class AgencySlctForm(forms.Form):
                                            label = "Select Agency",
                                            to_field_name='agency_name',
                                            required=True)
+    form_type = forms.CharField(widget=forms.HiddenInput(), initial='agency')
     
 class RouteSlctForm(forms.Form):
     def __init__(self, agency, *args, **kwargs):
@@ -26,14 +27,17 @@ class RouteSlctForm(forms.Form):
             required=False
         )
     
+    form_type = forms.CharField(widget=forms.HiddenInput(), initial='route')
+    
 
 class OriginForm(forms.Form):
-       
     origin_choice = forms.ModelChoiceField(queryset=Stop.objects.all(), 
                                          label = "Select Origin: ",
                                          to_field_name='stop_name',
                                          required=False)
     
+    form_type = forms.CharField(widget=forms.HiddenInput(), initial='origin')
+
 class DestForm(forms.Form):
 
     def __init__(self, origin, *args, **kwargs):
@@ -43,5 +47,7 @@ class DestForm(forms.Form):
                                          label = "Select Destination: ",
                                          to_field_name='stop_name',
                                          required=False)
+        
+    form_type = forms.CharField(widget=forms.HiddenInput(), initial='destination')
 
     
