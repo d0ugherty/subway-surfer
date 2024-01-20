@@ -138,8 +138,8 @@ def fare_calculator(request):
             origin_form = OriginForm(request.POST)
             if origin_form.is_valid():
                 origin = origin_form.cleaned_data['origin_choice']
-                request.session['origin_choice'] = origin.id
-                dest_form = DestForm(origin.id)
+                request.session['origin_choice'] = origin.stop_id
+                dest_form = DestForm(origin.stop_id)
 
             
 
