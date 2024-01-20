@@ -110,39 +110,26 @@ def update_arrivals_table(request, table_id):
     Section for Fare Calculation
 
 """
+
 def fare_calculator(request):
     agency_form = AgencySlctForm(request.POST or None)
-    route_form = None
-   # origin_form = None
-    dest_form = None
+    route_form = RouteSlctForm(request.session.get('agency_choice'), request.POST or None)
 
-    if request.method == 'POST' and agency_form.is_valid():
-        agency = agency_form.cleaned_data['agency_choice']
-        route_form = RouteSlctForm(agency, request.POST or None) 
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type', None)
+        if form_type == 'agency' and agency_form.is_valid():
+            agency = agency_form.cleaned_data['agency_choice']
+            request.session['agency_choice'] = agency.id
+        elif form_type == 'route' and route_form.is_valid():
+            pass
 
-        if request.method == 'POST' and route_form.is_valid():
-            print('route form valid')
             
-            origin = origin_form.cleaned_data['origin_choice']
-
-    origin_form = OriginForm(request.POST or None)
-    dest_form = DestForm(origin, request.POST or None)
-
-    if request.method == 'POST' and origin_form.is_valid():
-        if dest_form.is_valid():
-            print('destination form valid')
-            
-        else:
-            print(dest_form.errors)
-    else:
-        print(origin_form.errors)
 
     return render(request, 'fare/fare.html', {
-        'agency_slct_form' : agency_form,
-        'route_slct_form' : route_form,
-        'origin_form' : origin_form,
-        'dest_form' : dest_form
-        })
+        'agency_slct_form': agency_form,
+        'route_slct_form': route_form
+    })
+
 
 """
 def select_route(request, agency):
