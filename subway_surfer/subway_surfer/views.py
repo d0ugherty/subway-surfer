@@ -116,6 +116,7 @@ def fare_calculator(request):
     route_form = None
     origin_form = None
     dest_form = None
+    price = 0.0
 
     if request.method == 'POST':
         form_type = request.POST.get('form_type', None)
@@ -124,11 +125,12 @@ def fare_calculator(request):
             agency = agency_form.cleaned_data['agency_choice']
             request.session['agency_choice'] = agency.id
             route_form = RouteSlctForm(agency)
-
+        
+        # Route selection isn't really being used for anything
+        # TO DO: Figure out what i should do with it 
         elif form_type == 'route':
             agency_id = request.session.get('agency_choice')
             route_form = RouteSlctForm(agency_id, request.POST)
-            #route = route_form.cleaned_data['route_choice']
             if route_form.is_valid():
                 origin_form = OriginForm()
             else:
@@ -148,23 +150,26 @@ def fare_calculator(request):
                 destination = dest_form.cleaned_data['stops']
                 dest_zone = destination.zone_id
                 origin_zone = request.session['origin_zone']
-                get_fare(request, origin_zone, dest_zone)
 
-            
+                price = get_fare(request, origin_zone, dest_zone)
+                
 
     return render(request, 'fare/fare.html', {
         'agency_slct_form': agency_form,
         'route_slct_form': route_form,
         'origin_form': origin_form,
-        'dest_form' : dest_form
+        'dest_form' : dest_form,
+        'price': '${:,.2f}'.format(price)
     })
 
 def get_fare(request, origin, destination):
-    print(f'origin: {origin}')
-    print(f'destination: {destination}')
     fare = Fare.objects.get(origin_id=origin, destination_id=destination)
-    print(fare)
-    request.session['fare_id'] = fare.fare_id 
+    request.session['fare_id'] = fare.fare_id
+    fare_attributes = Fare_Attributes.objects.get(fare=fare)
+    request.session['fare_price'] = fare_attributes.price
+    return request.session['fare_price']
+    
+
 
 
 """
