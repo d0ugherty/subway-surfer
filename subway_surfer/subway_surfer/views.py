@@ -169,23 +169,19 @@ def get_fare(request, origin, destination):
     request.session['fare_price'] = fare_attributes.price
     return request.session['fare_price']
     
-
-
-
-"""
-def select_route(request, agency):
-    route_form = RouteSlctForm(agency)
+def next_to_arrive(request):
+    station = '30th Street Station'
     if request.method == 'POST':
-        if route_form.is_valid():
-            route = route_form['route_choice']
-            return redirect('fare_calculator', { 
-                        'agency': agency,
-                        'route': route })
-        else:
-            print(route_form.errors)
-
+        stn_form = StationSlctForm(request.POST)
+        if stn_form.is_valid():
+            selected_stop = stn_form.cleaned_data['stop_choice']
+            station = validate_station_name(selected_stop)
     else:
-        return render(request, 'fare/fare.html', {
-        'route_slct_form' : route_form
+        stn_form = StationSlctForm()
+    stops = Stop.objects.all()
+
+    return render(request, 'nta/nta.html', {
+        'stop_form': stn_form, 
+        'stops': stops,
+        'stop_name': station
         })
-"""

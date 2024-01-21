@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('arrivals/<str:station>/',views.load_arrivals, name='load_arrivals'),
     path('update_arrivals_table/<str:table_id>/', views.update_arrivals_table, name='update_arrivals_table'),
-    path('fare_calculator/', views.fare_calculator, name='fare_calculator')
+    path('fare_calculator/', views.fare_calculator, name='fare_calculator'),
+    path('next_to_arrive/', views.next_to_arrive, name='next_to_arrive')
     #path('map/', views.render_map, name='map')
 ]
