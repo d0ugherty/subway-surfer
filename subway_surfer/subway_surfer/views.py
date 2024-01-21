@@ -139,7 +139,16 @@ def fare_calculator(request):
             if origin_form.is_valid():
                 origin = origin_form.cleaned_data['origin_choice']
                 request.session['origin_choice'] = origin.stop_id
+                request.session['origin_zone'] = origin.zone_id
                 dest_form = DestForm(origin.stop_id)
+        
+        elif form_type == 'destination':
+            dest_form = DestForm(request.session['origin_choice'], request.POST)
+            if dest_form.is_valid():
+                destination = dest_form.cleaned_data['stops']
+                dest_zone = destination.zone_id
+                origin_zone = request.session['origin_zone']
+                get_fare(request, origin_zone, dest_zone)
 
             
 
@@ -149,6 +158,13 @@ def fare_calculator(request):
         'origin_form': origin_form,
         'dest_form' : dest_form
     })
+
+def get_fare(request, origin, destination):
+    print(f'origin: {origin}')
+    print(f'destination: {destination}')
+    fare = Fare.objects.get(origin_id=origin, destination_id=destination)
+    print(fare)
+    request.session['fare_id'] = fare.fare_id 
 
 
 """
