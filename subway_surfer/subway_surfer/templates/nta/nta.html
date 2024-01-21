@@ -1,7 +1,40 @@
+{% load static %}
+
 <title>Next to Arrive</title>
 
+{% block extra_head %}
+
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'subway_surfer/js/update_time.js' %}"></script>
+    
+{% endblock %}
+
+<div id="time">
+    <script type="text/javascript">
+        update_time();
+    </script>
+
+    <h3 id="current-time">{{current_time}}</h3>
+
+</div>
+
 {% if stop_name %}
-    <h2>Next to Arrrive at {{ stop_name }}</h2>
+    <h2>Next to Arrrive at {{ station }}</h2>
 {% endif %}
 
-{{ stop_form }}
+<form method = "post" action = "{% url 'next_to_arrive' station %}"> 
+    {% csrf_token %}
+    {{ stop_form }}
+    <button type = "submit" value = "Submit"> Submit </button>
+</form> 
+
+
+<table id="tbl_next">
+    {% include 'nta/header.html' %}
+    <tbody>
+    {% if train %}
+        {% include 'nta/table_rows.html' %}
+    {% endif %}
+    </tbody>
+</table>

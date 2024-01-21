@@ -13,7 +13,12 @@ from django.shortcuts import redirect
 def home(request):
     return render(request, 'home.html')
 
-def train_info(request, template_name='info_board/arrivals.html'):
+"""
+    Renders form and redirects to the train information board
+
+    TO DO: Refactor this to make it work with next to arrive
+"""
+def train_info(request, template_name='info_board/arrivals.html', redirect_dest='load_arrivals'):
     # default
     station = "30th Street Station"
     #print(request.method)
@@ -23,7 +28,7 @@ def train_info(request, template_name='info_board/arrivals.html'):
             selected_stop = form.cleaned_data['stop_choice']
             stop_name = validate_station_name(selected_stop)
             # Redirect to the load_arrivals view with the selected stop_name
-            return redirect('load_arrivals', station=stop_name)
+            return redirect(redirect_dest, station=stop_name)
     else:
         form = StationSlctForm()
 
@@ -32,7 +37,7 @@ def train_info(request, template_name='info_board/arrivals.html'):
     return render(request, template_name, context)
 
 """
-Render the Arrivals and Departures Table
+    Render the Arrivals and Departures Table
 """
 def load_arrivals(request, station):
     arrival_context = Consumer.get_arrivals(station)
@@ -158,6 +163,29 @@ def get_fare(request, origin, destination):
     fare_attributes = Fare_Attributes.objects.get(fare=fare)
     request.session['fare_price'] = fare_attributes.price
     return request.session['fare_price']
-    
-def next_to_arrive(request):
-    select_stop(request, template_name='nta/nta.html')
+
+
+"""
+    Emulates an information board you'd find on a station platform
+
+    - What train is next?
+    - Distance or time to next train
+    - Destination
+    - Via
+    - Current time
+"""
+def next_to_arrive(request, station):
+  #  station = "30th Street Station"
+    #print(request.method)
+    if request.method == 'POST':
+        form = StationSlctForm(request.POST)
+        if form.is_valid():
+            selected_stop = form.cleaned_data['stop_choice']
+            stop_name = validate_station_name(selected_stop)
+            return redirect('next_to_arrive', station=stop_name)
+    else:
+        form = StationSlctForm()
+
+    stops = Stop.objects.all()
+    context = {'stop_form': form, 'stops': stops, 'station': station}
+    return render(request, 'nta/nta.html', context)
