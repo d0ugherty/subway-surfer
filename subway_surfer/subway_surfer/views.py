@@ -8,9 +8,15 @@ from .utils import validate_station_name
 from .consumer import Consumer
 from django.shortcuts import redirect
 
+
+
 def home(request):
+    return render(request, 'home.html')
+
+def train_info(request, template_name='info_board/arrivals.html'):
+    # default
     station = "30th Street Station"
-    print(request.method)
+    #print(request.method)
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
         if form.is_valid():
@@ -22,24 +28,8 @@ def home(request):
         form = StationSlctForm()
 
     stops = Stop.objects.all()
-    context = {'form': form, 'stops': stops, 'station': station}
-
-    return render(request, 'home.html', context)
-
-
-def select_stop(request):
-    if request.method == 'POST':
-        form = StationSlctForm(request.POST)
-        if form.is_valid():
-            selected_stop = form.cleaned_data['stop_choice']
-            stop_name = validate_station_name(selected_stop)
-            return redirect('load_arrivals', stop_name=stop_name)
-    else:
-        form = StationSlctForm()
-    stops = Stop.objects.all()
-    return render(request, 'info_board/arrivals.html', {
-        'form': form, 
-        'stops': stops})
+    context = {'stop_form': form, 'stops': stops, 'station': station}
+    return render(request, template_name, context)
 
 """
 Render the Arrivals and Departures Table
@@ -170,18 +160,4 @@ def get_fare(request, origin, destination):
     return request.session['fare_price']
     
 def next_to_arrive(request):
-    station = '30th Street Station'
-    if request.method == 'POST':
-        stn_form = StationSlctForm(request.POST)
-        if stn_form.is_valid():
-            selected_stop = stn_form.cleaned_data['stop_choice']
-            station = validate_station_name(selected_stop)
-    else:
-        stn_form = StationSlctForm()
-    stops = Stop.objects.all()
-
-    return render(request, 'nta/nta.html', {
-        'stop_form': stn_form, 
-        'stops': stops,
-        'stop_name': station
-        })
+    select_stop(request, template_name='nta/nta.html')

@@ -21,6 +21,7 @@ from subway_surfer import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('train_info/', views.train_info, name='train_info'),
     path('arrivals/<str:station>/',views.load_arrivals, name='load_arrivals'),
     path('update_arrivals_table/<str:table_id>/', views.update_arrivals_table, name='update_arrivals_table'),
     path('fare_calculator/', views.fare_calculator, name='fare_calculator'),
