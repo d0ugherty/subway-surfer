@@ -53,7 +53,7 @@ class Consumer:
         if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
             if train_info not in arrivals_by_line['Fox Chase Line']:
                 arrivals_by_line['Fox Chase Line'].append(train_info)
-       # if train_info['destination'] == 'Airport' and train_info['']
+       
         if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
             if train_info not in arrivals_by_line['Warminster Line']:
                 arrivals_by_line['Warminster Line'].append(train_info)
@@ -120,7 +120,6 @@ class Consumer:
         try:
             trip = Trip.objects.filter(block_id=train_info['train_id']).latest('block_id')
         except Trip.DoesNotExist:
-            print(f'Trip {train_info["train_id"]} does not exist.')
-            return None
+            return train_info['destination']
         return trip.trip_headsign
 
