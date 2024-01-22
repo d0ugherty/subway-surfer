@@ -4,7 +4,7 @@ from .models import *
 
 class StationSlctForm(forms.Form):
     stop_choice = forms.ModelChoiceField(queryset=Stop.objects.all(), 
-                                         label = "See Arrivals & Departures At: ",
+                                         label = "Select Station ",
                                          to_field_name='stop_name',
                                          required=False)
 

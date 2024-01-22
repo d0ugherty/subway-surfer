@@ -167,7 +167,7 @@ def get_fare(request, origin, destination):
 
 """
     Emulates an information board you'd find on a station platform
-
+    - i should display information by track number
     - What train is next?
     - Distance or time to next train
     - Destination

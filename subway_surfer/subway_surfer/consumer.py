@@ -19,6 +19,18 @@ class Consumer:
             else:
                 return JsonResponse({'error': 'API request failed'}, status=500)
             
+    def get_next_to_arrive(station):
+            results = 30
+            api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}'
+            response = requests.get(api_url)
+            context = {}
+            if response.status_code == 200:
+                context['station'] = station
+                context = Consumer._process_arrivals_json(response, context)
+                return context
+            else:
+                return JsonResponse({'error': 'API request failed'}, status=500)
+            
     @staticmethod
     def _process_arrivals_json(response, context):
         all_arrivals = []
