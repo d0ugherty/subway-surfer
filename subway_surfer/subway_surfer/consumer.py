@@ -39,6 +39,7 @@ class Consumer:
                 #print(f'{bcolors.WARNING}{parsed_data}{bcolors.RESET}') 
                 
         for key, value in parsed_data.items():
+            print(f'KEY: {key} , VALUE: {value}')
             if isinstance(value, list) and not value:
                 continue
             Consumer._process_train_data(value, all_arrivals, arrivals_by_line)
