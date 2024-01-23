@@ -176,12 +176,17 @@ def get_fare(request, origin, destination):
 """
 def next_to_arrive(request, station):
   #  station = "30th Street Station"
-    #print(request.method)
+    
+
+    # Get station
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
         if form.is_valid():
             selected_stop = form.cleaned_data['stop_choice']
             stop_name = validate_station_name(selected_stop)
+
+            next_trains = Consumer.arrivals_by_track(stop_name, selected_stop)
+
             return redirect('next_to_arrive', station=stop_name)
     else:
         form = StationSlctForm()

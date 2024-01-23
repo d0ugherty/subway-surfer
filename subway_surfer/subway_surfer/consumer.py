@@ -2,7 +2,7 @@ import requests
 from .bcolors import bcolors
 from django.http import JsonResponse
 from .utils import format_time, clean_string
-from .models import Trip, Route
+from .models import Trip, Route, Stop
 
 
 class Consumer:
@@ -18,28 +18,29 @@ class Consumer:
                 return context
             else:
                 return JsonResponse({'error': 'API request failed'}, status=500)
-            
-    def get_next_to_arrive(station):
-            results = 30
-            api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}'
-            response = requests.get(api_url)
-            context = {}
-            if response.status_code == 200:
-                context['station'] = station
-                context = Consumer._process_arrivals_json(response, context)
-                return context
-            else:
-                return JsonResponse({'error': 'API request failed'}, status=500)
-            
+    
+    def arrivals_by_track(station, stop):
+        # dictionary size = number of tracks
+        num_tracks = stop.num_tracks
+        #initialize
+        track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
+        track_dict = { track: {} for track in track_numbers }
+
+        arrivals = Consumer.get_arrivals(station)
+
+        for arrival in arrivals:
+            for track_number in track_dict:
+                if arrival['track'] == track_number:
+                    pass
+
+
     @staticmethod
     def _process_arrivals_json(response, context):
         all_arrivals = []
         arrivals_by_line = Consumer._initialize_arrivals_by_line()
         parsed_data = response.json()
-                #print(f'{bcolors.WARNING}{parsed_data}{bcolors.RESET}') 
                 
         for key, value in parsed_data.items():
-            print(f'KEY: {key} , VALUE: {value}')
             if isinstance(value, list) and not value:
                 continue
             Consumer._process_train_data(value, all_arrivals, arrivals_by_line)
@@ -74,7 +75,8 @@ class Consumer:
     
     @staticmethod
     def _initialize_arrivals_by_line():
-        return {'Airport Line' : [], 
+        return {
+                'Airport Line' : [], 
                 'Chestnut Hill East Line' : [],
                 'Chestnut Hill West Line' : [],
                 'Lansdale/Doylestown Line': [],
