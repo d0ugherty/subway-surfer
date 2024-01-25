@@ -19,8 +19,6 @@ class Consumer:
                 return JsonResponse({'error': 'API request failed'}, status=500)
     
     def arrivals_by_track(station, stop):
-        # dictionary size = number of tracks
-      #  num_tracks = stop.num_tracks
         #initialize
         track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
         track_dict = { track: {} for track in track_numbers }

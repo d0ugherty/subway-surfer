@@ -12,7 +12,6 @@ class Stop(models.Model):
     stop_lon = models.FloatField()
     zone_id = models.CharField(max_length=10)
     stop_url = models.CharField(max_length=100)
-    num_tracks = models.IntegerField()
 
     def __str__(self):
         return self.stop_name
