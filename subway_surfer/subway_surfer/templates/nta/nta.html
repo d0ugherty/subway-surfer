@@ -29,12 +29,11 @@
     <button type = "submit" value = "Submit"> Submit </button>
 </form> 
 
-
-<table id="tbl_next">
-    {% include 'nta/header.html' %}
-    <tbody>
-    {% if train %}
-        {% include 'nta/table_rows.html' %}
-    {% endif %}
-    </tbody>
-</table>
+<div
+    hx-post="/next_to_arrive/{{ stop_name }}/" 
+    hx-trigger="every 5s" 
+    hx-swap="innerHTML" 
+    hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+    
+        {% include 'nta/tracks.html' with trains_by_track=trains_by_track%}
+</div>

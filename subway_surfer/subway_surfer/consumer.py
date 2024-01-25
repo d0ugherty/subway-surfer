@@ -23,7 +23,8 @@ class Consumer:
         track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
         track_dict = { track: {} for track in track_numbers }
 
-        arrivals = Consumer.get_arrivals(station, results=5)
+        arrivals = Consumer.get_arrivals(station, results=10)
+        print(arrivals.items)
      #   print(f'arrivals by track: {arrivals}')
         for arrival in arrivals['all_arrivals_ctx']:
             arriving_track = arrival['track']
@@ -33,9 +34,6 @@ class Consumer:
                     track_dict[track_number] = arrival
         print(f'arriving on track 2: {track_dict["2"]}')
         return track_dict
-
-            
-
 
     @staticmethod
     def _process_arrivals_json(response, context):

@@ -175,22 +175,22 @@ def get_fare(request, origin, destination):
     - Current time
 """
 def next_to_arrive(request, station):
-  #  station = "30th Street Station"
-    
-
-    # Get station
+    stops = Stop.objects.all()
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
         if form.is_valid():
             selected_stop = form.cleaned_data['stop_choice']
             stop_name = validate_station_name(selected_stop)
 
-            next_trains = Consumer.arrivals_by_track(stop_name, selected_stop)
-
-            return redirect('next_to_arrive', station=stop_name)
+            trains_by_track = Consumer.arrivals_by_track(stop_name, selected_stop)
+            print(trains_by_track)
+            return render(request, 'nta/nta.html', { 'stop_form' : form,
+                                                    'stop_name' : stop_name,
+                                                    'station': station,
+                                                    'trains_by_track': trains_by_track
+                                                    })
     else:
         form = StationSlctForm()
 
-    stops = Stop.objects.all()
     context = {'stop_form': form, 'stops': stops, 'station': station}
     return render(request, 'nta/nta.html', context)
