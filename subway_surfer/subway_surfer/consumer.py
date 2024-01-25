@@ -7,8 +7,7 @@ from .models import Trip, Route, Stop
 
 class Consumer:
         
-    def get_arrivals(station):
-            results = 30
+    def get_arrivals(station, results=30):
             api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}'
             response = requests.get(api_url)
             context = {}
@@ -21,17 +20,23 @@ class Consumer:
     
     def arrivals_by_track(station, stop):
         # dictionary size = number of tracks
-        num_tracks = stop.num_tracks
+      #  num_tracks = stop.num_tracks
         #initialize
         track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
         track_dict = { track: {} for track in track_numbers }
 
-        arrivals = Consumer.get_arrivals(station)
-
-        for arrival in arrivals:
+        arrivals = Consumer.get_arrivals(station, results=5)
+     #   print(f'arrivals by track: {arrivals}')
+        for arrival in arrivals['all_arrivals_ctx']:
+            arriving_track = arrival['track']
             for track_number in track_dict:
-                if arrival['track'] == track_number:
-                    pass
+             #   print(f'track number: {track_number}')
+                if track_number == arriving_track:
+                    track_dict[track_number] = arrival
+        print(f'arriving on track 2: {track_dict["2"]}')
+        return track_dict
+
+            
 
 
     @staticmethod
