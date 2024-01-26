@@ -30,7 +30,7 @@
 </form> 
 
 <div
-    hx-post="/next_to_arrive/{{ stop_name }}/" 
+    hx-post="/update_next_to_arrive/" 
     hx-trigger="every 5s" 
     hx-swap="innerHTML" 
     hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>

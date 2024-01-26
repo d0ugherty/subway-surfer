@@ -18,13 +18,14 @@ class Consumer:
             else:
                 return JsonResponse({'error': 'API request failed'}, status=500)
     
-    def arrivals_by_track(station, stop):
+    def arrivals_by_track(station):
         #initialize
+        print(f'STATION: {station}')
         track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
         track_dict = { track: {} for track in track_numbers }
 
         arrivals = Consumer.get_arrivals(station, results=10)
-        print(arrivals.items)
+        print(arrivals)
      #   print(f'arrivals by track: {arrivals}')
         for arrival in arrivals['all_arrivals_ctx']:
             arriving_track = arrival['track']
