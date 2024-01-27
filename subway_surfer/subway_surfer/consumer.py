@@ -28,12 +28,24 @@ class Consumer:
         arrivals = Consumer.get_arrivals(station, results=10)
         for track_number in track_dict:
             for arrival in arrivals['all_arrivals_ctx']:
-                # get only the next arriving train by short circuiting
                 arriving_track = get_digits(arrival['track'])
-                print(arriving_track)
+                # get only the next arriving train by short circuiting
                 if track_dict[track_number] == {} and track_number == arriving_track:
+                    arrival['eta'] = Consumer.countdown(arrival)
                     track_dict[track_number] = arrival
+                    print(Consumer.countdown(arrival))
         return track_dict
+    
+    def countdown(train_info):
+        sched_time = datetime.strptime(train_info['sched_time'], '%Y-%m-%d %H:%M:%S.%f')
+        if train_info['status'] != 'On Time':
+            min_late = int(get_digits(train_info['status'])) 
+        else:
+            min_late = 0
+        
+        diff = sched_time - datetime.now() 
+
+        print(int(diff.total_seconds()/60) + min_late)
 
     @staticmethod
     def _process_arrivals_json(response, context):
@@ -129,19 +141,6 @@ class Consumer:
 
         arrivals_by_line[route].append(train_info)
         arrivals_by_line = Consumer._handle_thru_routing(train_info, arrivals_by_line)
-
-    def eta(train_info):
-        sched_time = datetime.strptime(train_info['sched_time'], '%Y-%m-%d %H:%M:%S.%f')
-        if train_info['status'] != 'On Time':
-            min_late = int(get_digits(train_info['status'])) 
-        else:
-            min_late = 0
-        delta = datetime.now() - sched_time
-        print(delta)
-        sec = delta.total_seconds()
-        mins = min_late + (sec/60)
-
-        print(mins)
 
     @staticmethod
     def _get_headsign(train_info):
