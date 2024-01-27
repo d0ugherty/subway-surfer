@@ -38,3 +38,7 @@ def clean_string(s):
 
 def parse_time(time_str):
     return datetime.strptime(time_str, '%I:%M %p')
+
+def now():
+    now = str(datetime.now())
+    return datetime.strptime(now,"%H:%M:%S")
