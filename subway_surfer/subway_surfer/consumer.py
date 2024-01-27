@@ -1,7 +1,7 @@
 import requests
 from .bcolors import bcolors
 from django.http import JsonResponse
-from .utils import format_time, clean_string, parse_time,now
+from .utils import format_time, clean_string, get_digits
 from datetime import datetime, timedelta
 from .models import Trip, Route, Stop
 
@@ -29,7 +29,8 @@ class Consumer:
         for track_number in track_dict:
             for arrival in arrivals['all_arrivals_ctx']:
                 # get only the next arriving train by short circuiting
-                arriving_track = arrival['track'].strip()[0]
+                arriving_track = get_digits(arrival['track'])
+                print(arriving_track)
                 if track_dict[track_number] == {} and track_number == arriving_track:
                     track_dict[track_number] = arrival
         return track_dict
@@ -132,7 +133,7 @@ class Consumer:
     def eta(train_info):
         sched_time = datetime.strptime(train_info['sched_time'], '%Y-%m-%d %H:%M:%S.%f')
         if train_info['status'] != 'On Time':
-            min_late = int(''.join(filter(str.isdigit, train_info['status']))) 
+            min_late = int(get_digits(train_info['status'])) 
         else:
             min_late = 0
         delta = datetime.now() - sched_time
