@@ -22,15 +22,15 @@ class Consumer:
         #initialize
         print(f'STATION: {station}')
         track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
-        track_dict = { track: {} for track in track_numbers }
+        track_dict = { track: {} for track in track_numbers}
 
         arrivals = Consumer.get_arrivals(station, results=10)
         for track_number in track_dict:
             for arrival in arrivals['all_arrivals_ctx']:
                 # get only the next arriving train by short circuiting
-                if track_dict[track_number] == {} and track_number == arrival['track'].strip():
+                arriving_track = arrival['track'].strip()[0]
+                if track_dict[track_number] == {} and track_number == arriving_track:
                     track_dict[track_number] = arrival
-                    
         return track_dict
 
     @staticmethod
