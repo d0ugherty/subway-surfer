@@ -25,25 +25,12 @@ class Consumer:
         track_dict = { track: {} for track in track_numbers }
 
         arrivals = Consumer.get_arrivals(station, results=10)
-     #   print(arrivals)
-     #   print(f'arrivals by track: {arrivals}')
-        #for arrival in arrivals['all_arrivals_ctx']:
-         #   arriving_track = arrival['track'].strip()
-          #  print(f'track number: {track_number}')
-          #  for track_number in track_dict:
-                
-           #     if track_number == arriving_track:
-            #        track_dict[track_number] = arrival
-        #print(f'arriving on track 2: {track_dict["2"]}')
         for track_number in track_dict:
             for arrival in arrivals['all_arrivals_ctx']:
-                #print(arrival['track'].strip())
-                if track_number == arrival['track'].strip():
+                # get only the next arriving train by short circuiting
+                if track_dict[track_number] == {} and track_number == arrival['track'].strip():
                     track_dict[track_number] = arrival
-    
-       # for track, trains in track_dict.items():
-        #    track_dict[track] = sorted(trains, key=lambda x: parse_time(x['depart_time']))
-
+        print(track_dict)
         return track_dict
 
     @staticmethod
