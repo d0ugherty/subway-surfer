@@ -1,7 +1,8 @@
 import requests
 from .bcolors import bcolors
 from django.http import JsonResponse
-from .utils import format_time, clean_string, parse_time
+from .utils import format_time, clean_string, parse_time,now
+from datetime import datetime, timedelta
 from .models import Trip, Route, Stop
 
 
@@ -28,6 +29,7 @@ class Consumer:
         for track_number in track_dict:
             for arrival in arrivals['all_arrivals_ctx']:
                 # get only the next arriving train by short circuiting
+                Consumer.eta(arrival)
                 if track_dict[track_number] == {} and track_number == arrival['track'].strip():
                     track_dict[track_number] = arrival
                     
@@ -127,6 +129,19 @@ class Consumer:
 
         arrivals_by_line[route].append(train_info)
         arrivals_by_line = Consumer._handle_thru_routing(train_info, arrivals_by_line)
+
+    def eta(train_info):
+        sched_time = datetime.strptime(train_info['sched_time'], '%Y-%m-%d %H:%M:%S.%f')
+        if train_info['status'] != 'On Time':
+            min_late = int(''.join(filter(str.isdigit, train_info['status']))) 
+        else:
+            min_late = 0
+        delta = datetime.now() - sched_time
+        print(delta)
+        sec = delta.total_seconds()
+        mins = min_late + (sec/60)
+
+        print(mins)
 
     @staticmethod
     def _get_headsign(train_info):

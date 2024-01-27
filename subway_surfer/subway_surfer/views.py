@@ -183,7 +183,6 @@ def next_to_arrive(request, station):
             stop_name = validate_station_name(selected_stop)
 
             trains_by_track = Consumer.arrivals_by_track(stop_name)
-            print(trains_by_track)
             return render(request, 'nta/nta.html', { 'stop_form' : form,
                                                     'station': stop_name,
                                                     'trains_by_track': trains_by_track
@@ -196,6 +195,5 @@ def next_to_arrive(request, station):
 
 def update_next_to_arrive(request, station):
     station = request.POST.get('station', "30th Street Station") 
-    print(f'post station : {station}')
     trains_by_track = Consumer.arrivals_by_track(station)
     return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track})
