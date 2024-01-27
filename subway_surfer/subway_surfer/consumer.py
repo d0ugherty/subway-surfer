@@ -25,15 +25,21 @@ class Consumer:
         track_dict = { track: {} for track in track_numbers }
 
         arrivals = Consumer.get_arrivals(station, results=10)
-        print(arrivals)
+      #  print(arrivals)
      #   print(f'arrivals by track: {arrivals}')
-        for arrival in arrivals['all_arrivals_ctx']:
-            arriving_track = arrival['track']
-            for track_number in track_dict:
-             #   print(f'track number: {track_number}')
-                if track_number == arriving_track:
+        #for arrival in arrivals['all_arrivals_ctx']:
+         #   arriving_track = arrival['track'].strip()
+          #  print(f'track number: {track_number}')
+          #  for track_number in track_dict:
+                
+           #     if track_number == arriving_track:
+            #        track_dict[track_number] = arrival
+        #print(f'arriving on track 2: {track_dict["2"]}')
+        for track_number in track_dict:
+            for arrival in arrivals['all_arrivals_ctx']:
+                #print(arrival['track'].strip())
+                if track_number == arrival['track'].strip():
                     track_dict[track_number] = arrival
-        print(f'arriving on track 2: {track_dict["2"]}')
         return track_dict
 
     @staticmethod
@@ -48,7 +54,7 @@ class Consumer:
             Consumer._process_train_data(value, all_arrivals, arrivals_by_line)
 
         context = {
-            'all_arrivals_ctx' : all_arrivals[:10],
+            'all_arrivals_ctx' : all_arrivals,
             'arrivals_by_line_ctx' : arrivals_by_line,
             'optText' : 'Train Information'
         }
@@ -90,8 +96,7 @@ class Consumer:
                 'Trenton Line' : [],
                 'Warminster Line' : [],
                 'Wilmington/Newark Line' : [],
-                'West Trenton Line' : [],
-                'Express' : []
+                'West Trenton Line' : []
             }
 
     @staticmethod
