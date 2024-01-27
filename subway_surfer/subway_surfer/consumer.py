@@ -30,7 +30,7 @@ class Consumer:
                 # get only the next arriving train by short circuiting
                 if track_dict[track_number] == {} and track_number == arrival['track'].strip():
                     track_dict[track_number] = arrival
-        print(track_dict)
+                    
         return track_dict
 
     @staticmethod
