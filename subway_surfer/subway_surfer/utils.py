@@ -35,4 +35,6 @@ def clean_string(s):
         return s.strip().rstrip('.')
     else:
         return None
-    
+
+def parse_time(time_str):
+    return datetime.strptime(time_str, '%I:%M %p')

@@ -1,7 +1,7 @@
 import requests
 from .bcolors import bcolors
 from django.http import JsonResponse
-from .utils import format_time, clean_string
+from .utils import format_time, clean_string, parse_time
 from .models import Trip, Route, Stop
 
 
@@ -25,7 +25,7 @@ class Consumer:
         track_dict = { track: {} for track in track_numbers }
 
         arrivals = Consumer.get_arrivals(station, results=10)
-      #  print(arrivals)
+     #   print(arrivals)
      #   print(f'arrivals by track: {arrivals}')
         #for arrival in arrivals['all_arrivals_ctx']:
          #   arriving_track = arrival['track'].strip()
@@ -40,6 +40,10 @@ class Consumer:
                 #print(arrival['track'].strip())
                 if track_number == arrival['track'].strip():
                     track_dict[track_number] = arrival
+    
+       # for track, trains in track_dict.items():
+        #    track_dict[track] = sorted(trains, key=lambda x: parse_time(x['depart_time']))
+
         return track_dict
 
     @staticmethod
