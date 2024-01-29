@@ -33,19 +33,20 @@ class Consumer:
                 if track_dict[track_number] == {} and track_number == arriving_track:
                     arrival['eta'] = Consumer.countdown(arrival)
                     track_dict[track_number] = arrival
-                    print(Consumer.countdown(arrival))
+                   # print(Consumer.countdown(arrival))
         return track_dict
     
+    """
+        Calculates the ETA for an arriving train
+    """
     def countdown(train_info):
         sched_time = datetime.strptime(train_info['sched_time'], '%Y-%m-%d %H:%M:%S.%f')
         if train_info['status'] != 'On Time':
             min_late = int(get_digits(train_info['status'])) 
         else:
             min_late = 0
-        
         diff = sched_time - datetime.now() 
-
-        print(int(diff.total_seconds()/60) + min_late)
+        return (int(diff.total_seconds()/60) + min_late)
 
     @staticmethod
     def _process_arrivals_json(response, context):
