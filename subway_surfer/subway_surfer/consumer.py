@@ -8,7 +8,7 @@ from .models import Trip, Route, Stop
 
 class Consumer:
         
-    def get_arrivals(station, results=30):
+    def get_arrivals(station, results=20):
             api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}'
             response = requests.get(api_url)
             context = {}
@@ -55,6 +55,7 @@ class Consumer:
         parsed_data = response.json()
                 
         for key, value in parsed_data.items():
+            print(f'key: {key}')
             if isinstance(value, list) and not value:
                 continue
             Consumer._process_train_data(value, all_arrivals, arrivals_by_line)

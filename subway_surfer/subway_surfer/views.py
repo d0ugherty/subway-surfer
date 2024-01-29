@@ -43,7 +43,7 @@ def load_arrivals(request, station):
     arrival_context = Consumer.get_arrivals(station)
     form = StationSlctForm() 
     return render(request, 'info_board/arrivals.html', {
-        'all_arrivals_ctx': arrival_context['all_arrivals_ctx'],
+        'all_arrivals_ctx': arrival_context['all_arrivals_ctx'][:10],
         'air_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Airport Line'],
         'che_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill East Line'],
         'chw_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill West Line'],
@@ -70,7 +70,7 @@ def update_arrivals_table(request, table_id):
     all_arrivals = False # controls which columns appear in the table header
     match table_id:
         case 'tbl_all_arrivals':
-            data = arrival_context['all_arrivals_ctx']
+            data = arrival_context['all_arrivals_ctx'][:10]
             all_arrivals = True
         case 'tbl_air_arrivals':
             data = arrival_context['arrivals_by_line_ctx']['Airport Line'] 
