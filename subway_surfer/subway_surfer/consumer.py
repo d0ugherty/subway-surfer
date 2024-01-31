@@ -12,19 +12,19 @@ class Consumer:
             results = results / 2
             api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=N'
             response = requests.get(api_url)
-            context = {}
+            context = {'station': station, 'N': None, 'S': None}
             if response.status_code == 200:
-                context['station'] = station
-                context = Consumer._process_arrivals_json(response, context)
+              #  context['station'] = station
+                context['N'] = Consumer._process_arrivals_json(response, context)
         
             api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=S'
             response = requests.get(api_url)
             if response.status_code == 200:
-                context['station'] = station
-                context = context | Consumer._process_arrivals_json(response, context)
-                return context
+              #  context['station'] = station
+                context['S'] = context | Consumer._process_arrivals_json(response, context)
             else:
                 return JsonResponse({'error': 'API request failed'}, status=500)
+            return context
     
     def arrivals_by_track(station):
         #initialize

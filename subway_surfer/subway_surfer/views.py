@@ -42,21 +42,64 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
 def load_arrivals(request, station):
     arrival_context = Consumer.get_arrivals(station)
     form = StationSlctForm() 
+
+    all_data = arrival_context['N']['all_arrivals_ctx'][:5]
+    all_data  += arrival_context['S']['all_arrivals_ctx'][:5]
+
+    air_data = arrival_context['N']['arrivals_by_line_ctx']['Airport Line'] 
+    air_data += arrival_context['S']['arrivals_by_line_ctx']['Airport Line']
+
+    che_data = arrival_context['N']['arrivals_by_line_ctx']['Chestnut Hill East Line']
+    che_data += arrival_context['S']['arrivals_by_line_ctx']['Chestnut Hill East Line']
+
+    chw_data = arrival_context['N']['arrivals_by_line_ctx']['Chestnut Hill West Line']
+    chw_data += arrival_context['S']['arrivals_by_line_ctx']['Chestnut Hill West Line']
+
+    lan_data = arrival_context['N']['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
+    lan_data += arrival_context['S']['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
+
+    med_data = arrival_context['N']['arrivals_by_line_ctx']['Media/Wawa Line']
+    med_data += arrival_context['S']['arrivals_by_line_ctx']['Media/Wawa Line']
+
+    fox_data = arrival_context['N']['arrivals_by_line_ctx']['Fox Chase Line']
+    fox_data += arrival_context['S']['arrivals_by_line_ctx']['Fox Chase Line']
+
+    nor_data = arrival_context['N']['arrivals_by_line_ctx']['Manayunk/Norristown Line']
+    nor_data += arrival_context['S']['arrivals_by_line_ctx']['Manayunk/Norristown Line']
+
+    pao_data = arrival_context['N']['arrivals_by_line_ctx']['Paoli/Thorndale Line']
+    pao_data += arrival_context['S']['arrivals_by_line_ctx']['Paoli/Thorndale Line']
+
+    cyn_data = arrival_context['N']['arrivals_by_line_ctx']['Cynwyd Line']
+    cyn_data += arrival_context['S']['arrivals_by_line_ctx']['Cynwyd Line']
+
+    tre_data = arrival_context['N']['arrivals_by_line_ctx']['Trenton Line']
+    tre_data += arrival_context['S']['arrivals_by_line_ctx']['Trenton Line']
+
+    war_data = arrival_context['N']['arrivals_by_line_ctx']['Warminster Line']
+    war_data += arrival_context['S']['arrivals_by_line_ctx']['Warminster Line']
+
+    wil_data = arrival_context['N']['arrivals_by_line_ctx']['Wilmington/Newark Line']
+    wil_data += arrival_context['S']['arrivals_by_line_ctx']['Wilmington/Newark Line']
+
+    wtr_data = arrival_context['N']['arrivals_by_line_ctx']['West Trenton Line']
+    wtr_data += arrival_context['S']['arrivals_by_line_ctx']['West Trenton Line']
+
     return render(request, 'info_board/arrivals.html', {
-        'all_arrivals_ctx': arrival_context['all_arrivals_ctx'][:10],
-        'air_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Airport Line'],
-        'che_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill East Line'],
-        'chw_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Chestnut Hill West Line'],
-        'lan_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Lansdale/Doylestown Line'],
-        'med_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Media/Wawa Line'],
-        'fox_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Fox Chase Line'],
-        'nor_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Manayunk/Norristown Line'],
-        'pao_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Paoli/Thorndale Line'],
-        'cyn_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Cynwyd Line'],
-        'tre_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Trenton Line'],
-        'war_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Warminster Line'],
-        'wil_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['Wilmington/Newark Line'],
-        'wtr_arrivals_ctx': arrival_context['arrivals_by_line_ctx']['West Trenton Line'],
+        'all_arrivals_ctx': all_data,
+        'air_arrivals_ctx': air_data,
+        'che_arrivals_ctx': che_data,
+        'chw_arrivals_ctx': chw_data,
+        'lan_arrivals_ctx': lan_data,
+        'med_arrivals_ctx': med_data,
+        'fox_arrivals_ctx': fox_data,
+        'nor_arrivals_ctx': nor_data,
+        'pao_arrivals_ctx': pao_data,
+        'cyn_arrivals_ctx': cyn_data,
+        'tre_arrivals_ctx': tre_data,
+        'war_arrivals_ctx': war_data,
+        'wil_arrivals_ctx': wil_data,
+        'wtr_arrivals_ctx': wtr_data,
         'station': station,
         'form': form 
     })
@@ -70,34 +113,60 @@ def update_arrivals_table(request, table_id):
     all_arrivals = False # controls which columns appear in the table header
     match table_id:
         case 'tbl_all_arrivals':
-            data = arrival_context['all_arrivals_ctx'][:10]
+            data = arrival_context['N']['all_arrivals_ctx'][:5]
+            data  += arrival_context['S']['all_arrivals_ctx'][:5]
             all_arrivals = True
         case 'tbl_air_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Airport Line'] 
+            data = arrival_context['N']['arrivals_by_line_ctx']['Airport Line'] 
+            data += arrival_context['S']['arrivals_by_line_ctx']['Airport Line'] 
+
         case 'tbl_che_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Chestnut Hill East Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Chestnut Hill East Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Chestnut Hill East Line']
+            
         case 'tbl_chw_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Chestnut Hill West Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Chestnut Hill West Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Chestnut Hill West Line']
+
         case 'tbl_lan_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
+
         case 'tbl_med_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Media/Wawa Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Media/Wawa Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Media/Wawa Line']
+        
         case 'tbl_fox_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Fox Chase Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Fox Chase Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Fox Chase Line']
+
         case 'tbl_nor_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Manayunk/Norristown Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Manayunk/Norristown Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Manayunk/Norristown Line']
+
         case 'tbl_pao_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Paoli/Thorndale Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Paoli/Thorndale Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Paoli/Thorndale Line']
+        
         case 'tbl_cyn_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Cynwyd Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Cynwyd Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Cynwyd Line']
+        
         case 'tbl_tre_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Trenton Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Trenton Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Trenton Line']
+        
         case 'tbl_war_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Warminster Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Warminster Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Warminster Line']
+
         case 'tbl_wil_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['Wilmington/Newark Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['Wilmington/Newark Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['Wilmington/Newark Line']
+
         case 'tbl_wtr_arrivals':
-            data = arrival_context['arrivals_by_line_ctx']['West Trenton Line']
+            data = arrival_context['N']['arrivals_by_line_ctx']['West Trenton Line']
+            data += arrival_context['S']['arrivals_by_line_ctx']['West Trenton Line']
     return render(request, 'info_board/table_rows.html', {'arrivals': data, 'all_arrivals': all_arrivals})
 
 
