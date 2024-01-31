@@ -8,22 +8,32 @@ from .models import Trip, Route, Stop
 
 class Consumer:
         
-    def get_arrivals(station, results=20):
-            results = results / 2
-            api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=N'
-            response = requests.get(api_url)
-            context = {'station': station, 'N': None, 'S': None}
-            if response.status_code == 200:
-              #  context['station'] = station
-                context['N'] = Consumer._process_arrivals_json(response, context)
-        
-            api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=S'
-            response = requests.get(api_url)
-            if response.status_code == 200:
-              #  context['station'] = station
-                context['S'] = context | Consumer._process_arrivals_json(response, context)
+    def get_arrivals(station, results=20, by_track=False):
+            if by_track:
+                api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}'
+                response = requests.get(api_url)
+                context = { 'station' : station }
+                if response.status_code == 200:
+                    context = Consumer._process_arrivals_json(response,context)
+                    return context
+                else:
+                    return JsonResponse({'error': 'API request failed'}, status=500)
             else:
-                return JsonResponse({'error': 'API request failed'}, status=500)
+                results = results / 2
+                api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=N'
+                response = requests.get(api_url)
+                context = {'station': station, 'N': None, 'S': None}
+                if response.status_code == 200:
+                #  context['station'] = station
+                    context['N'] = Consumer._process_arrivals_json(response, context)
+            
+                api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=S'
+                response = requests.get(api_url)
+                if response.status_code == 200:
+                #  context['station'] = station
+                    context['S'] = context | Consumer._process_arrivals_json(response, context)
+                else:
+                    return JsonResponse({'error': 'API request failed'}, status=500)
             return context
     
     def arrivals_by_track(station):
@@ -32,7 +42,7 @@ class Consumer:
         track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
         track_dict = { track: {} for track in track_numbers}
 
-        arrivals = Consumer.get_arrivals(station, results=10)
+        arrivals = Consumer.get_arrivals(station, results=10, by_track=True)
         for track_number in track_dict:
             for arrival in arrivals['all_arrivals_ctx']:
                 arriving_track = get_digits(arrival['track'])
@@ -40,7 +50,7 @@ class Consumer:
                 if track_dict[track_number] == {} and track_number == arriving_track:
                     arrival['eta'] = Consumer.countdown(arrival)
                     track_dict[track_number] = arrival
-                   # print(Consumer.countdown(arrival))
+                # print(Consumer.countdown(arrival))
         return track_dict
     
     """
