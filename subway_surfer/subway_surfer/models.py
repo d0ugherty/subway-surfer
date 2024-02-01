@@ -39,7 +39,7 @@ class Route(models.Model):
     route_url = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.route_long_name
+        return str(self.route_long_name)
     
 """These draw the routes onto the map"""
 class Shape(models.Model):

@@ -40,70 +40,23 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
     Render the Arrivals and Departures Table
 """
 def load_arrivals(request, station):
-    arrival_context = Consumer.get_arrivals(station)
+    arrival_context = Consumer.get_arrivals(station,agency='SEPTA')
     form = StationSlctForm() 
+    septa = Agency.objects.filter(agency_id='SEPTA').first()
+    septa_routes = Route.objects.filter(agency_id=septa.id)
+    
+    arrivals_data = {'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5]}
 
-    all_data = arrival_context['N']['all_arrivals_ctx'][:5]
-    all_data  += arrival_context['S']['all_arrivals_ctx'][:5]
-
-    air_data = arrival_context['N']['arrivals_by_line_ctx']['Airport Line'] 
-    air_data += arrival_context['S']['arrivals_by_line_ctx']['Airport Line']
-
-    che_data = arrival_context['N']['arrivals_by_line_ctx']['Chestnut Hill East Line']
-    che_data += arrival_context['S']['arrivals_by_line_ctx']['Chestnut Hill East Line']
-
-    chw_data = arrival_context['N']['arrivals_by_line_ctx']['Chestnut Hill West Line']
-    chw_data += arrival_context['S']['arrivals_by_line_ctx']['Chestnut Hill West Line']
-
-    lan_data = arrival_context['N']['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
-    lan_data += arrival_context['S']['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
-
-    med_data = arrival_context['N']['arrivals_by_line_ctx']['Media/Wawa Line']
-    med_data += arrival_context['S']['arrivals_by_line_ctx']['Media/Wawa Line']
-
-    fox_data = arrival_context['N']['arrivals_by_line_ctx']['Fox Chase Line']
-    fox_data += arrival_context['S']['arrivals_by_line_ctx']['Fox Chase Line']
-
-    nor_data = arrival_context['N']['arrivals_by_line_ctx']['Manayunk/Norristown Line']
-    nor_data += arrival_context['S']['arrivals_by_line_ctx']['Manayunk/Norristown Line']
-
-    pao_data = arrival_context['N']['arrivals_by_line_ctx']['Paoli/Thorndale Line']
-    pao_data += arrival_context['S']['arrivals_by_line_ctx']['Paoli/Thorndale Line']
-
-    cyn_data = arrival_context['N']['arrivals_by_line_ctx']['Cynwyd Line']
-    cyn_data += arrival_context['S']['arrivals_by_line_ctx']['Cynwyd Line']
-
-    tre_data = arrival_context['N']['arrivals_by_line_ctx']['Trenton Line']
-    tre_data += arrival_context['S']['arrivals_by_line_ctx']['Trenton Line']
-
-    war_data = arrival_context['N']['arrivals_by_line_ctx']['Warminster Line']
-    war_data += arrival_context['S']['arrivals_by_line_ctx']['Warminster Line']
-
-    wil_data = arrival_context['N']['arrivals_by_line_ctx']['Wilmington/Newark Line']
-    wil_data += arrival_context['S']['arrivals_by_line_ctx']['Wilmington/Newark Line']
-
-    wtr_data = arrival_context['N']['arrivals_by_line_ctx']['West Trenton Line']
-    wtr_data += arrival_context['S']['arrivals_by_line_ctx']['West Trenton Line']
+    for route in septa_routes:
+        north_data = arrival_context['N']['arrivals_by_line_ctx'].get(route.route_long_name, [])
+        south_data = arrival_context['S']['arrivals_by_line_ctx'].get(route.route_long_name, [])
+        arrivals_data[f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'] = north_data + south_data
 
     return render(request, 'info_board/arrivals.html', {
-        'all_arrivals_ctx': all_data,
-        'air_arrivals_ctx': air_data,
-        'che_arrivals_ctx': che_data,
-        'chw_arrivals_ctx': chw_data,
-        'lan_arrivals_ctx': lan_data,
-        'med_arrivals_ctx': med_data,
-        'fox_arrivals_ctx': fox_data,
-        'nor_arrivals_ctx': nor_data,
-        'pao_arrivals_ctx': pao_data,
-        'cyn_arrivals_ctx': cyn_data,
-        'tre_arrivals_ctx': tre_data,
-        'war_arrivals_ctx': war_data,
-        'wil_arrivals_ctx': wil_data,
-        'wtr_arrivals_ctx': wtr_data,
+        **arrivals_data, 
         'station': station,
-        'form': form 
+        'form': form
     })
-
 
 """Update Arrivals"""
 def update_arrivals_table(request, table_id):
