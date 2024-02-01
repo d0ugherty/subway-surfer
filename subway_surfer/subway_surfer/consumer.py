@@ -51,7 +51,7 @@ class Consumer:
                 if track_dict[track_number] == {} and track_number == arriving_track:
                     arrival['eta'] = Consumer.countdown(arrival)
                     track_dict[track_number] = arrival
-                   # print(Consumer.countdown(arrival))
+                # print(Consumer.countdown(arrival))
         return track_dict
     
     """
