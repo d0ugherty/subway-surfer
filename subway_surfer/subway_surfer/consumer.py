@@ -8,8 +8,18 @@ from .models import Trip, Route, Stop, Agency
 
 class Consumer:
         
-    def get_arrivals(station, results=20,agency='SEPTA'):
-            if agency == 'SEPTA':
+    def get_arrivals(station, results=20,agency='SEPTA', by_track=False):
+            if by_track:
+                if agency == 'SEPTA':
+                    api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}'
+                    response = requests.get(api_url)
+                    context = { 'station' : station }
+                    if response.status_code == 200:
+                        context = Consumer._process_arrivals_json(response,context, agency)
+                        return context
+                else:
+                    return JsonResponse({'error': 'API request failed'}, status=500)
+            elif agency == 'SEPTA':
                 results = results / 2
                 api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=N'
                 response = requests.get(api_url)
@@ -33,7 +43,7 @@ class Consumer:
         track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
         track_dict = { track: {} for track in track_numbers}
 
-        arrivals = Consumer.get_arrivals(station, results=10)
+        arrivals = Consumer.get_arrivals(station, results=10, by_track=True)
         for track_number in track_dict:
             for arrival in arrivals['all_arrivals_ctx']:
                 arriving_track = get_digits(arrival['track'])
