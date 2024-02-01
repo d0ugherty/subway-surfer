@@ -16,13 +16,13 @@ class Consumer:
                 context = {'station': station, 'N': None, 'S': None}
                 if response.status_code == 200:
                 #  context['station'] = station
-                    context['N'] = Consumer._process_arrivals_json(response, context)
+                    context['N'] = Consumer._process_arrivals_json(response, context, agency)
             
                 api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=S'
                 response = requests.get(api_url)
                 if response.status_code == 200:
                 #  context['station'] = station
-                    context['S'] = context | Consumer._process_arrivals_json(response, context)
+                    context['S'] = context | Consumer._process_arrivals_json(response, context, agency)
                 else:
                     return JsonResponse({'error': 'API request failed'}, status=500)
             return context
@@ -57,9 +57,9 @@ class Consumer:
         return (int(diff.total_seconds()/60) + min_late)
 
     @staticmethod
-    def _process_arrivals_json(response, context):
+    def _process_arrivals_json(response, context, agency):
         all_arrivals = []
-        arrivals_by_line = Consumer._initialize_arrivals_by_line('SEPTA')
+        arrivals_by_line = Consumer._initialize_arrivals_by_line(agency)
         parsed_data = response.json()
                 
         for key, value in parsed_data.items():
