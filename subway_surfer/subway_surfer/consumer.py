@@ -3,27 +3,28 @@ from .bcolors import bcolors
 from django.http import JsonResponse
 from .utils import format_time, clean_string, get_digits
 from datetime import datetime, timedelta
-from .models import Trip, Route, Stop
+from .models import Trip, Route, Stop, Agency
 
 
 class Consumer:
         
-    def get_arrivals(station, results=20):
-            results = results / 2
-            api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=N'
-            response = requests.get(api_url)
-            context = {'station': station, 'N': None, 'S': None}
-            if response.status_code == 200:
-              #  context['station'] = station
-                context['N'] = Consumer._process_arrivals_json(response, context)
-        
-            api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=S'
-            response = requests.get(api_url)
-            if response.status_code == 200:
-              #  context['station'] = station
-                context['S'] = context | Consumer._process_arrivals_json(response, context)
-            else:
-                return JsonResponse({'error': 'API request failed'}, status=500)
+    def get_arrivals(station, results=20,agency='SEPTA'):
+            if agency == 'SEPTA':
+                results = results / 2
+                api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=N'
+                response = requests.get(api_url)
+                context = {'station': station, 'N': None, 'S': None}
+                if response.status_code == 200:
+                #  context['station'] = station
+                    context['N'] = Consumer._process_arrivals_json(response, context)
+            
+                api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=S'
+                response = requests.get(api_url)
+                if response.status_code == 200:
+                #  context['station'] = station
+                    context['S'] = context | Consumer._process_arrivals_json(response, context)
+                else:
+                    return JsonResponse({'error': 'API request failed'}, status=500)
             return context
     
     def arrivals_by_track(station):
@@ -58,7 +59,7 @@ class Consumer:
     @staticmethod
     def _process_arrivals_json(response, context):
         all_arrivals = []
-        arrivals_by_line = Consumer._initialize_arrivals_by_line()
+        arrivals_by_line = Consumer._initialize_arrivals_by_line('SEPTA')
         parsed_data = response.json()
                 
         for key, value in parsed_data.items():
@@ -84,6 +85,10 @@ class Consumer:
         trip_route = trip.route.route_short_name
         return trip_route
     
+    """
+        Trains from the Airport are typically terminate at Warminster or Fox Chase 
+        via Center City
+    """
     @staticmethod
     def _handle_thru_routing(train_info, arrivals_by_line):
         if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
@@ -96,22 +101,10 @@ class Consumer:
         return arrivals_by_line
     
     @staticmethod
-    def _initialize_arrivals_by_line():
-        return {
-                'Airport Line' : [], 
-                'Chestnut Hill East Line' : [],
-                'Chestnut Hill West Line' : [],
-                'Lansdale/Doylestown Line': [],
-                'Media/Wawa Line' : [],
-                'Fox Chase Line' : [],
-                'Manayunk/Norristown Line' : [],
-                'Paoli/Thorndale Line' : [],
-                'Cynwyd Line' : [],
-                'Trenton Line' : [],
-                'Warminster Line' : [],
-                'Wilmington/Newark Line' : [],
-                'West Trenton Line' : []
-            }
+    def _initialize_arrivals_by_line(agency_id):
+        agency = Agency.objects.filter(agency_id=agency_id).first()
+        agency_routes = Route.objects.filter(agency_id=agency.id)
+        return { route.route_short_name : [] for route in agency_routes }
 
     @staticmethod
     def _process_train_data(train_data, all_arrivals, arrivals_by_line):
