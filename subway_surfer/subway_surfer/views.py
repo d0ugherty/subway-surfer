@@ -13,6 +13,8 @@ from django.shortcuts import redirect
 def home(request):
     return render(request, 'home.html')
 
+def render_map(request):
+    return render(request, 'map.html')
 """
     Renders form and redirects to the train information board
 
