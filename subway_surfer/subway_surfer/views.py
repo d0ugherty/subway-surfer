@@ -9,12 +9,14 @@ from .consumer import Consumer
 from django.shortcuts import redirect
 
 
-
 def home(request):
     return render(request, 'home.html')
 
 def render_map(request):
-    return render(request, 'map.html')
+    train_data = None
+    if request.method == 'POST':
+        train_data = Consumer.transit_view('SEPTA')
+    return render(request, 'map.html', {'train_loc_data' : train_data})
 """
     Renders form and redirects to the train information board
 

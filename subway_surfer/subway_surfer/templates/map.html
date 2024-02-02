@@ -14,5 +14,7 @@
 {% endblock %}
 
 <div id="map">Map</div>
-
+<script type="text/javascript">
+    var data = {{ train_loc_data |json_script:"data-variable" }};
+</script>
 <script src="{% static 'subway_surfer/js/map.js' %}"></script>
