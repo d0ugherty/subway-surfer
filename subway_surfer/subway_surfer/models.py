@@ -1,9 +1,5 @@
 from django.db import models
 
-
-"""
-    Options for station selection menu and map locations
-"""
 class Stop(models.Model):
     stop_id = models.IntegerField()
     stop_name = models.CharField(max_length=100)
@@ -11,7 +7,7 @@ class Stop(models.Model):
     stop_lat = models.FloatField()
     stop_lon = models.FloatField()
     zone_id = models.CharField(max_length=10)
-    stop_url = models.CharField(max_length=100)
+    stop_url = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.stop_name
@@ -22,7 +18,7 @@ class Agency(models.Model):
     agency_url = models.CharField(max_length=255)
     agency_timezone = models.CharField(max_length=50)
     agency_lang = models.CharField(max_length=10)
-    agency_email = models.CharField(max_length=100)
+    agency_email = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.agency_name
@@ -31,12 +27,12 @@ class Route(models.Model):
     route_id = models.CharField(max_length=10)
     route_short_name = models.CharField(max_length=100)
     route_long_name = models.CharField(max_length = 100)
-    route_desc = models.CharField(max_length = 100)
+    route_desc = models.CharField(max_length = 100, null=True)
     agency = models.ForeignKey(Agency, on_delete=models.CASCADE)
     route_type = models.IntegerField()
-    route_color = models.CharField(max_length=10)
-    route_text_color = models.CharField(max_length=10)
-    route_url = models.CharField(max_length=100)
+    route_color = models.CharField(max_length=10, null=True)
+    route_text_color = models.CharField(max_length=10, null=True)
+    route_url = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return str(self.route_long_name)
@@ -47,6 +43,7 @@ class Shape(models.Model):
     shape_pt_lat = models.FloatField()
     shape_pt_lon = models.FloatField()
     shape_pt_sequence = models.IntegerField()
+    shape_dist_traveled = models.FloatField(null=True)
 
 class Fare(models.Model):
     fare_id = models.CharField(max_length=25)
@@ -67,7 +64,7 @@ class Trip(models.Model):
     trip_id = models.CharField(max_length=25)
     trip_headsign = models.CharField(max_length=50) 
     block_id = models.CharField(max_length=10)
-    trip_short_name = models.IntegerField()
+    trip_short_name = models.IntegerField(null=True)
     shape_id = models.IntegerField()
     direction_id = models.IntegerField()
 
@@ -77,6 +74,6 @@ class Stop_Time(models.Model):
     departure_time = models.TimeField()
     stop = models.ForeignKey(Stop, on_delete=models.CASCADE)
     stop_sequence = models.IntegerField()
-    pickup_type = models.IntegerField()
-    drop_off_type = models.IntegerField()
+    pickup_type = models.IntegerField(null=True)
+    drop_off_type = models.IntegerField(null=True)
 
