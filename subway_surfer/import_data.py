@@ -1,6 +1,7 @@
 
 from subway_surfer.wsgi import *
 from subway_surfer.models import *
+import os
 import csv
 
 def clear_existing_data():
@@ -18,11 +19,11 @@ def clear_existing_data():
     Trip.objects.all().delete()
     print('Clearing stop times...')
     Stop_Time.objects.all().delete()
-    #print('Clearing shape data...')
-    #Shape.objects.all().delete()
+    print('Clearing shape data...')
+    Shape.objects.all().delete()
 
 def import_stop_data(csv_file_path):
-    print("Importing Regional Rail stops...")
+    print("Importing stops...")
     with open(csv_file_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         i = 0
@@ -36,7 +37,7 @@ def import_stop_data(csv_file_path):
                 stop_lat=row['stop_lat'].strip(),
                 stop_lon=row['stop_lon'].strip(),
                 zone_id=row['zone_id'].strip(),
-                stop_url=row['stop_url'].strip()
+                **({'stop_url': row['stop_url'].strip()} if 'stop_url' in row else {})
             )
 
 def import_agency_data(file_path):
@@ -53,11 +54,11 @@ def import_agency_data(file_path):
                 agency_url = row['agency_url'].strip(),
                 agency_timezone = row['agency_timezone'].strip(),
                 agency_lang = row['agency_lang'].strip(),
-                agency_email = row ['agency_email'].strip()
+                **({'agency_email': row['agency_email'].strip()} if 'agency_email' in row else {})
             )
 
 def import_route_data(file_path):
-    print("Importing Regional Rail routes...")
+    print("Importing routes...")
     with open(file_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         i = 0
@@ -68,12 +69,13 @@ def import_route_data(file_path):
                 route_id=row['route_id'].strip(),
                 route_short_name=row['route_short_name'].strip(),
                 route_long_name=row['route_long_name'].strip(),
-                route_desc=row['route_desc'].strip(),
+                **({'route_desc': row['route_desc'].strip()} if 'route_desc' in row else {}),
                 agency = Agency.objects.get(agency_id=row['agency_id'].strip()),
                 route_type=row['route_type'].strip(),
-                route_color=row['route_color'].strip(),
-                route_text_color=row['route_text_color'].strip(),
-                route_url=row['route_url'].strip()
+                **({'route_color': row['route_color'].strip()} if 'route_color' in row else {}),
+                **({'route_text_color': row['route_text_color'].strip()} if 'route_text_color' in row else {}),
+                **({'route_url': row['route_url'].strip()} if 'route_url' in row else {})
+
             )
 
 def import_fare_data(file_path):
@@ -121,7 +123,7 @@ def import_trip_data(file_path):
                 trip_id = row['trip_id'].strip(),
                 trip_headsign = row['trip_headsign'].strip(),
                 block_id = row['block_id'].strip(),
-                trip_short_name = row['trip_short_name'].strip(),
+                **({'trip_short_name': row['trip_short_name'].strip()} if 'trip_short_name' in row else {}),
                 shape_id = row['shape_id'].strip(),
                 direction_id = row['direction_id'].strip()
             )
@@ -145,7 +147,7 @@ def import_stop_time_data(file_path):
             )
 
 def import_shape_data(file_path):
-    print("Importing Regional Rail shape data...")
+    print("Importing shape data...")
     with open(file_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         i = 0
@@ -156,26 +158,37 @@ def import_shape_data(file_path):
                 shape_id=row['shape_id'].strip(),
                 shape_pt_lat=row['shape_pt_lat'].strip(),
                 shape_pt_lon=row['shape_pt_lon'].strip(),
-                shape_pt_sequence=row['shape_pt_sequence'].strip()
+                shape_pt_sequence=row['shape_pt_sequence'].strip(),
+                **({'shape_dist_traveled': row['shape_dist_traveled'].strip()} if 'shape_dist_traveled' in row else {})
             )
 
 if __name__ == '__main__':
     clear_existing_data()
-    import_agency_data('data/agency.csv')
-    print("[1/8] \n\n")
-    import_stop_data('data/stops.csv')
-    print("[2/8]\n")
-    import_route_data('data/routes.csv')
-    print("[3/8]\n")
-    import_fare_data('data/fare_rules.csv')
-    print("[4/8]\n")
-    import_fare_attributes('data/fare_attributes.csv')
-    print("[5/8]\n")
-   # import_shape_data('data/shapes.csv')
-    print('Shape data already present, skipping shape data')
-    print("[6/8]\n")
-    import_trip_data('data/trips.csv')
-    print("[7/8]\n")
-    import_stop_time_data('data/stop_times.csv')
-    print("[8/8]\n")
-    print("Importing complete.")
+    agencies = ['septa', 'njt']
+    for agency in agencies:
+        print(f'Importing data for {agency}..')
+        import_agency_data(f'data/{agency}/agency.csv')
+        print("[1/8] \n\n")
+        import_stop_data(f'data/{agency}/stops.csv')
+        print("[2/8]\n")
+        import_route_data(f'data/{agency}/routes.csv')
+        print("[3/8]\n")
+        if os.path.exists(f'data/{agency}/fare_rules.csv'):
+            import_fare_data(f'data/{agency}/fare_rules.csv')
+        else:
+            print(f"File data/{agency}/fare_rules.csv does not exist.")
+        print("[4/8]\n")
+        if os.path.exists(f'data/{agency}/fare_attributes.csv'):
+            import_fare_attributes(f'data/{agency}/fare_attributes.csv')
+        else:
+            print(f"File data/{agency}/fare_attributes.csv does not exist.")
+        print("[5/8]\n")
+        import_shape_data(f'data/{agency}/shapes.csv')
+       # print('Shape data already present, skipping shape data')
+        print("[6/8]\n")
+        import_trip_data(f'data/{agency}/trips.csv')
+        print("[7/8]\n")
+        import_stop_time_data(f'data/{agency}/stop_times.csv')
+        print("[8/8]\n")
+        print("Importing complete.")
+    
