@@ -66,6 +66,35 @@ class Consumer:
         diff = sched_time - datetime.now() 
         return (int(diff.total_seconds()/60) + min_late)
 
+    def transit_view(agency):
+        if agency == 'SEPTA':
+            api_url = 'https://www3.septa.org/api/TrainView/index.php'
+            response = requests.get(api_url) 
+            train_info = {}
+            if response.status_code == 200:
+                data = response.json()
+                for item in data:
+                        trainno = item['trainno']
+                        train_info[trainno] = {
+                            'agency' : agency, 
+                            "lat": item['lat'],
+                            "lon": item['lon'],
+                            "trainno": trainno,
+                            "service": item['service'],
+                            "dest": item['dest'],
+                            "currentstop": item['currentstop'],
+                            "nextstop": item['nextstop'],
+                            "line": item['line'],
+                            "consist": item['consist'],
+                            "heading": item['heading'],
+                            "late": item['late'],
+                            "SOURCE": item['SOURCE'],
+                            "TRACK": item['TRACK'],
+                            "TRACK_CHANGE": item['TRACK_CHANGE']
+                        }
+          #  print(train_info) 
+            return train_info
+
     @staticmethod
     def _process_arrivals_json(response, context, agency):
         all_arrivals = []
