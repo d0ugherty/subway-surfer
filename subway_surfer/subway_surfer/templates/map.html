@@ -13,14 +13,14 @@
     <link rel="stylesheet" href="{% static 'subway_surfer/styles/map.css' %}"/>
     <script src="{% static 'subway_surfer/js/load_map_data.js' %}"></script>
 {% endblock %}
-
-<div id="map">Map</div>
 <!-- Displaying for debugging -->
 {{ train_loc_data }}
 
 {{ train_loc_data|json_script:"train_loc_data" }}
 <script type="text/javascript">
-    load_loc_data('train_loc_data');
+    var train_data = load_loc_data('train_loc_data');
+   // displayLocation(train_data);
 </script>
 
+<div id="map">Map</div>
 <script src="{% static 'subway_surfer/js/map.js' %}"></script>
