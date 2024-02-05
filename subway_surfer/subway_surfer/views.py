@@ -56,6 +56,9 @@ def load_arrivals(request, station):
         south_data = arrival_context['S']['arrivals_by_line_ctx'].get(route.route_long_name, [])
         arrivals_data[f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'] = north_data + south_data
 
+    # TO-DO: Add NJT data
+    # TO-DO: Add NJT's atlantic city line for 30th street
+
     return render(request, 'info_board/arrivals.html', {
         **arrivals_data, 
         'station': station,
