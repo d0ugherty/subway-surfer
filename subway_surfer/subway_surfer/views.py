@@ -13,6 +13,7 @@ def home(request):
     return render(request, 'home.html')
 
 def render_map(request):
+    print(request.method)
     train_data = None
     if request.method == 'POST':
         train_data = Consumer.transit_view('SEPTA')

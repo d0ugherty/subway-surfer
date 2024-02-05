@@ -11,14 +11,14 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
     <link rel="stylesheet" href="{% static 'subway_surfer/styles/map.css' %}"/>
+    <script src="{% static 'subway_surfer/js/load_map_data.js' %}"></script>
 {% endblock %}
 
 <div id="map">Map</div>
+{{ train_loc_data }}
+{{ train_loc_data|json_script:"train_loc_data" }}
 <script type="text/javascript">
-    var data = {{ train_loc_data|json_script:"train_loc_data" }};
+    load_loc_data('train_loc_data');
 </script>
 
-<script type="text/javascript">
-    load_loc_data(data);
-</script>
 <script src="{% static 'subway_surfer/js/map.js' %}"></script>

@@ -23,13 +23,6 @@ let stationLayer = L.layerGroup().addTo(map);
 let trolleyLayer = L.layerGroup().addTo(map);
 let trolleyStopLayer = L.layerGroup().addTo(map);
 
-
-function load_loc_data(data){
-  document.addEventListener('DOMContentLoaded', function() {
-    var train_loc_data = JSON.parse(document.getElementById(data).textContent);
-    console.log(train_loc_data)
-  })
-}
 /**
 let trainIcon = L.icon({
   iconUrl: './packages/leaflet/images/SEPTARegionalRail-bw.png',
