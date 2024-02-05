@@ -25,13 +25,11 @@ class Consumer:
                 response = requests.get(api_url)
                 context = {'station': station, 'N': None, 'S': None}
                 if response.status_code == 200:
-                #  context['station'] = station
                     context['N'] = Consumer._process_arrivals_json(response, context, agency)
             
                 api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=S'
                 response = requests.get(api_url)
                 if response.status_code == 200:
-                #  context['station'] = station
                     context['S'] = context | Consumer._process_arrivals_json(response, context, agency)
                 else:
                     return JsonResponse({'error': 'API request failed'}, status=500)
@@ -39,7 +37,6 @@ class Consumer:
     
     def arrivals_by_track(station):
         #initialize
-        print(f'STATION: {station}')
         track_numbers = ["1", "2", "3", "4", "5", "6", "8", "9", "10"]
         track_dict = { track: {} for track in track_numbers}
 
@@ -51,7 +48,6 @@ class Consumer:
                 if track_dict[track_number] == {} and track_number == arriving_track:
                     arrival['eta'] = Consumer.countdown(arrival)
                     track_dict[track_number] = arrival
-                # print(Consumer.countdown(arrival))
         return track_dict
     
     """
@@ -92,7 +88,6 @@ class Consumer:
                             "TRACK": item['TRACK'],
                             "TRACK_CHANGE": item['TRACK_CHANGE']
                         }
-          #  print(train_info) 
             return train_info
 
     @staticmethod
@@ -102,7 +97,6 @@ class Consumer:
         parsed_data = response.json()
                 
         for key, value in parsed_data.items():
-            print(f'key: {key}')
             if isinstance(value, list) and not value:
                 continue
             Consumer._process_train_data(value, all_arrivals, arrivals_by_line)

@@ -15,7 +15,9 @@
 {% endblock %}
 
 <div id="map">Map</div>
+<!-- Displaying for debugging -->
 {{ train_loc_data }}
+
 {{ train_loc_data|json_script:"train_loc_data" }}
 <script type="text/javascript">
     load_loc_data('train_loc_data');

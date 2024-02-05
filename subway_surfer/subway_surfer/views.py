@@ -15,7 +15,7 @@ def home(request):
 def render_map(request):
     print(request.method)
     train_data = None
-    if request.method == 'POST':
+    if request.method == 'GET':
         train_data = Consumer.transit_view('SEPTA')
     return render(request, 'map.html', {'train_loc_data' : train_data})
 """
@@ -26,7 +26,6 @@ def render_map(request):
 def train_info(request, template_name='info_board/arrivals.html', redirect_dest='load_arrivals'):
     # default
     station = "30th Street Station"
-    #print(request.method)
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
         if form.is_valid():
