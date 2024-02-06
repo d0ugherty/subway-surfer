@@ -18,9 +18,11 @@
 
 {{ train_loc_data|json_script:"train_loc_data" }}
 <script type="text/javascript">
-    var train_data = load_loc_data('train_loc_data');
+   load_loc_data('train_loc_data');
    // displayLocation(train_data);
 </script>
 
 <div id="map">Map</div>
-<script src="{% static 'subway_surfer/js/map.js' %}"></script>
+<script src="{% static 'subway_surfer/js/map.js' %}">
+    initMap();
+</script>
