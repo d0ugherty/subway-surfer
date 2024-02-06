@@ -13,11 +13,11 @@ def home(request):
     return render(request, 'home.html')
 
 def render_map(request):
-    print(request.method)
     train_data = None
     if request.method == 'GET':
         train_data = Consumer.transit_view('SEPTA')
     return render(request, 'map.html', {'train_loc_data' : train_data})
+
 """
     Renders form and redirects to the train information board
 
@@ -65,7 +65,9 @@ def load_arrivals(request, station):
         'form': form
     })
 
-"""Update Arrivals"""
+"""
+    Update Arrivals
+"""
 def update_arrivals_table(request, table_id):
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = Consumer.get_arrivals(station)

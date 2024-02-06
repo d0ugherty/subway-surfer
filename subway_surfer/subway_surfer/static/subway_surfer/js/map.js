@@ -4,6 +4,8 @@
  *  'stationLayer' and 'trainLayer' were created so markers can be added to layer groups rather than
  *   the map itself. This makes for easy marker removal either for toggling or 
  *   the retrieval of new data (live updating)
+ * 
+ *  TO DO: Modularize this
  * */
 
 const map = L.map('map', {
@@ -16,11 +18,9 @@ const map = L.map('map', {
         tap: false
     });
     
-    map.attributionControl.addAttribution('Data <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>'+ 
-                                        ' Style: <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a>'+
-                                        '<a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>');
-
-
+map.attributionControl.addAttribution('Data <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>'+ 
+                                    ' Style: <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a>'+
+                                    ' <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>');
 
 const trainLayer = L.layerGroup();
 const stationLayer = L.layerGroup().addTo(map);

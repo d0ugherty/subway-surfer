@@ -13,16 +13,18 @@
     <link rel="stylesheet" href="{% static 'subway_surfer/styles/map.css' %}"/>
     <script src="{% static 'subway_surfer/js/load_map_data.js' %}"></script>
 {% endblock %}
-<!-- Displaying for debugging -->
-{{ train_loc_data }}
 
 {{ train_loc_data|json_script:"train_loc_data" }}
+
+<!--
+    Might want to use ajax for this since I just want to update the map layer
+    instead of the whole map.
+
+    TO-DO: Refresh on interval
+-->
 <script type="text/javascript">
-   load_loc_data('train_loc_data');
-   // displayLocation(train_data);
+    load_loc_data('train_loc_data');
 </script>
 
 <div id="map">Map</div>
-<script src="{% static 'subway_surfer/js/map.js' %}">
-    initMap();
-</script>
+<script src="{% static 'subway_surfer/js/map.js' %}"></script>
