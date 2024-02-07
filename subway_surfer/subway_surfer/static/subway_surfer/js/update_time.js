@@ -1,6 +1,7 @@
 /**
  *  Updates the time display in 1 second intervals
  * 
+ *  Replaced by Django template tag
  */
 
 function updateTime() {

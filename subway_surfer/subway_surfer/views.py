@@ -12,11 +12,15 @@ from django.shortcuts import redirect
 def home(request):
     return render(request, 'home.html')
 
-def render_map(request):
+def render_map(request, agency):
     train_data = None
+    print(f'agency: {agency}')
     if request.method == 'GET':
-        train_data = Consumer.transit_view('SEPTA')
-    return render(request, 'map.html', {'train_loc_data' : train_data})
+        train_data = Consumer.transit_view(agency)
+    return render(request, 'map.html', {'train_loc_data' : train_data,
+                                        'agency' : agency 
+                                        })
+
 
 """
     Renders form and redirects to the train information board
@@ -49,7 +53,7 @@ def load_arrivals(request, station):
     septa = Agency.objects.filter(agency_id='SEPTA').first()
     septa_routes = Route.objects.filter(agency_id=septa.id)
     
-    arrivals_data = {'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5]}
+    arrivals_data = { 'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5] }
 
     for route in septa_routes:
         north_data = arrival_context['N']['arrivals_by_line_ctx'].get(route.route_long_name, [])
