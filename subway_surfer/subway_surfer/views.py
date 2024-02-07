@@ -3,7 +3,7 @@ from django.shortcuts import render
 #from django.http import JsonResponse, HttpResponse
 from django.utils.timezone import utc
 from .forms import *
-from .models import Stop
+from .models import Stop, Route, Shape
 from .utils import validate_station_name
 from .consumer import Consumer
 from django.shortcuts import redirect
@@ -12,14 +12,70 @@ from django.shortcuts import redirect
 def home(request):
     return render(request, 'home.html')
 
-def render_map(request, agency):
+"""
+    TO DO: Refresh map markers without refreshing whole page
+    may have to use ajax because leaflet is a js library. I already have the backend logic done
+    in Python though -_-
+"""
+def get_marker_data(request, agency):
     train_data = None
-    print(f'agency: {agency}')
     if request.method == 'GET':
         train_data = Consumer.transit_view(agency)
-    return render(request, 'map.html', {'train_loc_data' : train_data,
-                                        'agency' : agency 
-                                        })
+    return train_data
+
+
+"""
+    Renders the map page elements - map and agency form
+
+    TO DO: Handle unchecks
+"""
+def map_page_view(request):
+    agency_check = AgencyCheckBox()
+    train_marker_data = get_marker_data(request, agency='SEPTA')
+    show_njt_route = False
+    request.session['njt_shape_data'] = []
+    request.session['septa_shape_data'] = []
+    show_septa_route = False
+    if request.method == 'POST':
+        show_njt_route = agency_check.cleaned_data['njt']
+        show_septa_route = agency_check.cleaned_data['septa']
+        if show_njt_route:
+            request.session['njt_shape_data'] = get_shape_data('NJT')
+        if show_septa_route:
+            request.session['septa_shape_data'] = get_shape_data('SEPTA')
+
+    return render(request, 'map.html', {'agency_check' : agency_check,
+                                        'train_loc_data': train_marker_data,
+                                        'show_njt_route': show_njt_route,
+                                        'show_septa_route': show_septa_route,
+                                        'njt_shape_data' : request.session['njt_shape_data'],
+                                        'septa_shape_data': request.session['septa_shape_data']})
+
+""" 
+    Queries for retrieving the shape data. Shape data doesn't have a route 
+    or agency associated with it so you have to bridge through trips. 
+    Makes sense when you think about.
+
+    There might be a more efficient way to structure this
+"""
+def get_shape_data(agency):
+    shape_data = []
+    # Get each route from agency
+    agency_routes = Route.objects.filter(agency_id=agency)
+    # Get one trip from each route
+    route_trips = []
+    for route in agency_routes:
+        trip = Trip.objects.filter(route=route.id).first()
+        route_trips.append(trip.id)
+    # Get the shape id from each trip
+    trip_shapes = []
+    for trip in route_trips:
+        shape = Shape.objects.filter(shape=trip.shape_id)
+        trip_shapes.append(shape)
+    # Get the shape (lat, lon)
+    for shape in trip_shapes:
+        shape_data.append((shape.lat, shape.lon))
+    return shape_data
 
 
 """

@@ -16,7 +16,7 @@
     TO-DO: Refresh on interval
 -->
 {{ train_loc_data|json_script:"train_loc_data" }}
-
+{{ agency_check }}
 <h3>{{ agency }}</h3>
 <div id="data-fetcher"
      data-trainInfo="{{ train_loc_data|safe }}"
