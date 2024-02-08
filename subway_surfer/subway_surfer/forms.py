@@ -50,4 +50,6 @@ class DestForm(forms.Form):
         
     form_type = forms.CharField(widget=forms.HiddenInput(), initial='destination')
 
-    
+class AgencyCheckBox(forms.Form):
+    show_septa = forms.BooleanField(initial=False, label="Show SEPTA", required=False)
+    show_njt = forms.BooleanField(initial=False, label="Show NJT", required=False)

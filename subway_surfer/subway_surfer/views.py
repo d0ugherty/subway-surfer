@@ -3,7 +3,7 @@ from django.shortcuts import render
 #from django.http import JsonResponse, HttpResponse
 from django.utils.timezone import utc
 from .forms import *
-from .models import Stop
+from .models import Stop, Route, Shape
 from .utils import validate_station_name
 from .consumer import Consumer
 from django.shortcuts import redirect
@@ -12,11 +12,55 @@ from django.shortcuts import redirect
 def home(request):
     return render(request, 'home.html')
 
-def render_map(request):
+"""
+    TO DO: Refresh map markers without refreshing whole page
+    may have to use ajax because leaflet is a js library. I already have the backend logic done
+    in Python though -_-
+"""
+def get_marker_data(request, agency):
     train_data = None
-    if request.method == 'POST':
-        train_data = Consumer.transit_view('SEPTA')
-    return render(request, 'map.html', {'train_loc_data' : train_data})
+    if request.method == 'GET':
+        train_data = Consumer.transit_view(agency)
+    return train_data
+
+
+"""
+    Renders the map page elements - map and agency form
+
+    TO DO: Handle unchecks
+"""
+def map_page_view(request):
+    print(request.method)
+    init_form_data = request.session.get('agency_check_data', {})
+    agency_check = AgencyCheckBox(request.GET or None, initial=init_form_data)
+
+    train_marker_data = get_marker_data(request, agency='SEPTA')
+    show_njt_route = False
+    show_septa_route = False
+    njt_shapes = []
+    septa_shapes = []
+    request.session['septa_shape_data'] = []
+
+    if request.method == 'GET':
+        if agency_check.is_valid():
+
+            request.session['agency_check_data'] = agency_check.cleaned_data
+
+            show_njt_route = agency_check.cleaned_data['show_njt']
+            show_septa_route = agency_check.cleaned_data['show_septa']
+            if show_njt_route:
+                njt_shapes.append(Agency.objects.get(agency_id = 'NJT').get_shapes())
+                print("retrieved njt shape data")
+            if show_septa_route:
+                septa_shapes.append(Agency.objects.get(agency_id = 'SEPTA').get_shapes())
+                
+    return render(request, 'map.html', {'agency_check' : agency_check,
+                                        'train_loc_data': train_marker_data,
+                                        'show_njt_route': show_njt_route,
+                                        'show_septa_route': show_septa_route,
+                                        'njt_shape_data' : request.session['njt_shape_data'],
+                                        'septa_shape_data': request.session['septa_shape_data']})
+
 """
     Renders form and redirects to the train information board
 
@@ -25,7 +69,6 @@ def render_map(request):
 def train_info(request, template_name='info_board/arrivals.html', redirect_dest='load_arrivals'):
     # default
     station = "30th Street Station"
-    #print(request.method)
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
         if form.is_valid():
@@ -49,12 +92,15 @@ def load_arrivals(request, station):
     septa = Agency.objects.filter(agency_id='SEPTA').first()
     septa_routes = Route.objects.filter(agency_id=septa.id)
     
-    arrivals_data = {'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5]}
+    arrivals_data = { 'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5] }
 
     for route in septa_routes:
         north_data = arrival_context['N']['arrivals_by_line_ctx'].get(route.route_long_name, [])
         south_data = arrival_context['S']['arrivals_by_line_ctx'].get(route.route_long_name, [])
         arrivals_data[f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'] = north_data + south_data
+
+    # TO-DO: Add NJT data
+    # TO-DO: Add NJT's atlantic city line for 30th street
 
     return render(request, 'info_board/arrivals.html', {
         **arrivals_data, 
@@ -62,7 +108,9 @@ def load_arrivals(request, station):
         'form': form
     })
 
-"""Update Arrivals"""
+"""
+    Update Arrivals
+"""
 def update_arrivals_table(request, table_id):
     station = request.POST.get('station', "30th Street Station") 
     arrival_context = Consumer.get_arrivals(station)
@@ -184,10 +232,9 @@ def fare_calculator(request):
     })
 
 def get_fare(request, origin, destination):
-    fare = Fare.objects.get(origin_id=origin, destination_id=destination)
+    fare = Fare.get_fare_obj(origin, destination)
     request.session['fare_id'] = fare.fare_id
-    fare_attributes = Fare_Attributes.objects.get(fare=fare)
-    request.session['fare_price'] = fare_attributes.price
+    request.session['fare_price'] = fare.price()
     return request.session['fare_price']
 
 

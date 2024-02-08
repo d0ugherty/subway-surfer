@@ -27,5 +27,5 @@ urlpatterns = [
     path('fare_calculator/', views.fare_calculator, name='fare_calculator'),
     path('next_to_arrive/<str:station>/', views.next_to_arrive, name='next_to_arrive'),
     path('update_next_to_arrive/<str:station>/', views.update_next_to_arrive, name ='update_next_to_arrive'),
-    path('map/', views.render_map, name='render_map')
+    path('map/', views.map_page_view, name='render_map')
 ]
