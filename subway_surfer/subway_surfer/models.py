@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Prefetch
 
 class Stop(models.Model):
     stop_id = models.IntegerField()
@@ -22,6 +23,17 @@ class Agency(models.Model):
 
     def __str__(self):
         return self.agency_name
+    
+    """ 
+    Queries for retrieving the shape data. Shape data doesn't have a route 
+    or agency associated with it so you have to bridge through trips. 
+    Makes sense when you think about.
+    """
+    def get_shapes(self):
+        agency_route_trips = Trip.objects.filter(route__agency=self).values_list('shape_id', flat=True).distinct()
+        agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips)
+        return agency_shapes
+
 
 class Route(models.Model):
     route_id = models.CharField(max_length=10)
@@ -65,7 +77,7 @@ class Trip(models.Model):
     trip_headsign = models.CharField(max_length=50) 
     block_id = models.CharField(max_length=10)
     trip_short_name = models.IntegerField(null=True)
-    shape_id = models.IntegerField()
+    shape_id= models.IntegerField()
     direction_id = models.IntegerField()
 
 class Stop_Time(models.Model):
