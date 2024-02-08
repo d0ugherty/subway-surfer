@@ -30,19 +30,29 @@ def get_marker_data(request, agency):
     TO DO: Handle unchecks
 """
 def map_page_view(request):
-    agency_check = AgencyCheckBox()
+    print(request.method)
+    init_form_data = request.session.get('agency_check_data', {})
+    agency_check = AgencyCheckBox(request.GET or None, initial=init_form_data)
+
     train_marker_data = get_marker_data(request, agency='SEPTA')
     show_njt_route = False
+    show_septa_route = False
     request.session['njt_shape_data'] = []
     request.session['septa_shape_data'] = []
-    show_septa_route = False
-    if request.method == 'POST':
-        show_njt_route = agency_check.cleaned_data['njt']
-        show_septa_route = agency_check.cleaned_data['septa']
-        if show_njt_route:
-            request.session['njt_shape_data'] = get_shape_data('NJT')
-        if show_septa_route:
-            request.session['septa_shape_data'] = get_shape_data('SEPTA')
+
+    if request.method == 'GET':
+        if agency_check.is_valid():
+
+            request.session['agency_check_data'] = agency_check.cleaned_data
+
+            show_njt_route = agency_check.cleaned_data['show_njt']
+            show_septa_route = agency_check.cleaned_data['show_septa']
+            if show_njt_route:
+                request.session['njt_shape_data'] = get_shape_data('NJT')
+                print("retrieved njt shape data")
+            if show_septa_route:
+                request.session['septa_shape_data'] = get_shape_data('SEPTA')
+                print("retrieved septa shape data")
 
     return render(request, 'map.html', {'agency_check' : agency_check,
                                         'train_loc_data': train_marker_data,
@@ -58,23 +68,26 @@ def map_page_view(request):
 
     There might be a more efficient way to structure this
 """
-def get_shape_data(agency):
+def get_shape_data(agency_id):
     shape_data = []
     # Get each route from agency
-    agency_routes = Route.objects.filter(agency_id=agency)
+    agency = Agency.objects.get(agency_id=agency_id)
+    agency_routes = Route.objects.filter(agency_id=agency.id)
     # Get one trip from each route
     route_trips = []
     for route in agency_routes:
         trip = Trip.objects.filter(route=route.id).first()
-        route_trips.append(trip.id)
+        route_trips.append(trip)
     # Get the shape id from each trip
     trip_shapes = []
     for trip in route_trips:
-        shape = Shape.objects.filter(shape=trip.shape_id)
-        trip_shapes.append(shape)
+        shape_pts = Shape.objects.filter(shape_id=trip.shape_id)
+        trip_shapes.append(shape_pts)
     # Get the shape (lat, lon)
-    for shape in trip_shapes:
-        shape_data.append((shape.lat, shape.lon))
+    # god this is ugly
+    for shape_pts in trip_shapes:
+        for shape_pt in shape_pts:
+            shape_data.append([shape_pt.shape_pt_lon, shape_pt.shape_pt_lat])
     return shape_data
 
 

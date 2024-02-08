@@ -52,3 +52,9 @@ function displayTrainCurrentLoc(item, trainLayer) {
             <b> Destination: </b> ${item.dest}`));
     trainMarker.bindPopup(popup);
 }
+
+function displayShapes(shape_data) {
+    for(let index=0; index <= shape_data.length; index++) {
+        
+    }
+}
