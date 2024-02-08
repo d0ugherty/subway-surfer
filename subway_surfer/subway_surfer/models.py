@@ -62,6 +62,17 @@ class Fare(models.Model):
     origin_id = models.CharField(max_length=10)
     destination_id = models.CharField(max_length=10)
 
+    @classmethod
+    def get_fare_obj(cls, origin_id, destination_id):
+        try:
+            return cls.objects.get(origin_id=origin_id, destination_id=destination_id)
+        except cls.DoesNotExist:
+            return None
+        
+    def price(self):
+        fare_price = Fare_Attributes.objects.get(fare=self).price
+        return fare_price
+
 class Fare_Attributes(models.Model):
     fare = models.ForeignKey(Fare, on_delete=models.CASCADE)
     price = models.FloatField()
@@ -69,6 +80,8 @@ class Fare_Attributes(models.Model):
     payment_method = models.IntegerField()
     transfers = models.IntegerField()
     transfer_duration = models.CharField(max_length=2) # because septa xfer durations are empty
+
+
 
 class Trip(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE) 

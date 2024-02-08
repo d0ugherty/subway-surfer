@@ -232,10 +232,9 @@ def fare_calculator(request):
     })
 
 def get_fare(request, origin, destination):
-    fare = Fare.objects.get(origin_id=origin, destination_id=destination)
+    fare = Fare.get_fare_obj(origin, destination)
     request.session['fare_id'] = fare.fare_id
-    fare_attributes = Fare_Attributes.objects.get(fare=fare)
-    request.session['fare_price'] = fare_attributes.price
+    request.session['fare_price'] = fare.price()
     return request.session['fare_price']
 
 
