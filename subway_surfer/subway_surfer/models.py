@@ -24,6 +24,16 @@ class Agency(models.Model):
     def __str__(self):
         return self.agency_name
     
+    @classmethod
+    def get_agency(cls, agency_id):
+        try:
+            return cls.objects.get(agency_id=agency_id)
+        except cls.DoesNotExist:
+            return None
+        
+    def get_agency_routes(self):
+        return Route.objects.filter(agency_id=self.id)
+    
     """ 
     Queries for retrieving the shape data. Shape data doesn't have a route 
     or agency associated with it so you have to bridge through trips. 
@@ -57,6 +67,9 @@ class Shape(models.Model):
     shape_pt_sequence = models.IntegerField()
     shape_dist_traveled = models.FloatField(null=True)
 
+    def get_lat_lon(self):
+        return [self.shape_pt_lat, self.shape_pt_lon]
+
 class Fare(models.Model):
     fare_id = models.CharField(max_length=25)
     origin_id = models.CharField(max_length=10)
@@ -82,7 +95,6 @@ class Fare_Attributes(models.Model):
     transfer_duration = models.CharField(max_length=2) # because septa xfer durations are empty
 
 
-
 class Trip(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE) 
     service_id = models.CharField(max_length=25)
@@ -92,6 +104,15 @@ class Trip(models.Model):
     trip_short_name = models.IntegerField(null=True)
     shape_id= models.IntegerField()
     direction_id = models.IntegerField()
+
+    @classmethod
+    def get_trip(cls,train_id):
+        try:
+            return cls.objects.filter(block_id=train_id).latest('block_id')
+        except cls.DoesNotExist:
+            return None
+    
+
 
 class Stop_Time(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)

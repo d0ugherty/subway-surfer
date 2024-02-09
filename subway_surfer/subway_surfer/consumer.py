@@ -110,13 +110,13 @@ class Consumer:
     
     @staticmethod
     def _get_route(train_info):
-        try:
-            trip = Trip.objects.filter(block_id=train_info['train_id']).latest('block_id')
-        except Trip.DoesNotExist:
+        trip = Trip.get_trip(train_info['train_id'])
+        if trip == None:
             trip_route = train_info['line'] + ' Line'
             return trip_route
-        trip_route = trip.route.route_short_name
-        return trip_route
+        else:
+            trip_route = trip.route.route_short_name
+            return trip_route
     
     """
         Trains from the Airport are typically terminate at Warminster or Fox Chase 
@@ -135,8 +135,8 @@ class Consumer:
     
     @staticmethod
     def _initialize_arrivals_by_line(agency_id):
-        agency = Agency.objects.filter(agency_id=agency_id).first()
-        agency_routes = Route.objects.filter(agency_id=agency.id)
+        agency = Agency.get_agency(agency_id)
+        agency_routes = agency.get_agency_routes()
         return { route.route_short_name : [] for route in agency_routes }
 
     @staticmethod
@@ -179,9 +179,10 @@ class Consumer:
 
     @staticmethod
     def _get_headsign(train_info):
-        try:
-            trip = Trip.objects.filter(block_id=train_info['train_id']).latest('block_id')
-        except Trip.DoesNotExist:
+        trip = Trip.get_trip(train_info['train_id'])
+        if trip == None:
             return train_info['destination']
-        return trip.trip_headsign
+        else:
+            return trip.trip_headsign
+        
 
