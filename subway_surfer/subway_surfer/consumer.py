@@ -135,8 +135,7 @@ class Consumer:
     
     @staticmethod
     def _initialize_arrivals_by_line(agency_id):
-        agency = Agency.get_agency(agency_id)
-        agency_routes = agency.get_agency_routes()
+        agency_routes = Agency.get_agency(agency_id).get_routes()
         return { route.route_short_name : [] for route in agency_routes }
 
     @staticmethod

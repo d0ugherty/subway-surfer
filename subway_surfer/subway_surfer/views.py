@@ -49,10 +49,10 @@ def map_page_view(request):
             show_njt_route = agency_check.cleaned_data['show_njt']
             show_septa_route = agency_check.cleaned_data['show_septa']
             if show_njt_route:
-                njt_shapes.append(Agency.objects.get(agency_id = 'NJT').get_shapes())
+                njt_shapes.append(Agency.get_agency('NJT').get_shapes())
                 print("retrieved njt shape data")
             if show_septa_route:
-                septa_shapes.append(Agency.objects.get(agency_id = 'SEPTA').get_shapes())
+                septa_shapes.append(Agency.get_agency('SEPTA').get_shapes())
                 
     return render(request, 'map.html', {'agency_check' : agency_check,
                                         'train_loc_data': train_marker_data,
@@ -89,9 +89,8 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
 def load_arrivals(request, station):
     arrival_context = Consumer.get_arrivals(station,agency='SEPTA')
     form = StationSlctForm() 
-    septa = Agency.objects.filter(agency_id='SEPTA').first()
-    septa_routes = Route.objects.filter(agency_id=septa.id)
-    
+    septa = Agency.get_agency('SEPTA')
+    septa_routes = septa.get_routes()
     arrivals_data = { 'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5] }
 
     for route in septa_routes:

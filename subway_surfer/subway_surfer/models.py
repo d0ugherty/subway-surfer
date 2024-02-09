@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import Prefetch
 
 class Stop(models.Model):
     stop_id = models.IntegerField()
@@ -31,8 +30,8 @@ class Agency(models.Model):
         except cls.DoesNotExist:
             return None
         
-    def get_agency_routes(self):
-        return Route.objects.filter(agency_id=self.id)
+    def get_routes(self):
+        return Route.objects.filter(agency=self).select_related('agency')
     
     """ 
     Queries for retrieving the shape data. Shape data doesn't have a route 
@@ -44,6 +43,7 @@ class Agency(models.Model):
         agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips)
         return agency_shapes
 
+    
 
 class Route(models.Model):
     route_id = models.CharField(max_length=10)
