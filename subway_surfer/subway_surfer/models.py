@@ -11,6 +11,21 @@ class Stop(models.Model):
 
     def __str__(self):
         return self.stop_name
+
+    @classmethod
+    def get_stop(cls, stop_name):
+        try:
+            return cls.objects.get(stop_name=stop_name)
+        except cls.DoesNotExist:
+            return None
+    
+    def get_lat_lon(self):
+        lat = self.stop_lat
+        lon = self.stop_lon
+        return [lat, lon]
+    
+    def get_stop_times(self):
+        return Stop_Time.objects.filter(stop_id=self.stop_id).select_related("stop")
     
 class Agency(models.Model):
     agency_id = models.CharField(max_length=25)
@@ -40,7 +55,7 @@ class Agency(models.Model):
     """
     def get_shapes(self):
         agency_route_trips = Trip.objects.filter(route__agency=self).values_list('shape_id', flat=True).distinct()
-        agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips)
+        agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips).only("shape_pt_lat", "shape_pt_lon")
         return agency_shapes
 
     
@@ -112,7 +127,6 @@ class Trip(models.Model):
         except cls.DoesNotExist:
             return None
     
-
 
 class Stop_Time(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)

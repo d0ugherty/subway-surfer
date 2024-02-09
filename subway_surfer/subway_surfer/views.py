@@ -58,8 +58,8 @@ def map_page_view(request):
                                         'train_loc_data': train_marker_data,
                                         'show_njt_route': show_njt_route,
                                         'show_septa_route': show_septa_route,
-                                        'njt_shape_data' : request.session['njt_shape_data'],
-                                        'septa_shape_data': request.session['septa_shape_data']})
+                                        'njt_shapes' : njt_shapes,
+                                        'septa_shapes': septa_shapes})
 
 """
     Renders form and redirects to the train information board
