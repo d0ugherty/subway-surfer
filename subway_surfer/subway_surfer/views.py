@@ -37,9 +37,8 @@ def map_page_view(request):
     train_marker_data = get_marker_data(request, agency='SEPTA')
     show_njt_route = False
     show_septa_route = False
-    njt_shapes = []
-    septa_shapes = []
-    request.session['septa_shape_data'] = []
+    njt_shapes = None
+    septa_shapes = None
 
     if request.method == 'GET':
         if agency_check.is_valid():
@@ -49,11 +48,18 @@ def map_page_view(request):
             show_njt_route = agency_check.cleaned_data['show_njt']
             show_septa_route = agency_check.cleaned_data['show_septa']
             if show_njt_route:
-                njt_shapes.append(Agency.get_agency('NJT').get_shapes())
+                njt_shapes = Agency.get_agency('NJT').get_shapes()
                 print("retrieved njt shape data")
             if show_septa_route:
-                septa_shapes.append(Agency.get_agency('SEPTA').get_shapes())
-                
+                septa_shapes = Agency.get_agency('SEPTA').get_shapes()
+            return render(request, 'map.html', {'agency_check' : agency_check,
+                                                    'train_loc_data': train_marker_data,
+                                                    'show_njt_route': show_njt_route,
+                                                    'show_septa_route': show_septa_route,
+                                                    'njt_shapes' : njt_shapes,
+                                                    'septa_shapes': septa_shapes})
+
+
     return render(request, 'map.html', {'agency_check' : agency_check,
                                         'train_loc_data': train_marker_data,
                                         'show_njt_route': show_njt_route,

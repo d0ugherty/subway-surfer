@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load custom_tags %}
 {% block extra_head %}
     <meta name="viewport" content="width=device-width, intial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -16,6 +16,9 @@
     TO-DO: Refresh on interval
 -->
 {{ train_loc_data|json_script:"train_loc_data" }}
+
+
+
 <form>
 {{ agency_check }}
 <button type="submit">Submit</button>
@@ -31,6 +34,9 @@
      hx-after-get="displayTrainMarkers">
 </div>
 
+<script>
+    
+</script>
 <div id="map">Map<br>
 <script src="{% static 'subway_surfer/js/map.js' %}"></script>
 </div>

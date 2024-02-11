@@ -55,6 +55,7 @@ function displayTrainCurrentLoc(item, trainLayer) {
 
 function displayShapes(shape_data) {
     for(let index=0; index <= shape_data.length; index++) {
-        
+        let shape = shape_data[i];
+        console.log(shape.shape_pt_lat);
     }
 }
