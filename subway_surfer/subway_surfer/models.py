@@ -1,4 +1,5 @@
 from django.db import models
+from collections import defaultdict
 import json
 
 class Stop(models.Model):
@@ -56,15 +57,16 @@ class Agency(models.Model):
     """
     def get_shapes(self, serialize=True):
         agency_route_trips = Trip.objects.filter(route__agency=self).values_list('shape_id', flat=True).distinct()
-        agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips).values_list("shape_pt_lon", "shape_pt_lat")
-        print(f'agency_shape item type: {type(agency_shapes[0])}')
-        print(f'agency_shapes[0]: {agency_shapes[0]}')
+        print(agency_route_trips)
+        agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips).values_list("shape_id", "shape_pt_lon", "shape_pt_lat")
+        # Serialize to use it into a JSON string to use it with JavaScript
         if serialize:
-            data = [{'shape_pt_lon': row[0], 'shape_pt_lat': row[1]} for row in agency_shapes]
-            agency_shapes = json.dumps(data)
+            shape_dict = defaultdict(list)
+            for row in agency_shapes:
+                shape_id, shape_pt_lon, shape_pt_lat = row
+                shape_dict[shape_id].append({'shape_pt_lat': shape_pt_lat, 'shape_pt_lon': shape_pt_lon})
+            agency_shapes = json.dumps(shape_dict)
         return agency_shapes
-
-    
 
 class Route(models.Model):
     route_id = models.CharField(max_length=10)
