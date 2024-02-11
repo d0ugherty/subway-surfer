@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 class Stop(models.Model):
     stop_id = models.IntegerField()
@@ -53,9 +54,14 @@ class Agency(models.Model):
     or agency associated with it so you have to bridge through trips. 
     Makes sense when you think about.
     """
-    def get_shapes(self):
+    def get_shapes(self, serialize=True):
         agency_route_trips = Trip.objects.filter(route__agency=self).values_list('shape_id', flat=True).distinct()
-        agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips).only("shape_pt_lat", "shape_pt_lon")
+        agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips).values_list("shape_pt_lon", "shape_pt_lat")
+        print(f'agency_shape item type: {type(agency_shapes[0])}')
+        print(f'agency_shapes[0]: {agency_shapes[0]}')
+        if serialize:
+            data = [{'shape_pt_lon': row[0], 'shape_pt_lat': row[1]} for row in agency_shapes]
+            agency_shapes = json.dumps(data)
         return agency_shapes
 
     

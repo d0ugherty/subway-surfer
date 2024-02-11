@@ -1,11 +1,11 @@
 from .bcolors import bcolors
 from django.shortcuts import render
 #from django.http import JsonResponse, HttpResponse
-from django.utils.timezone import utc
+from django.core import serializers
 from .forms import *
-from .models import Stop, Route, Shape
-from .utils import validate_station_name
-from .consumer import Consumer
+from .models import Stop
+from .utils import validate_station_name, serialize_queryset
+from .consumer import transit_view, get_arrivals, arrivals_by_track
 from django.shortcuts import redirect
 
 
@@ -20,7 +20,7 @@ def home(request):
 def get_marker_data(request, agency):
     train_data = None
     if request.method == 'GET':
-        train_data = Consumer.transit_view(agency)
+        train_data = transit_view(agency)
     return train_data
 
 
@@ -31,12 +31,12 @@ def get_marker_data(request, agency):
 """
 def map_page_view(request):
     print(request.method)
-    init_form_data = request.session.get('agency_check_data', {})
-    agency_check = AgencyCheckBox(request.GET or None, initial=init_form_data)
-
+   # init_form_data = request.session.get('agency_check_data', {})
+    agency_check = AgencyCheckBox(request.GET or None)
+   # agency_check = AgencyCheckBox()
     train_marker_data = get_marker_data(request, agency='SEPTA')
     show_njt_route = False
-    show_septa_route = False
+    #show_septa_route = False
     njt_shapes = None
     septa_shapes = None
 
@@ -44,13 +44,13 @@ def map_page_view(request):
         if agency_check.is_valid():
 
             request.session['agency_check_data'] = agency_check.cleaned_data
-
-            show_njt_route = agency_check.cleaned_data['show_njt']
             show_septa_route = agency_check.cleaned_data['show_septa']
+            print(f'show septa route: {show_septa_route}')
             if show_njt_route:
                 njt_shapes = Agency.get_agency('NJT').get_shapes()
                 print("retrieved njt shape data")
             if show_septa_route:
+                print('getting septa shape data')
                 septa_shapes = Agency.get_agency('SEPTA').get_shapes()
             return render(request, 'map.html', {'agency_check' : agency_check,
                                                     'train_loc_data': train_marker_data,
@@ -62,8 +62,6 @@ def map_page_view(request):
 
     return render(request, 'map.html', {'agency_check' : agency_check,
                                         'train_loc_data': train_marker_data,
-                                        'show_njt_route': show_njt_route,
-                                        'show_septa_route': show_septa_route,
                                         'njt_shapes' : njt_shapes,
                                         'septa_shapes': septa_shapes})
 
@@ -93,7 +91,7 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
     Render the Arrivals and Departures Table
 """
 def load_arrivals(request, station):
-    arrival_context = Consumer.get_arrivals(station,agency='SEPTA')
+    arrival_context = get_arrivals(station,agency='SEPTA')
     form = StationSlctForm() 
     septa = Agency.get_agency('SEPTA')
     septa_routes = septa.get_routes()
@@ -118,7 +116,7 @@ def load_arrivals(request, station):
 """
 def update_arrivals_table(request, table_id):
     station = request.POST.get('station', "30th Street Station") 
-    arrival_context = Consumer.get_arrivals(station)
+    arrival_context = get_arrivals(station)
     data = []
     all_arrivals = False # controls which columns appear in the table header
     match table_id:
@@ -260,7 +258,7 @@ def next_to_arrive(request, station):
             selected_stop = form.cleaned_data['stop_choice']
             stop_name = validate_station_name(selected_stop)
 
-            trains_by_track = Consumer.arrivals_by_track(stop_name)
+            trains_by_track = arrivals_by_track(stop_name)
             return render(request, 'nta/nta.html', { 'stop_form' : form,
                                                     'station': stop_name,
                                                     'trains_by_track': trains_by_track
@@ -273,5 +271,5 @@ def next_to_arrive(request, station):
 
 def update_next_to_arrive(request, station):
     station = request.POST.get('station', "30th Street Station") 
-    trains_by_track = Consumer.arrivals_by_track(station)
+    trains_by_track = arrivals_by_track(station)
     return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track})

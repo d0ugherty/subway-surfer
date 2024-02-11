@@ -34,9 +34,15 @@
      hx-after-get="displayTrainMarkers">
 </div>
 
-<script>
-    
-</script>
 <div id="map">Map<br>
-<script src="{% static 'subway_surfer/js/map.js' %}"></script>
+    <script src="{% static 'subway_surfer/js/map.js' %}">
+        initMap();
+    </script>
 </div>
+
+{% if septa_shapes %}
+<script>
+    var shape_data = JSON.parse('{{ septa_shapes|safe }}')
+    displayShapes(shape_data);
+</script>
+{% endif %}
