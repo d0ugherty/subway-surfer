@@ -54,15 +54,12 @@ function displayTrainCurrentLoc(item, trainLayer) {
 }
 
 function displayShapes(shape_data) {
-    console.log("executing display shapes");
     Object.keys(shape_data).forEach(key => {
         let latlngs = [];
         let shape = shape_data[key];
         for(const point of shape) {
             latlngs.push([point.shape_pt_lat, point.shape_pt_lon]);
         }
-        let polyline = L.polyline(latlngs, { color: '#43647c'}).addTo(map);
+        L.polyline(latlngs, { color: '#43647c'}).addTo(map);
     });
-    
-    //console.log(polyline.getLatLngs());
 }

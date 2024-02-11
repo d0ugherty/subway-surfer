@@ -45,3 +45,9 @@
     displayShapes(shape_data);
 </script>
 {% endif %}
+{% if njt_shapes %}
+<script>
+    var shape_data = JSON.parse('{{ njt_shapes|safe }}')
+    displayShapes(shape_data);
+</script>
+{% endif %}

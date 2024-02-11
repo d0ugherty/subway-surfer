@@ -57,7 +57,6 @@ class Agency(models.Model):
     """
     def get_shapes(self, serialize=True):
         agency_route_trips = Trip.objects.filter(route__agency=self).values_list('shape_id', flat=True).distinct()
-        print(agency_route_trips)
         agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips).values_list("shape_id", "shape_pt_lon", "shape_pt_lat")
         # Serialize to use it into a JSON string to use it with JavaScript
         if serialize:

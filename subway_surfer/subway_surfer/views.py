@@ -36,7 +36,7 @@ def map_page_view(request):
    # agency_check = AgencyCheckBox()
     train_marker_data = get_marker_data(request, agency='SEPTA')
     show_njt_route = False
-    #show_septa_route = False
+    show_septa_route = False
     njt_shapes = None
     septa_shapes = None
 
@@ -45,6 +45,7 @@ def map_page_view(request):
 
             request.session['agency_check_data'] = agency_check.cleaned_data
             show_septa_route = agency_check.cleaned_data['show_septa']
+            show_njt_route = agency_check.cleaned_data['show_njt']
             print(f'show septa route: {show_septa_route}')
             if show_njt_route:
                 njt_shapes = Agency.get_agency('NJT').get_shapes()

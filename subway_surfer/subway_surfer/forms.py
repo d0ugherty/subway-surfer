@@ -52,4 +52,4 @@ class DestForm(forms.Form):
 
 class AgencyCheckBox(forms.Form):
     show_septa = forms.BooleanField(initial=True, label="Show SEPTA", required=False)
-  #  show_njt = forms.BooleanField(initial=False, label="Show NJT", required=False)
+    show_njt = forms.BooleanField(initial=False, label="Show NJT", required=False)

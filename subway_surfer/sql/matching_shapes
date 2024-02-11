@@ -1,0 +1,18 @@
+SELECT a1.shape_id
+FROM (
+	SELECT DISTINCT s.shape_id, a.agency_name
+	FROM subway_surfer_shape s
+	JOIN subway_surfer_trip t ON s.shape_id = t.shape_id
+	JOIN subway_surfer_route r ON t.route_id = r.id
+	JOIN subway_surfer_agency a ON r.agency_id = a.id
+	WHERE a.id = 25
+) as a1
+/**using inner join to find the id that exists in both lists*/
+INNER JOIN (
+	SELECT DISTINCT s.shape_id, a.agency_name
+	FROM subway_surfer_shape s
+	JOIN subway_surfer_trip t ON s.shape_id = t.shape_id
+	JOIN subway_surfer_route r ON t.route_id = r.id
+	JOIN subway_surfer_agency a ON r.agency_id = a.id
+	WHERE a.id = 27
+) AS a2 ON a1.shape_id = a2.shape_id;
