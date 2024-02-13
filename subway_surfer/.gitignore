@@ -138,7 +138,6 @@ GitHub.sublime-settings
 .history
 
 # etc
-get_data.py
 sql
 *.zip
 gtfs_data
