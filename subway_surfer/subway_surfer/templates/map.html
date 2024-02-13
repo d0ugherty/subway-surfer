@@ -1,5 +1,4 @@
 {% load static %}
-{% load custom_tags %}
 {% block extra_head %}
     <meta name="viewport" content="width=device-width, intial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -8,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'subway_surfer/styles/map.css' %}"/>
     <script src="{% static 'subway_surfer/js/load_map_data.js' %}"></script>
 {% endblock %}
-
+<body id="body">
 <!--
     Might want to use ajax for this since I just want to update the map layer
     instead of the whole map.
@@ -19,7 +18,7 @@
 
 
 
-<form>
+<form id="form">
 {{ agency_check }}
 <button type="submit">Submit</button>
 </form>
@@ -51,3 +50,4 @@
     displayShapes(shape_data);
 </script>
 {% endif %}
+</body>

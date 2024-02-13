@@ -47,9 +47,11 @@ def map_page_view(request):
             show_septa_route = agency_check.cleaned_data['show_septa']
             show_njt_route = agency_check.cleaned_data['show_njt']
             print(f'show septa route: {show_septa_route}')
+            print(f'show njt route: {show_njt_route}')
             if show_njt_route:
                 njt_shapes = Agency.get_agency('NJT').get_shapes()
                 print("retrieved njt shape data")
+                print(njt_shapes)
             if show_septa_route:
                 print('getting septa shape data')
                 septa_shapes = Agency.get_agency('SEPTA').get_shapes()

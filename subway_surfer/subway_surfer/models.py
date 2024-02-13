@@ -21,7 +21,7 @@ class Stop(models.Model):
         except cls.DoesNotExist:
             return None
     
-    def get_lat_lon(self):
+    def lat_lon(self):
         lat = self.stop_lat
         lon = self.stop_lon
         return [lat, lon]
@@ -57,8 +57,11 @@ class Agency(models.Model):
     """
     def get_shapes(self, serialize=True):
         agency_route_trips = Trip.objects.filter(route__agency=self).values_list('shape_id', flat=True).distinct()
+        print(f'agency_route_trips: {self} - {agency_route_trips}')
         agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips).values_list("shape_id", "shape_pt_lon", "shape_pt_lat")
+        print(f'agency_shapes: {self} {agency_shapes}')
         # Serialize to use it into a JSON string to use it with JavaScript
+        # this is faster than using the built-in serializer
         if serialize:
             shape_dict = defaultdict(list)
             for row in agency_shapes:
@@ -89,7 +92,7 @@ class Shape(models.Model):
     shape_pt_sequence = models.IntegerField()
     shape_dist_traveled = models.FloatField(null=True)
 
-    def get_lat_lon(self):
+    def lat_lon(self):
         return [self.shape_pt_lat, self.shape_pt_lon]
 
 class Fare(models.Model):
@@ -134,6 +137,9 @@ class Trip(models.Model):
         except cls.DoesNotExist:
             return None
     
+    def route_name(self):
+        return self.route.route_short_name
+        
 
 class Stop_Time(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)

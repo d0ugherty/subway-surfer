@@ -1,3 +1,11 @@
+body {
+  background-color: #363636;
+}
+
+form {
+  color:aliceblue;
+}
+
 #map { height: 700px; width: 700px; }
 
 /**

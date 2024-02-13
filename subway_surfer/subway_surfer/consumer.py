@@ -90,9 +90,10 @@ def transit_view(agency):
         return train_info
 
 
-def _process_arrivals_json(response, context, agency):
+def _process_arrivals_json(response, context, agency_id):
     all_arrivals = []
-    arrivals_by_line = _initialize_arrivals_by_line(agency)
+    agency_routes = Agency.get_agency(agency_id).get_routes()
+    arrivals_by_line = { route.route_short_name : [] for route in agency_routes }
     parsed_data = response.json()
             
     for key, value in parsed_data.items():
@@ -114,12 +115,8 @@ def _get_route(train_info):
         trip_route = train_info['line'] + ' Line'
         return trip_route
     else:
-        trip_route = trip.route.route_short_name
+        trip_route = trip.route_name()
         return trip_route
-
-def _initialize_arrivals_by_line(agency_id):
-    agency_routes = Agency.get_agency(agency_id).get_routes()
-    return { route.route_short_name : [] for route in agency_routes }
 
 
 def _process_train_data(train_data, all_arrivals, arrivals_by_line):
@@ -149,11 +146,12 @@ def _parse_train_info(train):
         "track": clean_string(train["track"])
         }
 
-def _update_arrivals_by_line(train_info, arrivals_by_line):
+def _update_arrivals_by_line(train_info, arrivals_by_line, agency='SEPTA'):
     route = _get_route(train_info)
     train_info['headsign'] = _get_headsign(train_info)
     arrivals_by_line[route].append(train_info)
-    arrivals_by_line = _handle_thru_routing(train_info, arrivals_by_line)
+    if agency == 'SEPTA':
+        arrivals_by_line = _handle_thru_routing(train_info, arrivals_by_line)
 
 """
     Trains from the Airport are typically terminate at Warminster or Fox Chase 
