@@ -1,10 +1,9 @@
 from .bcolors import bcolors
 from django.shortcuts import render
 #from django.http import JsonResponse, HttpResponse
-from django.core import serializers
 from .forms import *
 from .models import Stop
-from .utils import validate_station_name, serialize_queryset
+from .utils import validate_station_name
 from .consumer import transit_view, get_arrivals, arrivals_by_track
 from django.shortcuts import redirect
 
@@ -46,11 +45,8 @@ def map_page_view(request):
             request.session['agency_check_data'] = agency_check.cleaned_data
             show_septa_route = agency_check.cleaned_data['show_septa']
             show_njt_route = agency_check.cleaned_data['show_njt']
-            print(f'show septa route: {show_septa_route}')
-            print(f'show njt route: {show_njt_route}')
             if show_njt_route:
                 njt_shapes = Agency.get_agency('NJT').get_shapes()
-                print(njt_shapes)
             if show_septa_route:
                 septa_shapes = Agency.get_agency('SEPTA').get_shapes()
             return render(request, 'map.html', {'agency_check' : agency_check,
