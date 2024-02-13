@@ -1,15 +1,5 @@
 from datetime import datetime
-from django.core.paginator import Paginator
-from django.core import serializers
 import json
-
-def serialize_queryset(queryset, chunk_size=100):
-    paginator = Paginator(queryset, chunk_size)
-    serialized_data = []
-    for page_num in range(1, paginator.num_pages + 1):
-        page = paginator.page(page_num)
-        serialized_data += json.loads(serializers.serialize('json', page.object_list))
-    return json.dumps(serialized_data)
 
 """Because some of SEPTA's stop names in the static GTFS data are different from
 what their API endpoint expects lol"""
