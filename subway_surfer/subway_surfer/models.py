@@ -50,6 +50,9 @@ class Agency(models.Model):
     def get_routes(self):
         return Route.objects.filter(agency=self).select_related('agency')
     
+    def get_stops(self):
+        return Stop.objects.filter(stoptime__trip__route__agency_id=self.id).distinct()
+    
     """ 
     Queries for retrieving the shape data. Shape data doesn't have a route 
     or agency associated with it so you have to bridge through trips. 

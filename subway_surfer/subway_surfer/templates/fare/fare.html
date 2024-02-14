@@ -10,14 +10,6 @@
     <button type = "submit" value = "Submit"> Submit </button>
 </form>
 
-{% if route_slct_form %}
-    <form method="post" action="{% url 'fare_calculator' %}">
-        {% csrf_token %}
-        {{ route_slct_form }}
-        <button type = "submit" value = "Submit"> Submit </button>
-    </form>
-{% endif %}
-
 {% if origin_form %}
     <form method="post" action="{% url 'fare_calculator' %}">
         {% csrf_token %}

@@ -31,19 +31,23 @@ class RouteSlctForm(forms.Form):
     
 
 class OriginForm(forms.Form):
-    origin_choice = forms.ModelChoiceField(queryset=Stop.objects.all(), 
-                                         label = "Select Origin: ",
-                                         to_field_name='stop_name',
-                                         required=False)
+    def __ini__(self, agency, *args, **kwargs):
+        super(OriginForm, self).__init__(*args, **kwargs)
+        self.fields['stops'] = forms.ModelChoiceField(
+            queryset=Agency.objects.get(agency_id=agency).get_stops(),
+            label = "Select Origin: ",
+            to_field_name='stop_name',
+            required=False
+        )
     
     form_type = forms.CharField(widget=forms.HiddenInput(), initial='origin')
 
 class DestForm(forms.Form):
 
-    def __init__(self, origin, *args, **kwargs):
+    def __init__(self, origin, agency, *args, **kwargs):
         super(DestForm, self).__init__(*args, **kwargs)
         self.fields['stops'] = forms.ModelChoiceField(
-            queryset=Stop.objects.all().exclude(stop_id=origin), 
+            queryset=Agency.objects.get(agency_id=agency).get_stops().exclude(stop_id=origin.id), 
                                          label = "Select Destination: ",
                                          to_field_name='stop_name',
                                          required=False)

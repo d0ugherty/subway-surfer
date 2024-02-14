@@ -193,15 +193,7 @@ def fare_calculator(request):
             request.session['agency_choice'] = agency.id
             route_form = RouteSlctForm(agency)
         
-        # Route selection isn't really being used for anything
-        # TO DO: Figure out what i should do with it 
-        elif form_type == 'route':
-            agency_id = request.session.get('agency_choice')
-            route_form = RouteSlctForm(agency_id, request.POST)
-            if route_form.is_valid():
-                origin_form = OriginForm()
-            else:
-                print(route_form.errors)
+        
             
         elif form_type == 'origin':
             origin_form = OriginForm(request.POST)
