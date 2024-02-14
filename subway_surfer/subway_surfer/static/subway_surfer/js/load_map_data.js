@@ -28,17 +28,18 @@ function updateMarkers() {
 //setInterval(updateMarkers, 5000);
 
 
-function displayLocation(data){
-  // Check if data itself is an array
-    Object.keys(data).forEach(key => {
-        let train = data[key];
+function displayLocation(marker_data){
+    trainLayer.clearLayers();
+    Object.keys(marker_data).forEach(key => {
+        console.log(key);
+        let train = marker_data[key];
+        console.log(train);
         displayTrainCurrentLoc(train, trainLayer);
   });
 }
 
 
 function displayTrainCurrentLoc(item, trainLayer) {
-    trainLayer.clearLayers();
     let trainNumber = item.trainno;
     let trainMarker = L.marker([item.lat, item.lon]).addTo(trainLayer);
     trainLayer.addTo(map);
@@ -51,15 +52,4 @@ function displayTrainCurrentLoc(item, trainLayer) {
             <b>Line: </b> ${item.line}<br>
             <b> Destination: </b> ${item.dest}`));
     trainMarker.bindPopup(popup);
-}
-
-function displayShapes(shape_data) {
-    Object.keys(shape_data).forEach(key => {
-        let latlngs = [];
-        let shape = shape_data[key];
-        for(const point of shape) {
-            latlngs.push([point.shape_pt_lat, point.shape_pt_lon]);
-        }
-        L.polyline(latlngs, { color: '#43647c'}).addTo(map);
-    });
 }

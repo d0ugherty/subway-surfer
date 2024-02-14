@@ -1,4 +1,5 @@
 import requests
+import json
 from .bcolors import bcolors
 from django.http import JsonResponse
 from .utils import format_time, clean_string, get_digits
@@ -61,7 +62,7 @@ def countdown(train_info):
     diff = sched_time - datetime.now() 
     return (int(diff.total_seconds()/60) + min_late)
 
-def transit_view(agency):
+def map_marker_data(agency):
     if agency == 'SEPTA':
         api_url = 'https://www3.septa.org/api/TrainView/index.php'
         response = requests.get(api_url) 
@@ -87,7 +88,7 @@ def transit_view(agency):
                         "TRACK": item['TRACK'],
                         "TRACK_CHANGE": item['TRACK_CHANGE']
                     }
-        return train_info
+        return json.dumps(train_info)
 
 
 def _process_arrivals_json(response, context, agency_id):

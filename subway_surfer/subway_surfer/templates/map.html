@@ -23,7 +23,7 @@
 <button type="submit">Submit</button>
 </form>
 <h3>{{ agency }}</h3>
-<div id="data-fetcher"
+<!--<div id="data-fetcher"
      data-trainInfo="{{ train_loc_data|safe }}"
      hx-get="/map/{{ agency }}/"
      hx-trigger="every 5s"
@@ -31,12 +31,18 @@
      hx-swap="outerHTML"
      hx-select="#data-fetcher"
      hx-after-get="displayTrainMarkers">
-</div>
+</div>-->
+
 
 <div id="map">Map<br>
     <script src="{% static 'subway_surfer/js/map.js' %}">
     </script>
 </div>
+
+<script>
+    var train_data = JSON.parse('{{ train_marker_data|safe }}')
+    displayLocation(train_data)
+</script>
 
 {% if septa_shapes %}
 <script>

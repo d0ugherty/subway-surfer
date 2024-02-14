@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .forms import *
 from .models import Stop
 from .utils import validate_station_name
-from .consumer import transit_view, get_arrivals, arrivals_by_track
+from .consumer import map_marker_data, get_arrivals, arrivals_by_track
 from django.shortcuts import redirect
 
 
@@ -19,7 +19,8 @@ def home(request):
 def get_marker_data(request, agency):
     train_data = None
     if request.method == 'GET':
-        train_data = transit_view(agency)
+        train_data = map_marker_data(agency)
+        print(f'type(train_data) : {type(train_data)}')
     return train_data
 
 
@@ -34,6 +35,7 @@ def map_page_view(request):
     agency_check = AgencyCheckBox(request.GET or None)
    # agency_check = AgencyCheckBox()
     train_marker_data = get_marker_data(request, agency='SEPTA')
+    print(f'train_marker_data : {train_marker_data}')
     show_njt_route = False
     show_septa_route = False
     njt_shapes = None
@@ -58,7 +60,7 @@ def map_page_view(request):
 
 
     return render(request, 'map.html', {'agency_check' : agency_check,
-                                        'train_loc_data': train_marker_data,
+                                        'train_marker_data': train_marker_data,
                                         'njt_shapes' : njt_shapes,
                                         'septa_shapes': septa_shapes})
 
