@@ -1,6 +1,6 @@
 from .bcolors import bcolors
 from django.shortcuts import render
-#from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse
 from .forms import *
 from .models import Stop
 from .utils import validate_station_name
@@ -12,57 +12,53 @@ def home(request):
     return render(request, 'home.html')
 
 """
-    TO DO: Refresh map markers without refreshing whole page
-    may have to use ajax because leaflet is a js library. I already have the backend logic done
-    in Python though -_-
-"""
-def get_marker_data(request, agency):
-    train_data = None
-    if request.method == 'GET':
-        train_data = map_marker_data(agency)
-        print(f'type(train_data) : {type(train_data)}')
-    return train_data
-
-
-"""
     Renders the map page elements - map and agency form
-
-    TO DO: Handle unchecks
 """
 def map_page_view(request):
-    print(request.method)
-   # init_form_data = request.session.get('agency_check_data', {})
     agency_check = AgencyCheckBox(request.GET or None)
-   # agency_check = AgencyCheckBox()
-    train_marker_data = get_marker_data(request, agency='SEPTA')
-    print(f'train_marker_data : {train_marker_data}')
+    train_marker_data = map_markers(request, agency='SEPTA')
     show_njt_route = False
     show_septa_route = False
+    show_septa_markers = True
     njt_shapes = None
     septa_shapes = None
-
+    
     if request.method == 'GET':
         if agency_check.is_valid():
 
-            request.session['agency_check_data'] = agency_check.cleaned_data
             show_septa_route = agency_check.cleaned_data['show_septa']
             show_njt_route = agency_check.cleaned_data['show_njt']
+
             if show_njt_route:
                 njt_shapes = Agency.get_agency('NJT').get_shapes()
             if show_septa_route:
                 septa_shapes = Agency.get_agency('SEPTA').get_shapes()
             return render(request, 'map.html', {'agency_check' : agency_check,
-                                                    'train_loc_data': train_marker_data,
-                                                    'show_njt_route': show_njt_route,
-                                                    'show_septa_route': show_septa_route,
+                                                    'train_marker_data': train_marker_data,
                                                     'njt_shapes' : njt_shapes,
-                                                    'septa_shapes': septa_shapes})
+                                                    'septa_shapes': septa_shapes,
+                                                    'show_septa_markers' : show_septa_markers})
 
 
     return render(request, 'map.html', {'agency_check' : agency_check,
                                         'train_marker_data': train_marker_data,
                                         'njt_shapes' : njt_shapes,
-                                        'septa_shapes': septa_shapes})
+                                        'septa_shapes': septa_shapes,
+                                        'show_septa_markers': show_septa_markers})
+
+"""
+    Endpoint for the map marker data. Establishing the real-time location data
+    as its own endpoint makes it easier to fetch with JavaScript, while the 
+    Consumer module handles the backend logic.
+"""
+def map_markers(request, agency):
+    train_data = None
+    if request.method == 'GET':
+        train_data = map_marker_data(agency)
+        return JsonResponse(train_data, safe=True)
+    else:
+        return JsonResponse({'error': f'Request method {request.method} not supported'}, states=405)
+
 
 """
     Renders form and redirects to the train information board

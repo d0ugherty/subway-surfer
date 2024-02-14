@@ -1,5 +1,4 @@
 import requests
-import json
 from .bcolors import bcolors
 from django.http import JsonResponse
 from .utils import format_time, clean_string, get_digits
@@ -88,7 +87,7 @@ def map_marker_data(agency):
                         "TRACK": item['TRACK'],
                         "TRACK_CHANGE": item['TRACK_CHANGE']
                     }
-        return json.dumps(train_info)
+        return train_info
 
 
 def _process_arrivals_json(response, context, agency_id):
