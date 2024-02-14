@@ -14,7 +14,7 @@ const map = L.map('map', {
     zoom: 11,
     layers: [
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
-        L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png')
+      //  L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png')
     ],
         tap: false
     });
