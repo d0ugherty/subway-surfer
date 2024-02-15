@@ -14,7 +14,7 @@
     <form method="post" action="{% url 'fare_calculator' %}">
         {% csrf_token %}
         {{ origin_form }}
-        <button type = "submit" value = "Submit"> Submit </button>
+        <button type = "submit" value = "Submit"> Submit Origin</button>
     </form>
 {% endif %}
 
@@ -22,7 +22,7 @@
     <form method="post" action="{% url 'fare_calculator' %}">
         {% csrf_token %}
         {{ dest_form }}
-        <button type = "submit" value = "Submit"> Submit </button>
+        <button type = "submit" value = "Submit"> Submit Destination</button>
     </form>
 {% endif %}
 

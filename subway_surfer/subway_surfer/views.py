@@ -180,7 +180,6 @@ def update_arrivals_table(request, table_id):
 
 def fare_calculator(request):
     agency_form = AgencySlctForm(request.POST or None)
-    route_form = None
     origin_form = None
     dest_form = None
     price = 0.0
@@ -190,18 +189,22 @@ def fare_calculator(request):
         
         if form_type == 'agency' and agency_form.is_valid():
             agency = agency_form.cleaned_data['agency_choice']
+            print(f'agency : {agency}')
             request.session['agency_choice'] = agency.id
-            route_form = RouteSlctForm(agency)
-        
-        
-            
+            origin_form = OriginForm(agency)
+    
         elif form_type == 'origin':
-            origin_form = OriginForm(request.POST)
+           # agency = request.session.get('agency_choice')
+           # print(f'agency id : {agency}')
+            #print(f'type : {type(agency)}')
+          #  origin_form = OriginForm(agency, request.POST)
             if origin_form.is_valid():
                 origin = origin_form.cleaned_data['origin_choice']
                 request.session['origin_choice'] = origin.stop_id
                 request.session['origin_zone'] = origin.zone_id
                 dest_form = DestForm(origin.stop_id)
+            else:
+                print(origin_form.errors)
         
         elif form_type == 'destination':
             dest_form = DestForm(request.session['origin_choice'], request.POST)
@@ -215,7 +218,6 @@ def fare_calculator(request):
 
     return render(request, 'fare/fare.html', {
         'agency_slct_form': agency_form,
-        'route_slct_form': route_form,
         'origin_form': origin_form,
         'dest_form' : dest_form,
         'price': '${:,.2f}'.format(price)
