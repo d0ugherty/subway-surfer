@@ -189,27 +189,30 @@ def fare_calculator(request):
         
         if form_type == 'agency' and agency_form.is_valid():
             agency = agency_form.cleaned_data['agency_choice']
-            print(f'agency : {agency}')
             request.session['agency_choice'] = agency.id
             origin_form = OriginForm(agency)
     
         elif form_type == 'origin':
-           # agency = request.session.get('agency_choice')
-           # print(f'agency id : {agency}')
-            #print(f'type : {type(agency)}')
-          #  origin_form = OriginForm(agency, request.POST)
+            agency_choice_id = request.session.get('agency_choice')
+            agency = Agency.objects.get(id=agency_choice_id)
+            agency_form = AgencySlctForm(request.POST)
+            origin_form = OriginForm(agency, request.POST)
             if origin_form.is_valid():
-                origin = origin_form.cleaned_data['origin_choice']
-                request.session['origin_choice'] = origin.stop_id
+                origin = origin_form.cleaned_data['origin_stops']
+                request.session['origin_stop_id'] = origin.stop_id
                 request.session['origin_zone'] = origin.zone_id
-                dest_form = DestForm(origin.stop_id)
+                dest_form = DestForm(origin.stop_id, agency)
             else:
-                print(origin_form.errors)
+                print(f'origin form errors:  {origin_form.errors}')
         
         elif form_type == 'destination':
-            dest_form = DestForm(request.session['origin_choice'], request.POST)
+            origin = request.session['origin_stop_id']
+            agency = Agency.objects.get(id=request.session.get('agency_choice'))
+            agency_form = AgencySlctForm(request.POST)
+            origin_form = OriginForm(agency, request.POST)
+            dest_form = DestForm(origin, agency, request.POST)
             if dest_form.is_valid():
-                destination = dest_form.cleaned_data['stops']
+                destination = dest_form.cleaned_data['dest_stops']
                 dest_zone = destination.zone_id
                 origin_zone = request.session['origin_zone']
 
