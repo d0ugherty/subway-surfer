@@ -9,16 +9,27 @@ class StationSlctForm(forms.Form):
                                          required=False)
 
 """
-    TO DO: Display stops depending on route selected
-"""
-
 class AgencySlctForm(forms.Form):
     agency_choice = forms.ModelChoiceField(queryset=Agency.objects.all(),
                                            label = "Select Agency",
+                                           initial='SEPTA',
                                            to_field_name='agency_name',
                                            required=False)
     form_type = forms.CharField(widget=forms.HiddenInput(), initial='agency')
-    
+    """
+class AgencySlctForm(forms.Form):
+    def __init__(self, initial=None, *args, **kwargs):
+        super(AgencySlctForm, self).__init__(*args, **kwargs)
+        self.fields['agencies'] = forms.ModelChoiceField(
+            queryset=Agency.objects.all(),
+            label = "Select Agency",
+            initial = initial,
+            to_field_name = 'agency_name',
+            required = False
+        )
+
+    form_type = forms.CharField(widget=forms.HiddenInput(), initial='agency')
+
 class RouteSlctForm(forms.Form):
     def __init__(self, agency, *args, **kwargs):
         super(RouteSlctForm, self).__init__(*args, **kwargs)

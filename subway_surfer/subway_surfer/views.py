@@ -179,7 +179,8 @@ def update_arrivals_table(request, table_id):
 """
 
 def fare_calculator(request):
-    agency_form = AgencySlctForm(request.POST or None)
+    agency_form = AgencySlctForm(initial='SEPTA')
+
     origin_form = None
     dest_form = None
     price = 0.0
@@ -187,16 +188,21 @@ def fare_calculator(request):
     if request.method == 'POST':
         form_type = request.POST.get('form_type', None)
         
-        if form_type == 'agency' and agency_form.is_valid():
-            agency = agency_form.cleaned_data['agency_choice']
-            request.session['agency_choice'] = agency.id
-            origin_form = OriginForm(agency)
+        if form_type == 'agency':
+            if agency_form.is_valid():
+                agency = agency_form.cleaned_data['agencies']
+                request.session['agencies'] = agency.id
+                origin_form = OriginForm(agency)
+            else:
+                print(f'agency form errors: {agency_form.errors}')
     
         elif form_type == 'origin':
-            agency_choice_id = request.session.get('agency_choice')
+            agency_choice_id = request.session.get('agencies')
             agency = Agency.objects.get(id=agency_choice_id)
-            agency_form = AgencySlctForm(request.POST)
+            agency_form = AgencySlctForm(initial={'agencies': agency_choice_id})
+
             origin_form = OriginForm(agency, request.POST)
+
             if origin_form.is_valid():
                 origin = origin_form.cleaned_data['origin_stops']
                 request.session['origin_stop_id'] = origin.stop_id
@@ -207,7 +213,8 @@ def fare_calculator(request):
         
         elif form_type == 'destination':
             origin = request.session['origin_stop_id']
-            agency = Agency.objects.get(id=request.session.get('agency_choice'))
+            agency = Agency.objects.get(id=request.session.get('agencies'))
+
             agency_form = AgencySlctForm(request.POST)
             origin_form = OriginForm(agency, request.POST)
             dest_form = DestForm(origin, agency, request.POST)
