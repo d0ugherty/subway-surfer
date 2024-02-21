@@ -1,6 +1,7 @@
 from django.db import models
 from collections import defaultdict
 import json
+from datetime import datetime
 
 class Stop(models.Model):
     stop_id = models.IntegerField()
@@ -27,7 +28,18 @@ class Stop(models.Model):
         return [lat, lon]
     
     def get_stop_times(self):
-        return Stop_Time.objects.filter(stop_id=self.stop_id).select_related("stop")
+        return Stop_Time.objects.filter(stop_id=self.stop_id)
+    
+    # not finished
+    def next_departure(self):
+        #get today's date
+        today_cal_date = Calendar_Date.today()
+        today_trips = today_cal_date.get_date_trips()
+        #get next stop_time
+        next_stop_time = self.get_stop_times().order_by('departure_time').first()
+
+
+
     
 class Agency(models.Model):
     agency_id = models.CharField(max_length=25)
@@ -156,14 +168,31 @@ class Calendar_Date(models.Model):
     date = models.CharField(max_length=25)
     exception_type = models.IntegerField()
 
+    @classmethod
+    def today(cls):
+        todays_date = datetime.today().strftime('%Y%d%m')
+        try:
+            return cls.objects.get(date=todays_date)
+        except cls.DoesNotExist:
+            print(f'Calendar_Date model for {todays_date} does not exist')
+            return None
+
+    def get_date_trips(self):
+        try:
+            date_trips = Trip.objects.filter(service_id=self.service_id)
+            return date_trips
+        except Trip.DoesNotExist:
+            print(f'No trips found for service id {self.service_id}')
+            return None
+
 class Calendar(models.Model):
     service_id = models.CharField(max_length=25)
-    monday = models.IntegerField()
-    tuesday = models.IntegerField()
-    wednesday = models.IntegerField()
-    thursday = models.IntegerField()
-    friday = models.IntegerField()
-    saturday = models.IntegerField()
-    sunday = models.IntegerField()
+    monday = models.IntegerField(null=True)
+    tuesday = models.IntegerField(null=True)
+    wednesday = models.IntegerField(null=True)
+    thursday = models.IntegerField(null=True)
+    friday = models.IntegerField(null=True)
+    saturday = models.IntegerField(null=True)
+    sunday = models.IntegerField(null=True)
     start_date = models.CharField(max_length=25)
     end_date = models.CharField(max_length=25)

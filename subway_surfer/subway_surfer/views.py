@@ -6,6 +6,7 @@ from .models import Stop
 from .utils import validate_station_name
 from .consumer import map_marker_data, get_arrivals, arrivals_by_track
 from django.shortcuts import redirect
+import datetime
 
 
 def home(request):
@@ -98,6 +99,8 @@ def load_arrivals(request, station):
         arrivals_data[f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'] = north_data + south_data
 
     # TO-DO: Add NJT data
+    print(f'todays date {datetime.datetime.today()}')
+    print(f'formatted {datetime.datetime.today().strftime('%Y%d%m')}')
     # TO-DO: Add NJT's atlantic city line for 30th street
 
     return render(request, 'info_board/arrivals.html', {
