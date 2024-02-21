@@ -50,6 +50,9 @@ class Agency(models.Model):
     def get_routes(self):
         return Route.objects.filter(agency=self).select_related('agency')
     
+    def get_stops(self):
+        return Stop.objects.filter(stop_time__trip__route__agency_id=self.id).distinct()
+    
     """ 
     Queries for retrieving the shape data. Shape data doesn't have a route 
     or agency associated with it so you have to bridge through trips. 
@@ -148,3 +151,19 @@ class Stop_Time(models.Model):
     pickup_type = models.IntegerField(null=True)
     drop_off_type = models.IntegerField(null=True)
 
+class Calendar_Date(models.Model):
+    service_id = models.CharField(max_length=25)
+    date = models.CharField(max_length=25)
+    exception_type = models.IntegerField()
+
+class Calendar(models.Model):
+    service_id = models.CharField(max_length=25)
+    monday = models.IntegerField()
+    tuesday = models.IntegerField()
+    wednesday = models.IntegerField()
+    thursday = models.IntegerField()
+    friday = models.IntegerField()
+    saturday = models.IntegerField()
+    sunday = models.IntegerField()
+    start_date = models.CharField(max_length=25)
+    end_date = models.CharField(max_length=25)

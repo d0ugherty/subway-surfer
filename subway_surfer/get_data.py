@@ -13,7 +13,6 @@ from io import BytesIO
 
     TO-DO: 
     1. Retrieve NJT data (if possible)
-    2. Automate the time replacements in stop_times.csv
 """
 
 REPLACEMENTS = [(',24:', ',00:'),
