@@ -43,6 +43,8 @@ def get_digits(input_str):
 def parse_time(time_str):
     return datetime.strptime(time_str, '%I:%M %p')
 
-def now():
-    now = str(datetime.now())
-    return datetime.strptime(now,"%H:%M:%S")
+def current_time():
+    current_time = str(datetime.now())
+    current_time = datetime.strptime(current_time,"%H:%M:%S")
+    return current_time
+    

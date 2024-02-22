@@ -1,5 +1,6 @@
 from django.db import models
 from collections import defaultdict
+from .utils import current_time
 import json
 from datetime import datetime
 
@@ -31,17 +32,33 @@ class Stop(models.Model):
         return Stop_Time.objects.filter(stop_id=self.stop_id)
     
     """
+        There is likely a cleaner, more efficient way to do this
+        but it's doing what I need it to so far
+
         Not finished
     """
     def next_departure(self):
         #get today's date
-        todays_services = Calendar_Date.todays_services().values_list('service_id')
-        # get stop times
-        #stop_stop_times = Stop_Time.objects.filter(stop_id=self.id)
-        # get trips
-        stop_time_trips = Trip.objects.filter(stop_time__stop=self.id).values_list('service_id')
-        todays_trips = stop_time_trips.intersection(todays_services)
-        return todays_trips
+        todays_services = Calendar_Date.todays_services().values_list("service_id")
+        # get service_ids via stop_time and trip
+        stop_time_trips = Trip.objects.filter(stop_time__stop=self.id).values_list("service_id")
+        todays_trip_service_id_qs = stop_time_trips.intersection(todays_services).order_by('service_id').first()
+        todays_trip_service_id = todays_trip_service_id_qs[0]
+
+        # make sure to get departing train from PHL for NJT
+        if self.stop_name == '30TH ST. PHL.':
+            trips = Trip.objects.filter(service_id=todays_trip_service_id, trip_headsign='ATLANTIC CITY')
+        else:
+            trips = Trip.objects.filter(service_id=todays_trip_service_id)
+
+        stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id).values_list('departure_time')
+
+        current = current_time()
+        print(f'currently: {current}')
+        for stop_time in stop_times:
+            diff = current_time - stop_time.departure_time
+            print(diff)
+        return stop_times
         
 
 

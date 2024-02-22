@@ -102,9 +102,7 @@ def load_arrivals(request, station):
     print(f'todays date {datetime.datetime.today()}')
     print(f'formatted {datetime.datetime.today().strftime('%Y%d%m')}')
     print(Stop.get_stop('30TH ST. PHL.').next_departure())
-    trips = Stop.get_stop('30TH ST. PHL.').next_departure()
-    for trip in trips:
-        print(trip)
+    
     # TO-DO: Add NJT's atlantic city line for 30th street
 
     return render(request, 'info_board/arrivals.html', {
