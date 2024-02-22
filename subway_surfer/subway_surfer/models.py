@@ -30,17 +30,21 @@ class Stop(models.Model):
     def get_stop_times(self):
         return Stop_Time.objects.filter(stop_id=self.stop_id)
     
-    # not finished
+    """
+        Not finished
+    """
     def next_departure(self):
         #get today's date
-        today_cal_date = Calendar_Date.today()
-        today_trips = today_cal_date.get_date_trips()
-        #get next stop_time
-        next_stop_time = self.get_stop_times().order_by('departure_time').first()
+        todays_services = Calendar_Date.todays_services().values_list('service_id')
+        # get stop times
+        #stop_stop_times = Stop_Time.objects.filter(stop_id=self.id)
+        # get trips
+        stop_time_trips = Trip.objects.filter(stop_time__stop=self.id).values_list('service_id')
+        todays_trips = stop_time_trips.intersection(todays_services)
+        return todays_trips
+        
 
 
-
-    
 class Agency(models.Model):
     agency_id = models.CharField(max_length=25)
     agency_name = models.CharField(max_length=50)
@@ -143,6 +147,12 @@ class Trip(models.Model):
     shape_id= models.IntegerField()
     direction_id = models.IntegerField()
 
+    """
+        For debugging
+    """
+    def __str__(self):
+        return str(self.trip_headsign + self.trip_id)
+    
     @classmethod
     def get_trip(cls,train_id):
         try:
@@ -169,10 +179,10 @@ class Calendar_Date(models.Model):
     exception_type = models.IntegerField()
 
     @classmethod
-    def today(cls):
-        todays_date = datetime.today().strftime('%Y%d%m')
+    def todays_services(cls):
+        todays_date = datetime.today().strftime('%Y%m%d')
         try:
-            return cls.objects.get(date=todays_date)
+            return cls.objects.filter(date=todays_date)
         except cls.DoesNotExist:
             print(f'Calendar_Date model for {todays_date} does not exist')
             return None
