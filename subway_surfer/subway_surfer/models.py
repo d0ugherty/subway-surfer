@@ -57,13 +57,17 @@ class Stop(models.Model):
 
         stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id)
         now = current_time()
+
         while next_stop_time == None:
+            
             for stop_time in stop_times:
                 departure_datetime = time_to_datetime(stop_time.departure_time)
                 diff = departure_datetime - now
+
                 if diff >= timedelta(0):
                     next_stop_time = stop_time
                     return next_stop_time
+                
             now = datetime.combine(now, datetime.min.time())
         
             

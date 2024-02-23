@@ -96,20 +96,10 @@ def load_arrivals(request, station):
     
     arrivals_data = { 'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5] }
     
-    if station == 'Gray 30th Street':
-        next_acl_time, next_acl_trip = Stop.get_stop('30TH ST. PHL.').next_departure()
-        train_info = {
-            "direction": "S",
-            "train_id": next_acl_trip.block_id,
-            "origin" : "Gray 30th Street",
-            "destination": next_acl_trip.trip_headsign,
-            "line": next_acl_trip.route_name(),
-            "sched_time": str(next_acl_time.departure_time),
-            "depart_time": str(next_acl_time.departure_time),
-            "track": 2
-        }
-
-        arrivals_data['all_arrivals_ctx'].append(train_info)
+    njt_info = get_njt_info(station)
+    
+    if njt_info != None:
+        arrivals_data['all_arrivals_ctx'].append(njt_info)
     
     arrivals_data['all_arrivals_ctx'] = sorted(arrivals_data['all_arrivals_ctx'], key=lambda x: x['depart_time'])
     
@@ -131,6 +121,33 @@ def load_arrivals(request, station):
         'form': form
     })
 
+def get_njt_info(station):
+    if station == 'Gray 30th Street':
+        njt_stop = '30TH ST. PHL.'
+
+    elif station == 'Trenton':
+        njt_stop = 'TRENTON TRANSIT CENTER'
+    
+    next_time, next_trip = Stop.get_stop(njt_stop).next_departure()
+    
+    if next_trip == None:
+        return None
+    
+    else:
+
+        train_info = {
+            "direction": 'N' if next_trip.direction_id == 0 else 'S',
+            "train_id": next_trip.block_id,
+            "origin" : station,
+            "destination": next_trip.trip_headsign,
+            "line": next_trip.route_name(),
+            "sched_time": str(next_time.departure_time),
+            "depart_time": str(next_time.departure_time),
+            "track": ""
+        }
+
+    return train_info
+
 """
     Update Arrivals
 """
@@ -139,22 +156,25 @@ def update_arrivals_table(request, table_id):
     arrival_context = get_arrivals(station)
     data = []
     all_arrivals = False # controls which columns appear in the table header
+
     match table_id:
         case 'tbl_all_arrivals':
             data = arrival_context['N']['all_arrivals_ctx'][:5]
+
             if station == 'Gray 30th Street':
-                next_acl_time, next_acl_trip = Stop.get_stop('30TH ST. PHL.').next_departure()
+                next_acl_time, next_trip = Stop.get_stop('30TH ST. PHL.').next_departure()
                 train_info = {
                     "direction": "S",
-                    "train_id": next_acl_trip.block_id,
+                    "train_id": next_trip.block_id,
                     "origin" : "Gray 30th Street",
-                    "destination": next_acl_trip.trip_headsign,
-                    "line": next_acl_trip.route_name(),
+                    "destination": next_trip.trip_headsign,
+                    "line": next_trip.route_name(),
                     "sched_time": str(next_acl_time.departure_time),
                     "depart_time": str(next_acl_time.departure_time),
                     "track": 2
                 }
                 arrival_context['S']['all_arrivals_ctx'].append(train_info)
+                
             data  += arrival_context['S']['all_arrivals_ctx'][:5]
             all_arrivals = True
 
