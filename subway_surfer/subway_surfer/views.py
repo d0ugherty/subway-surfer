@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .forms import *
 from .models import Stop
-from .utils import validate_station_name
+from .utils import validate_station_name, parse_time
 from .consumer import map_marker_data, get_arrivals, arrivals_by_track
 from django.shortcuts import redirect
 import datetime
@@ -142,8 +142,22 @@ def update_arrivals_table(request, table_id):
     match table_id:
         case 'tbl_all_arrivals':
             data = arrival_context['N']['all_arrivals_ctx'][:5]
+            if station == 'Gray 30th Street':
+                next_acl_time, next_acl_trip = Stop.get_stop('30TH ST. PHL.').next_departure()
+                train_info = {
+                    "direction": "S",
+                    "train_id": next_acl_trip.block_id,
+                    "origin" : "Gray 30th Street",
+                    "destination": next_acl_trip.trip_headsign,
+                    "line": next_acl_trip.route_name(),
+                    "sched_time": str(next_acl_time.departure_time),
+                    "depart_time": str(next_acl_time.departure_time),
+                    "track": 2
+                }
+                arrival_context['S']['all_arrivals_ctx'].append(train_info)
             data  += arrival_context['S']['all_arrivals_ctx'][:5]
             all_arrivals = True
+
         case 'tbl_air_arrivals':
             data = arrival_context['N']['arrivals_by_line_ctx']['Airport Line'] 
             data += arrival_context['S']['arrivals_by_line_ctx']['Airport Line'] 

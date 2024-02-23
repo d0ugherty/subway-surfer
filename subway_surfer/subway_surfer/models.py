@@ -61,7 +61,6 @@ class Stop(models.Model):
             for stop_time in stop_times:
                 departure_datetime = time_to_datetime(stop_time.departure_time)
                 diff = departure_datetime - now
-                print(now)
                 if diff >= timedelta(0):
                     next_stop_time = stop_time
                     return next_stop_time
