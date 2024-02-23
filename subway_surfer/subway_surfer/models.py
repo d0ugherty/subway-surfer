@@ -42,6 +42,7 @@ class Stop(models.Model):
     """
 
     def next_stop_time(self):
+        next_stop_time = None
         #get today's date
         todays_services = Calendar_Date.todays_services().values_list("service_id")
         # get service_ids via stop_time and trip
@@ -56,11 +57,16 @@ class Stop(models.Model):
 
         stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id)
         now = current_time()
-        for stop_time in stop_times:
-            departure_datetime = time_to_datetime(stop_time.departure_time)
-            diff = departure_datetime - now
-            if diff >= timedelta(0):
-                return stop_time
+        while next_stop_time == None:
+            for stop_time in stop_times:
+                departure_datetime = time_to_datetime(stop_time.departure_time)
+                diff = departure_datetime - now
+                print(now)
+                if diff >= timedelta(0):
+                    next_stop_time = stop_time
+                    return next_stop_time
+            now = datetime.combine(now, datetime.min.time())
+        
             
 class Agency(models.Model):
     agency_id = models.CharField(max_length=25)
