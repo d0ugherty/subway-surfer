@@ -31,20 +31,23 @@ class Stop(models.Model):
     def get_stop_times(self):
         return Stop_Time.objects.filter(stop_id=self.stop_id)
     
+    def next_departure(self):
+        next_stop_time = self.next_stop_time()
+        next_trip = Trip.objects.get(trip_id=next_stop_time.trip.trip_id)
+        return next_stop_time, next_trip
+    
     """
         There is likely a cleaner, more efficient way to do this
         but it's doing what I need it to so far
-
-        Not finished
     """
-    def next_departure(self):
+
+    def next_stop_time(self):
         #get today's date
         todays_services = Calendar_Date.todays_services().values_list("service_id")
         # get service_ids via stop_time and trip
         stop_time_trips = Trip.objects.filter(stop_time__stop=self.id).values_list("service_id")
         todays_trip_service_id_qs = stop_time_trips.intersection(todays_services).order_by('service_id').first()
         todays_trip_service_id = todays_trip_service_id_qs[0]
-
         # make sure to get departing train from PHL for NJT
         if self.stop_name == '30TH ST. PHL.':
             trips = Trip.objects.filter(service_id=todays_trip_service_id, trip_headsign='ATLANTIC CITY')
@@ -52,11 +55,6 @@ class Stop(models.Model):
             trips = Trip.objects.filter(service_id=todays_trip_service_id)
 
         stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id)
-        next_stop_time = self._next_stop_time(stop_times)
-        next_trip = Trip.objects.filter(trip_id=next_stop_time.trip.trip_id)
-        return next_trip
-    
-    def next_stop_time(self,stop_times):
         now = current_time()
         for stop_time in stop_times:
             departure_datetime = time_to_datetime(stop_time.departure_time)
@@ -119,8 +117,7 @@ class Route(models.Model):
 
     def __str__(self):
         return str(self.route_long_name)
-    
-"""These draw the routes onto the map"""
+
 class Shape(models.Model):
     shape_id = models.IntegerField()
     shape_pt_lat = models.FloatField()
@@ -153,7 +150,7 @@ class Fare_Attributes(models.Model):
     currency_type = models.CharField(max_length=10)
     payment_method = models.IntegerField()
     transfers = models.IntegerField()
-    transfer_duration = models.CharField(max_length=2) # because septa xfer durations are empty
+    transfer_duration = models.CharField(max_length=2) 
 
 
 class Trip(models.Model):
@@ -180,7 +177,7 @@ class Trip(models.Model):
             return None
     
     def route_name(self):
-        return self.route.route_short_name
+        return self.route.route_long_name
         
 
 class Stop_Time(models.Model):

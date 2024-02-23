@@ -85,23 +85,44 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
 
 """
     Render the Arrivals and Departures Table
+
+    TO-DO: Error handling or preventing on station == None
 """
 def load_arrivals(request, station):
     arrival_context = get_arrivals(station,agency='SEPTA')
     form = StationSlctForm() 
     septa = Agency.get_agency('SEPTA')
     septa_routes = septa.get_routes()
+    
     arrivals_data = { 'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5] }
+    
+    if station == 'Gray 30th Street':
+        next_acl_time, next_acl_trip = Stop.get_stop('30TH ST. PHL.').next_departure()
+        train_info = {
+            "direction": "S",
+            "train_id": next_acl_trip.block_id,
+            "origin" : "Gray 30th Street",
+            "destination": next_acl_trip.trip_headsign,
+            "line": next_acl_trip.route_name(),
+            "sched_time": str(next_acl_time.departure_time),
+            "depart_time": str(next_acl_time.departure_time),
+            "track": 2
+        }
 
+        arrivals_data['all_arrivals_ctx'].append(train_info)
+    
+    arrivals_data['all_arrivals_ctx'] = sorted(arrivals_data['all_arrivals_ctx'], key=lambda x: x['depart_time'])
+    
     for route in septa_routes:
         north_data = arrival_context['N']['arrivals_by_line_ctx'].get(route.route_long_name, [])
         south_data = arrival_context['S']['arrivals_by_line_ctx'].get(route.route_long_name, [])
         arrivals_data[f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'] = north_data + south_data
 
     # TO-DO: Add NJT data
+        
     print(f'todays date {datetime.datetime.today()}')
     print(Stop.get_stop('30TH ST. PHL.').next_departure())
-    
+ 
     # TO-DO: Add NJT's atlantic city line for 30th street
 
     return render(request, 'info_board/arrivals.html', {
