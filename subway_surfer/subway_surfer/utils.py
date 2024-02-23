@@ -44,7 +44,10 @@ def parse_time(time_str):
     return datetime.strptime(time_str, '%I:%M %p')
 
 def current_time():
-    current_time = str(datetime.now())
-    current_time = datetime.strptime(current_time,"%H:%M:%S")
-    return current_time
-    
+    now = datetime.now()
+    print(f'current_time: {now}')
+    return now
+
+def time_to_datetime(time):
+    current_date = datetime.now().date()
+    return datetime.combine(current_date, time)

@@ -1,8 +1,8 @@
 from django.db import models
 from collections import defaultdict
-from .utils import current_time
+from .utils import time_to_datetime, current_time
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Stop(models.Model):
     stop_id = models.IntegerField()
@@ -51,15 +51,25 @@ class Stop(models.Model):
         else:
             trips = Trip.objects.filter(service_id=todays_trip_service_id)
 
-        stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id).values_list('departure_time')
+        stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id).values_list('departure_time', flat=True)
 
-        current = current_time()
-        print(f'currently: {current}')
-        for stop_time in stop_times:
-            diff = current_time - stop_time.departure_time
-            print(diff)
+        next_departure_time = self._next_departure_time(stop_times)
+
+        print(f'next departure_time: {next_departure_time}')
+
         return stop_times
-        
+    
+    def _next_departure_time(self,stop_times):
+        now = current_time()
+        for departure_time in stop_times:
+            print(f'type departure_time: {type(departure_time)}')
+            print(departure_time.strftime('%I:%M %p'))
+            departure_datetime = time_to_datetime(departure_time)
+            diff = departure_datetime - now
+
+            if diff >= timedelta(0):
+                return departure_time
+            
 
 
 class Agency(models.Model):

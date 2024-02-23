@@ -100,7 +100,6 @@ def load_arrivals(request, station):
 
     # TO-DO: Add NJT data
     print(f'todays date {datetime.datetime.today()}')
-    print(f'formatted {datetime.datetime.today().strftime('%Y%d%m')}')
     print(Stop.get_stop('30TH ST. PHL.').next_departure())
     
     # TO-DO: Add NJT's atlantic city line for 30th street
