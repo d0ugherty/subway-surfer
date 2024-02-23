@@ -51,27 +51,19 @@ class Stop(models.Model):
         else:
             trips = Trip.objects.filter(service_id=todays_trip_service_id)
 
-        stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id).values_list('departure_time', flat=True)
-
-        next_departure_time = self._next_departure_time(stop_times)
-
-        print(f'next departure_time: {next_departure_time}')
-
-        return stop_times
+        stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id)
+        next_stop_time = self._next_stop_time(stop_times)
+        next_trip = Trip.objects.filter(trip_id=next_stop_time.trip.trip_id)
+        return next_trip
     
-    def _next_departure_time(self,stop_times):
+    def next_stop_time(self,stop_times):
         now = current_time()
-        for departure_time in stop_times:
-            print(f'type departure_time: {type(departure_time)}')
-            print(departure_time.strftime('%I:%M %p'))
-            departure_datetime = time_to_datetime(departure_time)
+        for stop_time in stop_times:
+            departure_datetime = time_to_datetime(stop_time.departure_time)
             diff = departure_datetime - now
-
             if diff >= timedelta(0):
-                return departure_time
+                return stop_time
             
-
-
 class Agency(models.Model):
     agency_id = models.CharField(max_length=25)
     agency_name = models.CharField(max_length=50)
