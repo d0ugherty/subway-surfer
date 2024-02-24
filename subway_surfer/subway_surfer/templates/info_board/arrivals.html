@@ -14,12 +14,14 @@
 <h1 id = "station">Train Information for {{ station }}</h1>
 
     <table id="tbl_all_arrivals">
-            {% include 'info_board/header.html' with all_arrivals=True %}
+
+            {% include 'info_board/header.html' with show_all_arrivals=True %}
+
         <tbody hx-post="/update_arrivals_table/tbl_all_arrivals/" 
             hx-trigger="every 5s" 
             hx-swap="innerHTML" 
             hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>
-                {% include 'info_board/table_rows.html' with arrivals=all_arrivals_ctx all_arrivals=True %}
+                {% include 'info_board/table_rows.html' with arrivals=all_arrivals_ctx show_all_arrivals=True %}
         </tbody>
     </table>
 
