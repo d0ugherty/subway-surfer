@@ -36,6 +36,16 @@ class Stop(models.Model):
         next_trip = Trip.objects.get(trip_id=next_stop_time.trip.trip_id)
         return next_stop_time, next_trip
     
+    def todays_stop_times(self):
+        todays_services = Calendar_Date.todays_services().values_list("service_id", flat=True)
+
+        stop_time_trips_qs = Trip.objects.filter(service_id__in=todays_services,stop_time__stop=self.id)
+        stop_time_trips_qs = stop_time_trips_qs.exclude(trip_headsign__in=['TRENTON TRANSIT CENTER', '30TH ST. PHL.'])
+        stop_time_trips_qs = stop_time_trips_qs.distinct().order_by('service_id')
+       
+        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id).order_by('departure_time')
+        return stop_times 
+    
     """
     Currently getting a date overflow when attempting to retrieve NJT trips for the next day.
     I think this has to do with the trips.
@@ -45,16 +55,9 @@ class Stop(models.Model):
     Trenton and 30th Street, both of which are termini for NJT. 
     """
     def next_stop_time(self):
+        stop_times = self.todays_stop_times()
+
         next_stop_time = None
-
-        todays_services = Calendar_Date.todays_services().values_list("service_id", flat=True)
-
-        stop_time_trips_qs = Trip.objects.filter(service_id__in=todays_services,stop_time__stop=self.id)
-        stop_time_trips_qs = stop_time_trips_qs.exclude(trip_headsign__in=['TRENTON TRANSIT CENTER', '30TH ST. PHL.'])
-        stop_time_trips_qs = stop_time_trips_qs.distinct().order_by('service_id')
-       
-        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id).order_by('departure_time')
-        
         now = current_time()
         while next_stop_time == None:
 
