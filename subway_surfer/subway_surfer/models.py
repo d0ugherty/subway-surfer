@@ -36,28 +36,44 @@ class Stop(models.Model):
         next_trip = Trip.objects.get(trip_id=next_stop_time.trip.trip_id)
         return next_stop_time, next_trip
     
-    def todays_stop_times(self):
+    def todays_departures(self):
+        stop_times = self.todays_stop_times()
+        trips = self.todays_trips()
+        return stop_times, trips
+
+    def todays_trips(self):
         todays_services = Calendar_Date.todays_services().values_list("service_id", flat=True)
 
         stop_time_trips_qs = Trip.objects.filter(service_id__in=todays_services,stop_time__stop=self.id)
         stop_time_trips_qs = stop_time_trips_qs.exclude(trip_headsign__in=['TRENTON TRANSIT CENTER', '30TH ST. PHL.'])
         stop_time_trips_qs = stop_time_trips_qs.distinct().order_by('service_id')
-       
-        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id).order_by('departure_time')
-        return stop_times 
+
+        return stop_time_trips_qs
     
+    def todays_stop_times(self):
+        stop_time_trips_qs = self.todays_trips()
+        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id).order_by('departure_time')
+        return stop_times
+
+    def upcoming_stop_times(self):
+        now = current_time()
+        stop_time_trips_qs = self.todays_trips()
+        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id, departure_time__gt=now).order_by('departure_time')
+        return stop_times
+    
+    def upcoming_departures(self):
+        stop_trips = self.todays_trips()
+        stop_times = self.upcoming_stop_times()
+        return stop_times, stop_trips
+
     """
     Currently getting a date overflow when attempting to retrieve NJT trips for the next day.
-    I think this has to do with the trips.
-
-    NJT's GTFS data has departure times for inbound trips at the termini
-    we only want outbound departure times, so we exclude trips with inbound headsigns for 
-    Trenton and 30th Street, both of which are termini for NJT. 
+    I think this has to do with the change in trip IDs.
     """
     def next_stop_time(self):
         stop_times = self.todays_stop_times()
-
         next_stop_time = None
+
         now = current_time()
         while next_stop_time == None:
 

@@ -29,3 +29,31 @@ def get_next_departure(station):
     context[train_info['direction']] = train_info
 
     return context
+
+def get_departures(station):
+    if station == 'Gray 30th Street':
+        njt_stop = '30TH ST. PHL.'
+    elif station == 'Trenton':
+        njt_stop = 'TRENTON TRANSIT CENTER'
+    else:
+        return None
+    
+    context = {'station': station, 'N': [], 'S': [] }
+
+    stop_times, trips = Stop.get_stop(njt_stop).upcoming_departures()
+
+    for stop_time, trip in zip(stop_times, trips):
+        train_info = {
+        "direction": 'N' if trip.direction_id == 0 else 'S',
+        "train_id": trip.block_id,
+        "origin" : station,
+        "destination": trip.trip_headsign,
+        "line": trip.route_name(),
+        "sched_time": convert_twelve_hour(str(stop_time.departure_time)),
+        "depart_time": convert_twelve_hour(str(stop_time.departure_time)),
+        "track": ""
+        }
+
+        context[train_info['direction']].append(train_info)
+    
+    return context

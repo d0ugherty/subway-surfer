@@ -102,8 +102,9 @@ def load_arrivals(request, station):
     septa_context = SEPTA.get_arrivals(station,agency='SEPTA')
     form = StationSlctForm() 
     septa_routes = Agency.get_agency('SEPTA').get_routes() 
+    #njt_context = NJ_Transit.get_departures(station)
     njt_context = NJ_Transit.get_next_departure(station)
-
+    #print(NJ_Transit.get_departures(station))
     all_arrivals = {'all_arrivals_ctx': None }
 
     # combine northbound + southbound arrivals
@@ -158,6 +159,7 @@ def update_arrivals_table(request, table_id):
             all_arrivals['all_arrivals_ctx'] = njt_data['all_arrivals_ctx'] + septa_data['all_arrivals_ctx']
             all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
 
+            show_all_arrivals = True
             data = all_arrivals['all_arrivals_ctx']
 
         case 'tbl_air_arrivals':
