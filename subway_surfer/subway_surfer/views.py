@@ -109,10 +109,6 @@ def load_arrivals(request, station):
         arrivals_data[f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'] = north_data + south_data
 
     # TO-DO: Add NJT data
-        
-    print(f'todays date {datetime.datetime.today()}')
-    print(Stop.get_stop('30TH ST. PHL.').next_departure())
- 
     # TO-DO: Add NJT's atlantic city line for 30th street
 
     return render(request, 'info_board/arrivals.html', {
@@ -158,23 +154,14 @@ def update_arrivals_table(request, table_id):
     all_arrivals = False # controls which columns appear in the table header
 
     match table_id:
-        case 'tbl_all_arrivals':
-            data = arrival_context['N']['all_arrivals_ctx'][:5]
 
-            if station == 'Gray 30th Street':
-                next_acl_time, next_trip = Stop.get_stop('30TH ST. PHL.').next_departure()
-                train_info = {
-                    "direction": "S",
-                    "train_id": next_trip.block_id,
-                    "origin" : "Gray 30th Street",
-                    "destination": next_trip.trip_headsign,
-                    "line": next_trip.route_name(),
-                    "sched_time": str(next_acl_time.departure_time),
-                    "depart_time": str(next_acl_time.departure_time),
-                    "track": 2
-                }
-                arrival_context['S']['all_arrivals_ctx'].append(train_info)
-                
+        case 'tbl_all_arrivals':
+            njt_info = get_njt_info(station)
+   
+            if njt_info != None:
+                arrival_context[njt_info['direction']]['all_arrivals_ctx'].append(njt_info)
+   
+            data = arrival_context['N']['all_arrivals_ctx'][:5]
             data  += arrival_context['S']['all_arrivals_ctx'][:5]
             all_arrivals = True
 

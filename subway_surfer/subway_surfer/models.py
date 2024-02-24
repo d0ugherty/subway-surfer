@@ -43,31 +43,29 @@ class Stop(models.Model):
 
     def next_stop_time(self):
         next_stop_time = None
-        #get today's date
+
         todays_services = Calendar_Date.todays_services().values_list("service_id")
-        # get service_ids via stop_time and trip
+
         stop_time_trips = Trip.objects.filter(stop_time__stop=self.id).values_list("service_id")
-        todays_trip_service_id_qs = stop_time_trips.intersection(todays_services).order_by('service_id').first()
-        todays_trip_service_id = todays_trip_service_id_qs[0]
-        # make sure to get departing train from PHL for NJT
-        if self.stop_name == '30TH ST. PHL.':
-            trips = Trip.objects.filter(service_id=todays_trip_service_id, trip_headsign='ATLANTIC CITY')
-        else:
-            trips = Trip.objects.filter(service_id=todays_trip_service_id)
 
-        stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id)
+        todays_trip_service_id_qs = stop_time_trips.intersection(todays_services).order_by('service_id')
+        todays_trip_service_ids = todays_trip_service_id_qs
+        # NJT's GTFS data has departure times for inbound trips for some reason, we only want outbound departure times 
+        trips = Trip.objects.filter(service_id__in=todays_trip_service_ids).exclude(trip_headsign__in=['TRENTON TRANSIT CENTER', '30TH ST. PHL.'])
+
+        stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id).order_by('departure_time')
+        
         now = current_time()
-
         while next_stop_time == None:
-            
+
             for stop_time in stop_times:
                 departure_datetime = time_to_datetime(stop_time.departure_time)
                 diff = departure_datetime - now
-
+                
                 if diff >= timedelta(0):
                     next_stop_time = stop_time
                     return next_stop_time
-                
+            # if no departure time is found for today, move on to tomorrow
             now = datetime.combine(now, datetime.min.time())
         
             
@@ -197,6 +195,9 @@ class Stop_Time(models.Model):
     stop_sequence = models.IntegerField()
     pickup_type = models.IntegerField(null=True)
     drop_off_type = models.IntegerField(null=True)
+
+    def __str__(self):
+        return f' {self.stop.stop_name} {self.departure_time}'
 
 class Calendar_Date(models.Model):
     service_id = models.CharField(max_length=25)
