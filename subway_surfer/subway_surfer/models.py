@@ -45,10 +45,10 @@ class Stop(models.Model):
                                                 stop_time__stop=self.id
                                             ).exclude(
                                                 trip_headsign__in=['TRENTON TRANSIT CENTER', '30TH ST. PHL.']
-                                            ).order_by('service_id')
-       
-        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips, stop_id=self.id).order_by('departure_time')
-        
+                                            ).distinct().order_by('service_id')
+        # NJT's GTFS data has departure times for inbound trips at the termini
+        # we only want outbound departure times, so we exclude trips with inbound headsigns 
+        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips).order_by('departure_time')
         now = current_time()
         while next_stop_time == None:
 
@@ -59,8 +59,8 @@ class Stop(models.Model):
                 if diff >= timedelta(0):
                     next_stop_time = stop_time
                     return next_stop_time
-            # if no departure time is found for today, move on to tomorrow midnight
-            now = datetime.combine(now, datetime.min.time() + timedelta(days=1))
+            # if no departure time is found for today, move to midnight
+            now = datetime.combine(now.date(), datetime.min.time()) + timedelta(days=1)
         
             
 class Agency(models.Model):

@@ -7,30 +7,38 @@ from .models import Trip, Agency
 
 
 def get_arrivals(station, results=20,agency='SEPTA', by_track=False):
-        if by_track:
-            if agency == 'SEPTA':
-                api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}'
+        if agency == 'SEPTA':
+            septa_base_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}'
+
+            if by_track:
+
+                api_url = f'{septa_base_url}&results={results}'
                 response = requests.get(api_url)
                 context = { 'station' : station }
+
                 if response.status_code == 200:
                     context = _process_arrivals_json(response,context, agency)
                     return context
+                else:
+                    return JsonResponse({'error': 'API request failed'}, status=500)
+                
             else:
-                return JsonResponse({'error': 'API request failed'}, status=500)
-        elif agency == 'SEPTA':
-            results = results / 2
-            api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=N'
-            response = requests.get(api_url)
-            context = {'station': station, 'N': None, 'S': None}
-            if response.status_code == 200:
-                context['N'] = _process_arrivals_json(response, context, agency)
-        
-            api_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}&results={results}&direction=S'
-            response = requests.get(api_url)
-            if response.status_code == 200:
-                context['S'] = context | _process_arrivals_json(response, context, agency)
-            else:
-                return JsonResponse({'error': 'API request failed'}, status=500)
+
+                results = results / 2
+                api_url = f'{septa_base_url}&results={results}&direction=N'
+                response = requests.get(api_url)
+                context = {'station': station, 'N': None, 'S': None}
+
+                if response.status_code == 200:
+                    context['N'] = _process_arrivals_json(response, context, agency)
+            
+                api_url = f'{septa_base_url}&results={results}&direction=S'
+                response = requests.get(api_url)
+
+                if response.status_code == 200:
+                    context['S'] = context | _process_arrivals_json(response, context, agency)
+                else:
+                    return JsonResponse({'error': 'API request failed'}, status=500)
         return context
 
 def arrivals_by_track(station):
@@ -54,21 +62,28 @@ def arrivals_by_track(station):
 """
 def countdown(train_info):
     sched_time = datetime.strptime(train_info['sched_time'], '%Y-%m-%d %H:%M:%S.%f')
+
     if train_info['status'] != 'On Time':
         min_late = int(get_digits(train_info['status'])) 
+
     else:
         min_late = 0
+
     diff = sched_time - datetime.now() 
     return (int(diff.total_seconds()/60) + min_late)
 
 def map_marker_data(agency):
     if agency == 'SEPTA':
+
         api_url = 'https://www3.septa.org/api/TrainView/index.php'
         response = requests.get(api_url) 
         train_info = {}
+
         if response.status_code == 200:
             data = response.json()
+
             for item in data:
+                    
                     trainno = item['trainno']
                     train_info[trainno] = {
                         'agency' : agency, 
@@ -97,8 +112,10 @@ def _process_arrivals_json(response, context, agency_id):
     parsed_data = response.json()
             
     for key, value in parsed_data.items():
+
         if isinstance(value, list) and not value:
             continue
+        
         _process_train_data(value, all_arrivals, arrivals_by_line)
 
     context = {

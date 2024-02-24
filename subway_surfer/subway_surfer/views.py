@@ -18,6 +18,7 @@ def home(request):
 def map_page_view(request):
     agency_check = AgencyCheckBox(request.GET or None)
     train_marker_data = map_markers(request, agency='SEPTA')
+
     show_njt_route = False
     show_septa_route = False
     show_septa_markers = True
@@ -25,6 +26,7 @@ def map_page_view(request):
     septa_shapes = None
     
     if request.method == 'GET':
+
         if agency_check.is_valid():
 
             show_septa_route = agency_check.cleaned_data['show_septa']
@@ -34,6 +36,7 @@ def map_page_view(request):
                 njt_shapes = Agency.get_agency('NJT').get_shapes()
             if show_septa_route:
                 septa_shapes = Agency.get_agency('SEPTA').get_shapes()
+
             return render(request, 'map.html', {'agency_check' : agency_check,
                                                     'train_marker_data': train_marker_data,
                                                     'njt_shapes' : njt_shapes,
@@ -54,9 +57,11 @@ def map_page_view(request):
 """
 def map_markers(request, agency):
     train_data = None
+
     if request.method == 'GET':
         train_data = map_marker_data(agency)
         return JsonResponse(train_data, safe=True)
+    
     else:
         return JsonResponse({'error': f'Request method {request.method} not supported'}, states=405)
 
@@ -69,18 +74,21 @@ def map_markers(request, agency):
 def train_info(request, template_name='info_board/arrivals.html', redirect_dest='load_arrivals'):
     # default
     station = "30th Street Station"
+
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
+
         if form.is_valid():
             selected_stop = form.cleaned_data['stop_choice']
             stop_name = validate_station_name(selected_stop)
             # Redirect to the load_arrivals view with the selected stop_name
             return redirect(redirect_dest, station=stop_name)
+        
     else:
         form = StationSlctForm()
 
     stops = Stop.objects.all()
-    context = {'stop_form': form, 'stops': stops, 'station': station}
+    context = {'stop_form': form, 'station': station}
     return render(request, template_name, context)
 
 """
@@ -91,8 +99,7 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
 def load_arrivals(request, station):
     arrival_context = get_arrivals(station,agency='SEPTA')
     form = StationSlctForm() 
-    septa = Agency.get_agency('SEPTA')
-    septa_routes = septa.get_routes()
+    septa_routes = Agency.get_agency('SEPTA').get_routes()
     
     arrivals_data = { 'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5] }
     
@@ -104,12 +111,10 @@ def load_arrivals(request, station):
     arrivals_data['all_arrivals_ctx'] = sorted(arrivals_data['all_arrivals_ctx'], key=lambda x: x['depart_time'])
     
     for route in septa_routes:
+
         north_data = arrival_context['N']['arrivals_by_line_ctx'].get(route.route_long_name, [])
         south_data = arrival_context['S']['arrivals_by_line_ctx'].get(route.route_long_name, [])
         arrivals_data[f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'] = north_data + south_data
-
-    # TO-DO: Add NJT data
-    # TO-DO: Add NJT's atlantic city line for 30th street
 
     return render(request, 'info_board/arrivals.html', {
         **arrivals_data, 
@@ -155,13 +160,14 @@ def update_arrivals_table(request, table_id):
 
         case 'tbl_all_arrivals':
             njt_info = get_njt_info(station)
-   
             if njt_info != None:
-                arrival_context[njt_info['direction']]['all_arrivals_ctx'].append(njt_info)
-   
+                arrival_context['NJT'] = njt_info
+                
+            print(arrival_context['NJT'])
+
             data = arrival_context['N']['all_arrivals_ctx'][:5]
             data  += arrival_context['S']['all_arrivals_ctx'][:5]
-            all_arrivals = True
+            data += arrival_context['NJT']
 
         case 'tbl_air_arrivals':
             data = arrival_context['N']['arrivals_by_line_ctx']['Airport Line'] 
@@ -231,9 +237,11 @@ def fare_calculator(request):
     price = 0.0
 
     if request.method == 'POST':
+
         form_type = request.POST.get('form_type', None)
         
         if form_type == 'agency' and agency_form.is_valid():
+
             agency = agency_form.cleaned_data['agency_choice']
             request.session['agency_choice'] = agency.id
             route_form = RouteSlctForm(agency)
@@ -241,24 +249,33 @@ def fare_calculator(request):
         # Route selection isn't really being used for anything
         # TO DO: Figure out what i should do with it 
         elif form_type == 'route':
+
             agency_id = request.session.get('agency_choice')
             route_form = RouteSlctForm(agency_id, request.POST)
+
             if route_form.is_valid():
                 origin_form = OriginForm()
+
             else:
                 print(route_form.errors)
             
         elif form_type == 'origin':
+
             origin_form = OriginForm(request.POST)
+
             if origin_form.is_valid():
+
                 origin = origin_form.cleaned_data['origin_choice']
                 request.session['origin_choice'] = origin.stop_id
                 request.session['origin_zone'] = origin.zone_id
                 dest_form = DestForm(origin.stop_id)
         
         elif form_type == 'destination':
+
             dest_form = DestForm(request.session['origin_choice'], request.POST)
+
             if dest_form.is_valid():
+
                 destination = dest_form.cleaned_data['stops']
                 dest_zone = destination.zone_id
                 origin_zone = request.session['origin_zone']
@@ -292,13 +309,17 @@ def get_fare(request, origin, destination):
 """
 def next_to_arrive(request, station):
     stops = Stop.objects.all()
+
     if request.method == 'POST':
         form = StationSlctForm(request.POST)
+
         if form.is_valid():
+
             selected_stop = form.cleaned_data['stop_choice']
             stop_name = validate_station_name(selected_stop)
 
             trains_by_track = arrivals_by_track(stop_name)
+
             return render(request, 'nta/nta.html', { 'stop_form' : form,
                                                     'station': stop_name,
                                                     'trains_by_track': trains_by_track

@@ -8,10 +8,6 @@ class StationSlctForm(forms.Form):
                                          to_field_name='stop_name',
                                          required=False)
 
-"""
-    TO DO: Display stops depending on route selected
-"""
-
 class AgencySlctForm(forms.Form):
     agency_choice = forms.ModelChoiceField(queryset=Agency.objects.all(),
                                            label = "Select Agency",
