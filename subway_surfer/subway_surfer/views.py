@@ -3,10 +3,10 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .forms import *
 from .models import Stop
-from .utils import validate_station_name, convert_twelve_hour
-from .consumer import map_marker_data, get_arrivals, arrivals_by_track
+from .utils import validate_station_name
+from subway_surfer import septa as SEPTA
 from django.shortcuts import redirect
-import datetime
+from subway_surfer import nj_transit as NJ_Transit
 
 
 def home(request):
@@ -59,7 +59,7 @@ def map_markers(request, agency):
     train_data = None
 
     if request.method == 'GET':
-        train_data = map_marker_data(agency)
+        train_data = SEPTA.map_marker_data(agency)
         return JsonResponse(train_data, safe=True)
     
     else:
@@ -97,13 +97,13 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
     TO-DO: Error handling or preventing on station == None
 """
 def load_arrivals(request, station):
-    arrival_context = get_arrivals(station,agency='SEPTA')
+    arrival_context = SEPTA.get_arrivals(station,agency='SEPTA')
     form = StationSlctForm() 
     septa_routes = Agency.get_agency('SEPTA').get_routes()
     
     arrivals_data = { 'all_arrivals_ctx': arrival_context['N']['all_arrivals_ctx'][:5] + arrival_context['S']['all_arrivals_ctx'][:5] }
     
-    njt_info = get_njt_info(station)
+    njt_info = NJ_Transit.get_njt_info(station)
     
     if njt_info != None:
         arrivals_data['all_arrivals_ctx'].append(njt_info)
@@ -122,51 +122,26 @@ def load_arrivals(request, station):
         'form': form
     })
 
-def get_njt_info(station):
-    if station == 'Gray 30th Street':
-        njt_stop = '30TH ST. PHL.'
-
-    elif station == 'Trenton':
-        njt_stop = 'TRENTON TRANSIT CENTER'
-    
-    else:
-        return None
-    
-    next_time, next_trip = Stop.get_stop(njt_stop).next_departure()
-    
-    train_info = {
-        "direction": 'N' if next_trip.direction_id == 0 else 'S',
-        "train_id": next_trip.block_id,
-        "origin" : station,
-        "destination": next_trip.trip_headsign,
-        "line": next_trip.route_name(),
-        "sched_time": convert_twelve_hour(str(next_time.departure_time)),
-        "depart_time": convert_twelve_hour(str(next_time.departure_time)),
-        "track": ""
-    }
-
-    return train_info
-
 """
     Update Arrivals
 """
 def update_arrivals_table(request, table_id):
     station = request.POST.get('station', "30th Street Station") 
-    arrival_context = get_arrivals(station)
+    arrival_context = SEPTA.get_arrivals(station)
     data = []
     all_arrivals = False # controls which columns appear in the table header
 
     match table_id:
 
         case 'tbl_all_arrivals':
-            njt_info = get_njt_info(station)
+            njt_info = NJ_Transit.get_njt_info(station)
             if njt_info != None:
                 arrival_context['NJT'] = njt_info
                 
             print(arrival_context['NJT'])
 
             data = arrival_context['N']['all_arrivals_ctx'][:5]
-            data  += arrival_context['S']['all_arrivals_ctx'][:5]
+            data += arrival_context['S']['all_arrivals_ctx'][:5]
             data += arrival_context['NJT']
 
         case 'tbl_air_arrivals':
@@ -318,7 +293,7 @@ def next_to_arrive(request, station):
             selected_stop = form.cleaned_data['stop_choice']
             stop_name = validate_station_name(selected_stop)
 
-            trains_by_track = arrivals_by_track(stop_name)
+            trains_by_track = SEPTA.arrivals_by_track(stop_name)
 
             return render(request, 'nta/nta.html', { 'stop_form' : form,
                                                     'station': stop_name,
@@ -332,5 +307,5 @@ def next_to_arrive(request, station):
 
 def update_next_to_arrive(request, station):
     station = request.POST.get('station', "30th Street Station") 
-    trains_by_track = arrivals_by_track(station)
+    trains_by_track = SEPTA.arrivals_by_track(station)
     return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track})

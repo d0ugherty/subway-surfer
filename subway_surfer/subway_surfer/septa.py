@@ -5,7 +5,6 @@ from .utils import format_time, clean_string, get_digits
 from datetime import datetime
 from .models import Trip, Agency
 
-
 def get_arrivals(station, results=20,agency='SEPTA', by_track=False):
         if agency == 'SEPTA':
             septa_base_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}'
