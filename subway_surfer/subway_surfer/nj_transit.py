@@ -1,18 +1,18 @@
-from .models import *
+from .models import Stop
 from .utils import convert_twelve_hour
 
 """"""
 
-def get_njt_info(station):
+def get_next_departure(station):
     if station == 'Gray 30th Street':
         njt_stop = '30TH ST. PHL.'
-
     elif station == 'Trenton':
         njt_stop = 'TRENTON TRANSIT CENTER'
-    
     else:
         return None
     
+    context = { 'station': station, 'N': None, 'S': None }
+
     next_stop_time, next_trip = Stop.get_stop(njt_stop).next_departure()
     
     train_info = {
@@ -26,4 +26,6 @@ def get_njt_info(station):
         "track": ""
     }
 
-    return train_info
+    context[train_info['direction']] = train_info
+
+    return context

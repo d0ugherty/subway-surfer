@@ -6,38 +6,37 @@ from datetime import datetime
 from .models import Trip, Agency
 
 def get_arrivals(station, results=20,agency='SEPTA', by_track=False):
-        if agency == 'SEPTA':
-            septa_base_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}'
+        septa_base_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}'
 
-            if by_track:
+        if by_track:
 
-                api_url = f'{septa_base_url}&results={results}'
-                response = requests.get(api_url)
-                context = { 'station' : station }
+            api_url = f'{septa_base_url}&results={results}'
+            response = requests.get(api_url)
+            context = { 'station' : station }
 
-                if response.status_code == 200:
-                    context = _process_arrivals_json(response,context, agency)
-                    return context
-                else:
-                    return JsonResponse({'error': 'API request failed'}, status=500)
-                
+            if response.status_code == 200:
+                context = _process_arrivals_json(response,context, agency)
+                return context
             else:
-
-                results = results / 2
-                api_url = f'{septa_base_url}&results={results}&direction=N'
-                response = requests.get(api_url)
-                context = {'station': station, 'N': None, 'S': None}
-
-                if response.status_code == 200:
-                    context['N'] = _process_arrivals_json(response, context, agency)
+                return JsonResponse({'error': 'API request failed'}, status=500)
             
-                api_url = f'{septa_base_url}&results={results}&direction=S'
-                response = requests.get(api_url)
+        else:
 
-                if response.status_code == 200:
-                    context['S'] = context | _process_arrivals_json(response, context, agency)
-                else:
-                    return JsonResponse({'error': 'API request failed'}, status=500)
+            results = results / 2
+            api_url = f'{septa_base_url}&results={results}&direction=N'
+            response = requests.get(api_url)
+            context = {'station': station, 'N': None, 'S': None}
+
+            if response.status_code == 200:
+                context['N'] = _process_arrivals_json(response, context, agency)
+        
+            api_url = f'{septa_base_url}&results={results}&direction=S'
+            response = requests.get(api_url)
+
+            if response.status_code == 200:
+                context['S'] = context | _process_arrivals_json(response, context, agency)
+            else:
+                return JsonResponse({'error': 'API request failed'}, status=500)
         return context
 
 def arrivals_by_track(station):
@@ -127,9 +126,11 @@ def _process_arrivals_json(response, context, agency_id):
 
 def _get_route(train_info):
     trip = Trip.get_trip(train_info['train_id'])
+    
     if trip == None:
         trip_route = train_info['line'] + ' Line'
         return trip_route
+    
     else:
         trip_route = trip.route_name()
         return trip_route
@@ -137,10 +138,14 @@ def _get_route(train_info):
 
 def _process_train_data(train_data, all_arrivals, arrivals_by_line):
     for item in train_data:
+
         if not isinstance(item, dict):
             continue
+
         for next_to_arrive in item.values():
+
             for train in next_to_arrive:
+
                 train_info = _parse_train_info(train)
                 train_info['headsign'] = _get_headsign(train_info)
                 all_arrivals.append(train_info)
@@ -165,7 +170,9 @@ def _parse_train_info(train):
 def _update_arrivals_by_line(train_info, arrivals_by_line, agency='SEPTA'):
     route = _get_route(train_info)
     train_info['headsign'] = _get_headsign(train_info)
+
     arrivals_by_line[route].append(train_info)
+
     if agency == 'SEPTA':
         arrivals_by_line = _handle_thru_routing(train_info, arrivals_by_line)
 
@@ -175,12 +182,17 @@ def _update_arrivals_by_line(train_info, arrivals_by_line, agency='SEPTA'):
 """
 def _handle_thru_routing(train_info, arrivals_by_line):
     if train_info['destination'] == 'Fox Chase' and train_info['line'] == 'Airport':
+
         if train_info not in arrivals_by_line['Fox Chase Line']:
+
             arrivals_by_line['Fox Chase Line'].append(train_info)
     
     if train_info['destination'] == 'Warminster' and train_info['line'] == 'Airport':
+
         if train_info not in arrivals_by_line['Warminster Line']:
+
             arrivals_by_line['Warminster Line'].append(train_info)
+
     return arrivals_by_line
 
 def _get_headsign(train_info):
