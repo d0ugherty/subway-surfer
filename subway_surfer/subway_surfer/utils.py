@@ -45,7 +45,6 @@ def parse_time(time_str):
 
 def current_time():
     now = datetime.now()
-    print(f'current_time: {now}')
     return now
 
 def convert_twelve_hour(time):
