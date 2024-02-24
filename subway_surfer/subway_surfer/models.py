@@ -35,25 +35,19 @@ class Stop(models.Model):
         next_stop_time = self.next_stop_time()
         next_trip = Trip.objects.get(trip_id=next_stop_time.trip.trip_id)
         return next_stop_time, next_trip
-    
-    """
-        There is likely a cleaner, more efficient way to do this
-        but it's doing what I need it to so far
-    """
 
     def next_stop_time(self):
         next_stop_time = None
 
-        todays_services = Calendar_Date.todays_services().values_list("service_id")
-
-        stop_time_trips = Trip.objects.filter(stop_time__stop=self.id).values_list("service_id")
-
-        todays_trip_service_id_qs = stop_time_trips.intersection(todays_services).order_by('service_id')
-        todays_trip_service_ids = todays_trip_service_id_qs
-        # NJT's GTFS data has departure times for inbound trips for some reason, we only want outbound departure times 
-        trips = Trip.objects.filter(service_id__in=todays_trip_service_ids).exclude(trip_headsign__in=['TRENTON TRANSIT CENTER', '30TH ST. PHL.'])
-
-        stop_times = Stop_Time.objects.filter(trip_id__in=trips,stop_id=self.id).order_by('departure_time')
+        todays_services = Calendar_Date.todays_services().values_list("service_id", flat=True)
+        stop_time_trips = Trip.objects.filter(
+                                                service_id__in=todays_services,
+                                                stop_time__stop=self.id
+                                            ).exclude(
+                                                trip_headsign__in=['TRENTON TRANSIT CENTER', '30TH ST. PHL.']
+                                            ).order_by('service_id')
+       
+        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips, stop_id=self.id).order_by('departure_time')
         
         now = current_time()
         while next_stop_time == None:
@@ -65,8 +59,8 @@ class Stop(models.Model):
                 if diff >= timedelta(0):
                     next_stop_time = stop_time
                     return next_stop_time
-            # if no departure time is found for today, move on to tomorrow
-            now = datetime.combine(now, datetime.min.time())
+            # if no departure time is found for today, move on to tomorrow midnight
+            now = datetime.combine(now, datetime.min.time() + timedelta(days=1))
         
             
 class Agency(models.Model):

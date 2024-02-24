@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .forms import *
 from .models import Stop
-from .utils import validate_station_name, parse_time
+from .utils import validate_station_name, convert_twelve_hour
 from .consumer import map_marker_data, get_arrivals, arrivals_by_track
 from django.shortcuts import redirect
 import datetime
@@ -124,23 +124,21 @@ def get_njt_info(station):
     elif station == 'Trenton':
         njt_stop = 'TRENTON TRANSIT CENTER'
     
-    next_time, next_trip = Stop.get_stop(njt_stop).next_departure()
-    
-    if next_trip == None:
+    else:
         return None
     
-    else:
-
-        train_info = {
-            "direction": 'N' if next_trip.direction_id == 0 else 'S',
-            "train_id": next_trip.block_id,
-            "origin" : station,
-            "destination": next_trip.trip_headsign,
-            "line": next_trip.route_name(),
-            "sched_time": str(next_time.departure_time),
-            "depart_time": str(next_time.departure_time),
-            "track": ""
-        }
+    next_time, next_trip = Stop.get_stop(njt_stop).next_departure()
+    
+    train_info = {
+        "direction": 'N' if next_trip.direction_id == 0 else 'S',
+        "train_id": next_trip.block_id,
+        "origin" : station,
+        "destination": next_trip.trip_headsign,
+        "line": next_trip.route_name(),
+        "sched_time": convert_twelve_hour(str(next_time.departure_time)),
+        "depart_time": convert_twelve_hour(str(next_time.departure_time)),
+        "track": ""
+    }
 
     return train_info
 
@@ -216,6 +214,7 @@ def update_arrivals_table(request, table_id):
         case 'tbl_wtr_arrivals':
             data = arrival_context['N']['arrivals_by_line_ctx']['West Trenton Line']
             data += arrival_context['S']['arrivals_by_line_ctx']['West Trenton Line']
+
     return render(request, 'info_board/table_rows.html', {'arrivals': data, 'all_arrivals': all_arrivals})
 
 

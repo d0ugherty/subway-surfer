@@ -48,6 +48,12 @@ def current_time():
     print(f'current_time: {now}')
     return now
 
+def convert_twelve_hour(time):
+    temp_time = datetime.strptime(time, '%H:%M:%S')
+    formatted = temp_time.strftime('%I:%M %p')
+    return formatted
+
 def time_to_datetime(time):
     current_date = datetime.now().date()
-    return datetime.combine(current_date, time)
+    combined_datetime = datetime.combine(current_date, time)
+    return combined_datetime
