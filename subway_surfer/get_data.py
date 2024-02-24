@@ -23,19 +23,24 @@ REPLACEMENTS = [(',24:', ',00:'),
 def retrieve_gtfs_zip(agency):
     if agency == 'septa':
         url = "https://www3.septa.org/developer/gtfs_public.zip"
+        
     response = requests.get(url, allow_redirects=True)
     return response
 
 # if response is successful unzip the file
 def extract_gtfs(response, agency):
     extract_dir = f'data/{agency}/'
+
     with zipfile.ZipFile(BytesIO(response.content)) as zip_parent_ref:
         zip_parent_ref.extractall(extract_dir)
+
         for file in zip_parent_ref.namelist():
             file_path = os.path.join(extract_dir, file)
             print(f'file_path : {file_path}')
+
             if zipfile.is_zipfile(file_path):
                 print(f'Extracting child ZIP file: {file}')
+
                 with zipfile.ZipFile(file_path) as zip_child_ref:
                     child_extract_dir = os.path.join(extract_dir, os.path.splitext(file)[0])
                     os.makedirs(child_extract_dir, exist_ok=True)
@@ -47,10 +52,14 @@ def extract_gtfs(response, agency):
     
 def convert_to_csv(agency):
     agency_dir = f'data/{agency}'
+
     if agency == 'septa':
         rail_dir = "data/septa/google_rail/"
+
     for filename in os.listdir(rail_dir):
+
         if filename.endswith('.txt'):
+
             current_path = os.path.join(rail_dir, filename)
             new_file = os.path.join(rail_dir, filename.replace('.txt', '.csv'))
             os.rename(current_path, new_file)
@@ -62,22 +71,28 @@ def convert_to_csv(agency):
 # for midnight 
 def format_stop_times(agency):
     file_path = f'data/{agency}/stop_times.csv'
+
     with open(file_path, 'r') as file:
         file_content = file.read()
+
     for find, replace in REPLACEMENTS:
         file_content = file_content.replace(find, replace)
+
     with open(file_path, 'w') as file:
         file.write(file_content)
         
 
 if __name__ == '__main__':
     agencies = ['septa']
+
     for agency in agencies:
         response = retrieve_gtfs_zip(agency)
+
         if response.status_code == 200:
             extract_gtfs(response, agency)
         else:
             print(f"Failed to download the file: HTTP {response.status_code}")
+
         print("Converting to CSV")
         convert_to_csv(agency)
         print("Formatting stop times")
