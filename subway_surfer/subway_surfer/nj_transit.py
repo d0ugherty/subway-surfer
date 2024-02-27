@@ -5,26 +5,17 @@ from .utils import convert_twelve_hour
 
 def get_next_departure(station):
     if station == 'Gray 30th Street':
-        njt_stop = '30TH ST. PHL.'
+        njt_stop_name = '30TH ST. PHL.'
     elif station == 'Trenton':
-        njt_stop = 'TRENTON TRANSIT CENTER'
+        njt_stop_name = 'TRENTON TRANSIT CENTER'
     else:
         return None
     
     context = { 'station': station, 'N': None, 'S': None }
 
-    next_stop_time, next_trip = Stop.get_stop(njt_stop).next_departure()
+    next_stop_time, next_trip = Stop.get_stop(njt_stop_name).next_departure()
     
-    train_info = {
-        "direction": 'N' if next_trip.direction_id == 0 else 'S',
-        "train_id": next_trip.block_id,
-        "origin" : station,
-        "destination": next_trip.trip_headsign,
-        "line": next_trip.route_name(),
-        "sched_time": convert_twelve_hour(str(next_stop_time.departure_time)),
-        "depart_time": convert_twelve_hour(str(next_stop_time.departure_time)),
-        "track": ""
-    }
+    train_info = _parse_train_info(next_stop_time, next_trip, njt_stop_name)
 
     context[train_info['direction']] = train_info
 
@@ -32,18 +23,39 @@ def get_next_departure(station):
 
 def get_departures(station):
     if station == 'Gray 30th Street':
-        njt_stop = '30TH ST. PHL.'
+        njt_stop_name = '30TH ST. PHL.'
     elif station == 'Trenton':
-        njt_stop = 'TRENTON TRANSIT CENTER'
+        njt_stop_name = 'TRENTON TRANSIT CENTER'
     else:
         return None
     
-    context = {'station': station, 'N': [], 'S': [] }
+    context = {'station': station, 'N': None, 'S': None }
 
-    stop_times, trips = Stop.get_stop(njt_stop).upcoming_departures()
+    njt_stop = Stop.get_stop(njt_stop_name)
 
-    for stop_time, trip in zip(stop_times, trips):
-        train_info = {
+    #Northbound
+    stop_times_n, trips_n = njt_stop.upcoming_departures(0)
+    #Southbound
+    stop_times_s, trips_s = njt_stop.upcoming_departures(1)
+
+    departing_trains_n = []
+    for stop_time, trip in zip(stop_times_n, trips_n):
+        train_info =_parse_train_info(stop_time, trip, station)
+        departing_trains_n.append(train_info)
+
+    departing_trains_s = []
+    for stop_time, trip in zip(stop_times_s, trips_s):
+        train_info = _parse_train_info(stop_time, trip, station)
+        departing_trains_s.append(train_info)
+    
+    context['N'] = departing_trains_n
+    context['S'] = departing_trains_s
+   
+    return context
+
+def _parse_train_info(stop_time, trip, station):
+
+    train_info = {
         "direction": 'N' if trip.direction_id == 0 else 'S',
         "train_id": trip.block_id,
         "origin" : station,
@@ -52,8 +64,7 @@ def get_departures(station):
         "sched_time": convert_twelve_hour(str(stop_time.departure_time)),
         "depart_time": convert_twelve_hour(str(stop_time.departure_time)),
         "track": ""
-        }
+    }
+        
 
-        context[train_info['direction']].append(train_info)
-    
-    return context
+    return train_info

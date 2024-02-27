@@ -46,9 +46,10 @@ def arrivals_by_track(station):
     arrivals = get_arrivals(station, results=10, by_track=True)
 
     for track_number in track_dict:
+
         for arrival in arrivals['all_arrivals_ctx']:
             arriving_track = get_digits(arrival['track'])
-            # get only the next arriving train by short circuiting
+    
             if track_dict[track_number] == {} and track_number == arriving_track:
                 arrival['eta'] = countdown(arrival)
                 track_dict[track_number] = arrival

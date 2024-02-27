@@ -61,14 +61,14 @@ class Stop(models.Model):
         stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id, departure_time__gt=now).order_by('departure_time')
         return stop_times
     
-    def upcoming_departures(self):
-        stop_trips = self.todays_trips()
+    def upcoming_departures(self, direction):
+        stop_trips = self.todays_trips().filter(direction_id=direction)
         stop_times = self.upcoming_stop_times()
         return stop_times, stop_trips
 
     """
     Currently getting a date overflow when attempting to retrieve NJT trips for the next day.
-    I think this has to do with the change in trip IDs.
+    I think I have to change the trip ID for the new day
     """
     def next_stop_time(self):
         stop_times = self.todays_stop_times()
@@ -123,11 +123,15 @@ class Agency(models.Model):
         # Serialize to use it into a JSON string to use it with JavaScript
         # this is faster than using the built-in serializer
         if serialize:
+
             shape_dict = defaultdict(list)
+
             for row in agency_shapes:
                 shape_id, shape_pt_lon, shape_pt_lat = row
                 shape_dict[shape_id].append({'shape_pt_lat': shape_pt_lat, 'shape_pt_lon': shape_pt_lon})
+
             agency_shapes = json.dumps(shape_dict)
+
         return agency_shapes
 
 class Route(models.Model):
