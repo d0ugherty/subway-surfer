@@ -56,3 +56,9 @@ def time_to_datetime(time):
     current_date = datetime.now().date()
     combined_datetime = datetime.combine(current_date, time)
     return combined_datetime
+
+def extract_route_id(html_table_id):
+    parts = html_table_id.split('_')
+    if len(parts) > 2:
+        return parts[1].upper()
+    return None

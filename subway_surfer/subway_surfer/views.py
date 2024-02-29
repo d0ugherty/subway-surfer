@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .forms import *
 from .models import Stop
-from .utils import validate_station_name
+from subway_surfer import utils as  utils
 from subway_surfer import septa as SEPTA
 from django.shortcuts import redirect
 from subway_surfer import nj_transit as NJ_Transit
@@ -80,7 +80,7 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
 
         if form.is_valid():
             selected_stop = form.cleaned_data['stop_choice']
-            stop_name = validate_station_name(selected_stop)
+            stop_name = utils.validate_station_name(selected_stop)
             # Redirect to the load_arrivals view with the selected stop_name
             return redirect(redirect_dest, station=stop_name)
         
@@ -148,89 +148,30 @@ def update_arrivals_table(request, table_id):
     data = []
     show_all_arrivals = False # controls which columns appear in the table header
 
-    match table_id:
+    route_id = utils.extract_route_id(table_id)
+    
+    if route_id == 'ALL':
+        septa_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
 
-        case 'tbl_all_arrivals':
+        if njt_context is not None:
+            njt_data = {
+                'all_arrivals_ctx' : [njt_context[key] for key in ['N','S'] if njt_context.get(key)]
+            }
 
-            septa_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
+        all_arrivals = {'all_arrivals_ctx': None }
+        all_arrivals['all_arrivals_ctx'] = njt_data['all_arrivals_ctx'][0] + septa_data['all_arrivals_ctx']
+        all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
 
-            if njt_context is not None:
-                njt_data = {
-                    'all_arrivals_ctx' : [njt_context[key] for key in ['N','S'] if njt_context.get(key)]
-                }
+        show_all_arrivals = True
+        data = all_arrivals['all_arrivals_ctx'][:10]
+    
+    else:
+        route_name = Route.get_route(route_id).route_long_name
 
-            all_arrivals = {'all_arrivals_ctx': None }
-            all_arrivals['all_arrivals_ctx'] = njt_data['all_arrivals_ctx'][0] + septa_data['all_arrivals_ctx']
-            all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
+        data = septa_context['N']['arrivals_by_line_ctx'][route_name]
+        data += septa_context['S']['arrivals_by_line_ctx'][route_name]
+        data = sorted(data, key=lambda arrival: arrival['depart_time'])
 
-            show_all_arrivals = True
-            data = all_arrivals['all_arrivals_ctx'][:10]
-
-        case 'tbl_air_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Airport Line'] 
-            data += septa_context['S']['arrivals_by_line_ctx']['Airport Line'] 
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-            
-
-        case 'tbl_che_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Chestnut Hill East Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Chestnut Hill East Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-            
-        case 'tbl_chw_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Chestnut Hill West Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Chestnut Hill West Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-
-        case 'tbl_lan_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Lansdale/Doylestown Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-
-        case 'tbl_med_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Media/Wawa Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Media/Wawa Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-        
-        case 'tbl_fox_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Fox Chase Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Fox Chase Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-
-        case 'tbl_nor_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Manayunk/Norristown Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Manayunk/Norristown Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-
-        case 'tbl_pao_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Paoli/Thorndale Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Paoli/Thorndale Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-        
-        case 'tbl_cyn_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Cynwyd Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Cynwyd Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-        
-        case 'tbl_tre_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Trenton Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Trenton Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-        
-        case 'tbl_war_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Warminster Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Warminster Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-
-        case 'tbl_wil_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['Wilmington/Newark Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['Wilmington/Newark Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
-
-        case 'tbl_wtr_arrivals':
-            data = septa_context['N']['arrivals_by_line_ctx']['West Trenton Line']
-            data += septa_context['S']['arrivals_by_line_ctx']['West Trenton Line']
-            data = sorted(data, key=lambda arrival: arrival['depart_time'])
 
     return render(request, 'info_board/table_rows.html', {'arrivals': data, 'show_all_arrivals': show_all_arrivals})
 
@@ -327,7 +268,7 @@ def next_to_arrive(request, station):
         if form.is_valid():
 
             selected_stop = form.cleaned_data['stop_choice']
-            stop_name = validate_station_name(selected_stop)
+            stop_name = utils.validate_station_name(selected_stop)
 
             trains_by_track = SEPTA.arrivals_by_track(stop_name)
 

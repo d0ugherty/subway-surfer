@@ -147,6 +147,13 @@ class Route(models.Model):
 
     def __str__(self):
         return str(self.route_long_name)
+    
+    @classmethod
+    def get_route(cls, route_id):
+        try:
+            return cls.objects.get(route_id=route_id)
+        except cls.DoesNotExist:
+            return None
 
 class Shape(models.Model):
     shape_id = models.IntegerField()
