@@ -45,7 +45,7 @@ class Stop(models.Model):
         todays_services = Calendar_Date.todays_services().values_list("service_id", flat=True)
 
         stop_time_trips_qs = Trip.objects.filter(service_id__in=todays_services,stop_time__stop=self.id)
-        stop_time_trips_qs = stop_time_trips_qs.exclude(trip_headsign__in=['TRENTON TRANSIT CENTER', '30TH ST. PHL.'])
+        stop_time_trips_qs = stop_time_trips_qs.exclude(trip_headsign__in=self.stop_name)
         stop_time_trips_qs = stop_time_trips_qs.distinct().order_by('service_id')
 
         return stop_time_trips_qs
