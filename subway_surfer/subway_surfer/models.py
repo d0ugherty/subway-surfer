@@ -35,36 +35,32 @@ class Stop(models.Model):
         next_stop_time = self.next_stop_time()
         next_trip = Trip.objects.get(trip_id=next_stop_time.trip.trip_id)
         return next_stop_time, next_trip
-    
-    def todays_departures(self):
-        stop_times = self.todays_stop_times()
-        trips = self.todays_trips()
-        return stop_times, trips
+    """
+        Might change this to getting departures by a given day
+    """
+    def departures_by_day(self, date):
 
-    def todays_trips(self):
-        todays_services = Calendar_Date.todays_services().values_list("service_id", flat=True)
+        services = Calendar_Date.get_services(date).values_list("service_id", flat=True)
 
-        stop_time_trips_qs = Trip.objects.filter(service_id__in=todays_services,stop_time__stop=self.id)
-        stop_time_trips_qs = stop_time_trips_qs.exclude(trip_headsign__in=self.stop_name)
+        stop_time_trips_qs = Trip.objects.filter(service_id__in=services,stop_time__stop=self.id)
+        stop_time_trips_qs = stop_time_trips_qs.exclude(trip_headsign=self.stop_name)
         stop_time_trips_qs = stop_time_trips_qs.distinct().order_by('service_id')
 
-        return stop_time_trips_qs
-    
-    def todays_stop_times(self):
-        stop_time_trips_qs = self.todays_trips()
-        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id).order_by('departure_time')
-        return stop_times
+        stop_times_qs = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id).order_by('departure_time')
 
-    def upcoming_stop_times(self):
-        now = current_time()
-        stop_time_trips_qs = self.todays_trips()
-        stop_times = Stop_Time.objects.filter(trip_id__in=stop_time_trips_qs, stop_id=self.id, departure_time__gt=now).order_by('departure_time')
-        return stop_times
-    
+        return stop_times_qs, stop_time_trips_qs
+
     def upcoming_departures(self, direction):
-        stop_trips = self.todays_trips().filter(direction_id=direction)
-        stop_times = self.upcoming_stop_times()
-        return stop_times, stop_trips
+        now = current_time()
+        todays_date = datetime.today().strftime('%Y%m%d')
+        
+        stop_times_qs, stop_trips_qs = self.departures_by_day(todays_date)
+        
+        stop_trips_qs = stop_trips_qs.filter(direction_id=direction).exclude(trip_headsign=self.stop_name)
+
+        stop_times_qs = Stop_Time.objects.filter(trip_id__in=stop_trips_qs, stop_id=self.id, departure_time__gt=now).order_by('departure_time')
+
+        return stop_times_qs, stop_trips_qs
 
     """
     Currently getting a date overflow when attempting to retrieve NJT trips for the next day.
@@ -74,7 +70,9 @@ class Stop(models.Model):
         stop_times = self.todays_stop_times()
         next_stop_time = None
 
+        todays_date = datetime.today().strftime('%Y%m%d')
         now = current_time()
+        print(f'now {now}')
         while next_stop_time == None:
 
             for stop_time in stop_times:
@@ -85,7 +83,10 @@ class Stop(models.Model):
                     next_stop_time = stop_time
                     return next_stop_time
             # if no departure time is found for today, move to midnight
-            now = datetime.combine(now.date(), datetime.min.time()) + timedelta(days=1)
+            now = now.time() + timedelta(hours=1)
+            new_date = todays_date + timedelta(days=1)
+            stop_times, trips = self.departures_by_day(now)
+            print(now)
         
             
 class Agency(models.Model):
@@ -241,6 +242,14 @@ class Calendar_Date(models.Model):
             return cls.objects.filter(date=todays_date)
         except cls.DoesNotExist:
             print(f'Calendar_Date model for {todays_date} does not exist')
+            return None
+        
+    @classmethod
+    def get_services(cls, date):
+        try:
+            return cls.objects.filter(date=date)
+        except cls.DoesNotExist:
+            print(f'Calendar_Date model for {date} does not exist')
             return None
 
     def get_date_trips(self):
