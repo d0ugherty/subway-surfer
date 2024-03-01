@@ -155,6 +155,7 @@ def _process_train_data(train_data, all_arrivals, arrivals_by_line):
 
 def _parse_train_info(train):
     return {
+        "agency" : "SEPTA",
         "direction": clean_string(train["direction"]),
         "train_id": clean_string(train["train_id"]),
         "origin": clean_string(train["origin"]),

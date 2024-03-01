@@ -56,6 +56,7 @@ def get_departures(station):
 def _parse_train_info(stop_time, trip, station):
 
     train_info = {
+        "agency" : "NJ Transit",
         "direction": 'N' if trip.direction_id == 0 else 'S',
         "train_id": trip.block_id,
         "origin" : station,
