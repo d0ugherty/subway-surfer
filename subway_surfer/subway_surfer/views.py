@@ -37,18 +37,20 @@ def map_page_view(request):
             if show_septa_route:
                 septa_shapes = Agency.get_agency('SEPTA').get_shapes()
 
-            return render(request, 'map.html', {'agency_check' : agency_check,
-                                                    'train_marker_data': train_marker_data,
-                                                    'njt_shapes' : njt_shapes,
-                                                    'septa_shapes': septa_shapes,
-                                                    'show_septa_markers' : show_septa_markers})
+            return render(request, 'map.html', {
+                'agency_check' : agency_check,
+                'train_marker_data': train_marker_data,
+                'njt_shapes' : njt_shapes,
+                'septa_shapes': septa_shapes,
+                'show_septa_markers' : show_septa_markers})
 
 
-    return render(request, 'map.html', {'agency_check' : agency_check,
-                                        'train_marker_data': train_marker_data,
-                                        'njt_shapes' : njt_shapes,
-                                        'septa_shapes': septa_shapes,
-                                        'show_septa_markers': show_septa_markers})
+    return render(request, 'map.html', {
+        'agency_check' : agency_check,
+        'train_marker_data': train_marker_data,
+        'njt_shapes' : njt_shapes,
+        'septa_shapes': septa_shapes,
+        'show_septa_markers': show_septa_markers})
 
 """
     Endpoint for the map marker data. Establishing the real-time location data
@@ -103,23 +105,23 @@ def load_arrivals(request, station):
     form = StationSlctForm() 
 
     septa_routes = Agency.get_agency('SEPTA').get_routes() 
-    
-    all_arrivals = {'all_arrivals_ctx': None }
 
     septa_arrivals_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
-    
-    if njt_context is not None:
+
+    if len(njt_context['N']) > 0 or len(njt_context['S']) > 0:
 
         njt_arrivals_data = {
             'all_arrivals_ctx' : [njt_context[key] for key in ['N','S'] if njt_context.get(key)]
         }
 
-        all_arrivals['all_arrivals_ctx'] = njt_arrivals_data['all_arrivals_ctx'][0] + septa_arrivals_data['all_arrivals_ctx']
+        all_arrivals = { 'all_arrivals_ctx' : njt_arrivals_data['all_arrivals_ctx'][0] }
+        all_arrivals['all_arrivals_ctx'] += septa_arrivals_data['all_arrivals_ctx'] 
+        
         all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
         all_arrivals['all_arrivals_ctx'] = all_arrivals['all_arrivals_ctx'][:10]
 
     else:
-        all_arrivals['all_arrivals_ctx'] = sorted(septa_arrivals_data['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
+        all_arrivals = { 'all_arrivals_ctx' : sorted(septa_arrivals_data['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time']) }
     
     # For displaying arrivals/departures for SEPTA routes that service the station
     for route in septa_routes:
@@ -153,13 +155,18 @@ def update_arrivals_table(request, table_id):
     if route_id == 'ALL':
         septa_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
 
-        if njt_context is not None:
+        if len(njt_context['N']) > 0 or len(njt_context['S']) > 0:
+
             njt_data = {
                 'all_arrivals_ctx' : [njt_context[key] for key in ['N','S'] if njt_context.get(key)]
             }
 
-        all_arrivals = {'all_arrivals_ctx': None }
-        all_arrivals['all_arrivals_ctx'] = njt_data['all_arrivals_ctx'][0] + septa_data['all_arrivals_ctx']
+            all_arrivals = { 'all_arrivals_ctx' : njt_data['all_arrivals_ctx'][0] }
+            all_arrivals['all_arrivals_ctx'] += septa_data['all_arrivals_ctx']
+
+        else:
+            all_arrivals = { 'all_arrivals_ctx' : septa_data['all_arrivals_ctx'] }
+
         all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
 
         show_all_arrivals = True
@@ -272,10 +279,11 @@ def next_to_arrive(request, station):
 
             trains_by_track = SEPTA.arrivals_by_track(stop_name)
 
-            return render(request, 'nta/nta.html', { 'stop_form' : form,
-                                                    'station': stop_name,
-                                                    'trains_by_track': trains_by_track
-                                                    })
+            return render(request, 'nta/nta.html', { 
+                'stop_form' : form,
+                'station': stop_name,
+                'trains_by_track': trains_by_track
+                })
     else:
         form = StationSlctForm()
 
