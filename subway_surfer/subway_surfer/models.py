@@ -35,9 +35,7 @@ class Stop(models.Model):
         next_stop_time = self.next_stop_time()
         next_trip = Trip.objects.get(trip_id=next_stop_time.trip.trip_id)
         return next_stop_time, next_trip
-    """
-        Might change this to getting departures by a given day
-    """
+  
     def departures_by_day(self, date):
 
         services = Calendar_Date.get_services(date).values_list("service_id", flat=True)
@@ -55,10 +53,9 @@ class Stop(models.Model):
         todays_date = datetime.today().strftime('%Y%m%d')
         
         stop_times_qs, stop_trips_qs = self.departures_by_day(todays_date)
-        
-        stop_trips_qs = stop_trips_qs.filter(direction_id=direction).exclude(trip_headsign=self.stop_name)
+        stop_times_qs = stop_times_qs.filter(trip_id__in=stop_trips_qs, stop_id=self.id, departure_time__gt=now).order_by('departure_time')
 
-        stop_times_qs = Stop_Time.objects.filter(trip_id__in=stop_trips_qs, stop_id=self.id, departure_time__gt=now).order_by('departure_time')
+        stop_trips_qs = stop_trips_qs.filter(direction_id=direction).exclude(trip_headsign=self.stop_name)
 
         return stop_times_qs, stop_trips_qs
 
@@ -72,7 +69,6 @@ class Stop(models.Model):
 
         todays_date = datetime.today().strftime('%Y%m%d')
         now = current_time()
-        print(f'now {now}')
         while next_stop_time == None:
 
             for stop_time in stop_times:
@@ -113,11 +109,6 @@ class Agency(models.Model):
     def get_stops(self):
         return Stop.objects.filter(stop_time__trip__route__agency_id=self.id).distinct()
     
-    """ 
-    Queries for retrieving the shape data. Shape data doesn't have a route 
-    or agency associated with it so you have to bridge through trips. 
-    Makes sense when you think about.
-    """
     def get_shapes(self, serialize=True):
         agency_route_trips = Trip.objects.filter(route__agency=self).values_list('shape_id', flat=True).distinct()
         agency_shapes = Shape.objects.filter(shape_id__in=agency_route_trips).values_list("shape_id", "shape_pt_lon", "shape_pt_lat")
