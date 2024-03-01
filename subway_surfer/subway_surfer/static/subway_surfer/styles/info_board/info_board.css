@@ -1,19 +1,29 @@
 #station_name {
-    font-family: Arial, sans-serif; 
+    font-family: 'Courier New', Courier, monospace; 
     color: #333; 
     text-align: center; 
     padding: 2rem 0; 
     background-color: #f0f0f0; 
+    font-size: 24pt;
+}
+
+#time {
+    font-family: 'Courier New', Courier, monospace;
+    justify-content: center;
+    text-align: center;
+    font-size: 18pt;
 }
 
 table {
     font-family: 'Courier New', Courier, monospace;
+    table-layout: auto;
+    word-wrap: normal;
+    margin: auto;
 }
 
 #tbl_all_arrivals {
     width: 50%; 
     border-collapse: collapse; 
-    margin-top: 20px;
 }
 
 table tr:nth-child(odd) {
@@ -26,11 +36,22 @@ table tr:nth-child(even) {
 
 #tbl_all_arrivals th, #tbl_all_arrivals td {
     text-align: left;  
-    padding: 8px; 
+    padding: .5rem; 
 }
 
+.flex-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+    gap: 1rem; 
+    justify-content: center;
+}
+
+#info_by_route {
+    font-family: 'Courier New', Courier, monospace;
+}
 #info_by_route table {
-    width: 25%;
+    width: 100%;
     border-collapse: collapse;
-    margin: 20px;
+    margin: 0.25rem;
+    padding: .5rem;
 }

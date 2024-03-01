@@ -2,6 +2,8 @@
 {% load static %}
 {% block extra_head %}
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <script src="https://unpkg.com/htmx.org"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!--<script src="{% static 'subway_surfer/js/update_table.js' %}"></script>-->
@@ -9,13 +11,15 @@
     <link rel="stylesheet" href="{% static 'subway_surfer/styles/info_board/info_board.css' %}"></script>
     <link rel="stylesheet" href="{% static 'subway_surfer/styles/info_board/table_row.css' %}"></script>
 {% endblock %}
-<div id="time">
-    <h3 id="current-time">{{current_time}}</h3>
-</div>
+
 <h3 id = "station_name">Train Information for {{ station }}</h3>
 
     <table id="tbl_all_arrivals">
-
+        
+        <div id="time">
+            <h3 id="current-time">{{current_time}}</h3>
+        </div>
+    
             {% include 'info_board/header.html' with show_all_arrivals=True %}
 
         <tbody hx-post="/update_arrivals_table/tbl_all_arrivals/" 
@@ -28,9 +32,9 @@
 
     {% include "info_board/select.html" %}
 
-<div id="info_by_route">
+<div id="info_by_route" class="flex-container">
 
-    
+
         {% if air_arrivals_ctx %}
             <h3>AIRPORT</h>
             <table id="tbl_air_arrivals">
@@ -43,7 +47,7 @@
                 </tbody>
             </table>
         {% endif %}
-    
+        
         {% if che_arrivals_ctx %}
             <h3>CHESTNUT HILL EAST</h>
             <table id="tbl_che_arrivals">
@@ -58,7 +62,7 @@
         {% endif %}
     
 
-    <div>
+    
         {% if chw_arrivals_ctx %}
             <h3>CHESTNUT HILL WEST</h>
             <table id="tbl_chw_arrivals">
@@ -71,9 +75,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
-
-    <div>
+    
         {% if lan_arrivals_ctx %}
             <h3>
                 LANSDALE
@@ -88,8 +90,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
-    <div>
+   
         {% if med_arrivals_ctx %}
             <h3>
                 MEDIA
@@ -104,9 +105,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
     
-    <div>
         {% if fox_arrivals_ctx %}
             <h3>
                 FOX CHASE
@@ -121,9 +120,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
     
-    <div>
         {% if nor_arrivals_ctx %}
             <h3>
                 NORRISTOWN
@@ -138,9 +135,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </DIV>
-    
-    <div>
+   
         {% if pao_arrivals_ctx %}
             <h3>
                 PAOLI/THORNDALE
@@ -155,9 +150,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
-    
-    <div>
+  
         {% if cyn_arrivals_ctx %}
         <h3>
             CYNWYD
@@ -172,9 +165,7 @@
             </tbody>
         </table>
         {% endif %}
-    </div>
     
-    <div>
         {% if tre_arrivals_ctx %}
             <h3>
                 TRENTON
@@ -189,9 +180,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
-    
-    <div>
+ 
         {% if war_arrivals_ctx %}
             <h3>
                 WARMINSTER
@@ -206,9 +195,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
-    
-    <div>
+
         {% if wil_arrivals_ctx %}
             <h3>
                 NEWARK/WILMINGTON
@@ -223,9 +210,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
-    
-    <div>
+
         {% if wtr_arrivals_ctx %}
             <h3>
                 WEST TRENTON
@@ -240,5 +225,5 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
+    
 </div>
