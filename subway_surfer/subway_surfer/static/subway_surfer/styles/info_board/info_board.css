@@ -1,0 +1,36 @@
+#station_name {
+    font-family: Arial, sans-serif; 
+    color: #333; 
+    text-align: center; 
+    padding: 2rem 0; 
+    background-color: #f0f0f0; 
+}
+
+table {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#tbl_all_arrivals {
+    width: 50%; 
+    border-collapse: collapse; 
+    margin-top: 20px;
+}
+
+table tr:nth-child(odd) {
+    background-color: #f2f2f2; 
+}
+
+table tr:nth-child(even) {
+    background-color: #e6e6e6;
+}
+
+#tbl_all_arrivals th, #tbl_all_arrivals td {
+    text-align: left;  
+    padding: 8px; 
+}
+
+#info_by_route table {
+    width: 25%;
+    border-collapse: collapse;
+    margin: 20px;
+}

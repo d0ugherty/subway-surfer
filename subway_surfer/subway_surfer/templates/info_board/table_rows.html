@@ -2,19 +2,24 @@
 {% for arrival in arrivals %}
     <tr>
         <td>{{ arrival.depart_time}}</td>
-
-        {% if show_all_arrivals%}
-            <td>{{ arrival.agency }}</td>
-        {% endif %}
-
         <td>{{ arrival.train_id }}</td>
-        
         {% if show_all_arrivals%}
+
+            <td>{{ arrival.agency }}</td>
+        
             <td>{{ arrival.line }}</td>
+       {% else %}
+            <td> {{ arrival.service_type }}</td>
         {% endif %}
 
         <td>{{ arrival.destination}}</td>
-        <td>{{ arrival.status }}</td>
+        <td style="{% if arrival.status != 'On Time' %}
+                color: yellow; 
+                {% else %} 
+                color: green;
+                {% endif %}">
+            {{ arrival.status }}
+        </td>
         <td>{{ arrival.track }}</td>
     </tr>
 {% endfor %}

@@ -6,12 +6,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!--<script src="{% static 'subway_surfer/js/update_table.js' %}"></script>-->
     <script src="{% static 'subway_surfer/js/update_time.js' %}"></script>
-    
+    <link rel="stylesheet" href="{% static 'subway_surfer/styles/info_board/info_board.css' %}"></script>
+    <link rel="stylesheet" href="{% static 'subway_surfer/styles/info_board/table_row.css' %}"></script>
 {% endblock %}
 <div id="time">
     <h3 id="current-time">{{current_time}}</h3>
 </div>
-<h1 id = "station">Train Information for {{ station }}</h1>
+<h3 id = "station_name">Train Information for {{ station }}</h3>
 
     <table id="tbl_all_arrivals">
 
@@ -31,9 +32,8 @@
 
     
         {% if air_arrivals_ctx %}
-            <h2>AIRPORT</h>
+            <h3>AIRPORT</h>
             <table id="tbl_air_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_air_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_air_arrivals/" 
                     hx-trigger="every 5s" 
@@ -45,9 +45,8 @@
         {% endif %}
     
         {% if che_arrivals_ctx %}
-            <h2>CHESTNUT HILL EAST</h>
+            <h3>CHESTNUT HILL EAST</h>
             <table id="tbl_che_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_che_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_che_arrivals/" 
                     hx-trigger="every 5s" 
@@ -57,13 +56,12 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
+    
 
     <div>
         {% if chw_arrivals_ctx %}
-            <h2>CHESTNUT HILL WEST</h>
+            <h3>CHESTNUT HILL WEST</h>
             <table id="tbl_chw_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_chw_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_chw_arrivals/" 
                     hx-trigger="every 5s" 
@@ -77,11 +75,10 @@
 
     <div>
         {% if lan_arrivals_ctx %}
-            <h2>
+            <h3>
                 LANSDALE
             </h>
             <table id="tbl_lan_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_lan_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_lan_arrivals/" 
                     hx-trigger="every 5s" 
@@ -94,11 +91,10 @@
     </div>
     <div>
         {% if med_arrivals_ctx %}
-            <h2>
+            <h3>
                 MEDIA
             </h>
             <table id="tbl_med_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_med_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_med_arrivals/" 
                     hx-trigger="every 5s" 
@@ -112,11 +108,10 @@
     
     <div>
         {% if fox_arrivals_ctx %}
-            <h2>
+            <h3>
                 FOX CHASE
             </h>
             <table id="tbl_fox_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_fox_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_fox_arrivals/" 
                     hx-trigger="every 5s" 
@@ -130,11 +125,10 @@
     
     <div>
         {% if nor_arrivals_ctx %}
-            <h2>
+            <h3>
                 NORRISTOWN
             </h>
             <table id="tbl_nor_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_nor_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_nor_arrivals/" 
                     hx-trigger="every 5s" 
@@ -148,11 +142,10 @@
     
     <div>
         {% if pao_arrivals_ctx %}
-            <h2>
+            <h3>
                 PAOLI/THORNDALE
             </h>
             <table id="tbl_pao_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_pao_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_pao_arrivals/" 
                     hx-trigger="every 5s" 
@@ -166,11 +159,10 @@
     
     <div>
         {% if cyn_arrivals_ctx %}
-        <h2>
+        <h3>
             CYNWYD
         </h>
         <table id="tbl_cyn_arrivals">
-            {% include 'info_board/header.html' %}
             <tbody id = "tbl_cyn_arrivals_body" 
                 hx-post="/update_arrivals_table/tbl_cyn_arrivals/"
                 hx-trigger="every 5s" 
@@ -184,11 +176,10 @@
     
     <div>
         {% if tre_arrivals_ctx %}
-            <h2>
+            <h3>
                 TRENTON
             </h>
             <table id="tbl_tre_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_tre_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_tre_arrivals/" 
                     hx-trigger="every 5s" 
@@ -202,11 +193,10 @@
     
     <div>
         {% if war_arrivals_ctx %}
-            <h2>
+            <h3>
                 WARMINSTER
             </h>
             <table id="tbl_war_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_war_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_war_arrivals/" 
                     hx-trigger="every 5s" 
@@ -220,11 +210,10 @@
     
     <div>
         {% if wil_arrivals_ctx %}
-            <h2>
+            <h3>
                 NEWARK/WILMINGTON
             </h>
             <table id="tbl_wil_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_wil_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_wil_arrivals/" 
                     hx-trigger="every 5s" 
@@ -238,11 +227,10 @@
     
     <div>
         {% if wtr_arrivals_ctx %}
-            <h2>
+            <h3>
                 WEST TRENTON
             </h>
             <table id="tbl_wtr_arrivals">
-                {% include 'info_board/header.html' %}
                 <tbody id = "tbl_wtr_arrivals_body" 
                     hx-post="/update_arrivals_table/tbl_wtr_arrivals/" 
                     hx-trigger="every 5s" 
