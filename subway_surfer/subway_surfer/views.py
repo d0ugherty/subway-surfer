@@ -108,18 +108,18 @@ def load_arrivals(request, station):
 
     septa_arrivals_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
 
-    if len(njt_context['N']) > 0 or len(njt_context['S']) > 0:
+    if njt_context is not None:
+        if len(njt_context['N']) > 0 or len(njt_context['S']) > 0:
 
-        njt_arrivals_data = {
-            'all_arrivals_ctx' : [njt_context[key] for key in ['N','S'] if njt_context.get(key)]
-        }
+            njt_arrivals_data = {
+                'all_arrivals_ctx' : [njt_context[key] for key in ['N','S'] if njt_context.get(key)]
+            }
 
-        all_arrivals = { 'all_arrivals_ctx' : njt_arrivals_data['all_arrivals_ctx'][0] }
-        all_arrivals['all_arrivals_ctx'] += septa_arrivals_data['all_arrivals_ctx'] 
-        
-        all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
-        all_arrivals['all_arrivals_ctx'] = all_arrivals['all_arrivals_ctx'][:10]
-
+            all_arrivals = { 'all_arrivals_ctx' : njt_arrivals_data['all_arrivals_ctx'][0] }
+            all_arrivals['all_arrivals_ctx'] += septa_arrivals_data['all_arrivals_ctx'] 
+            
+            all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
+            all_arrivals['all_arrivals_ctx'] = all_arrivals['all_arrivals_ctx'][:10]
     else:
         all_arrivals = { 'all_arrivals_ctx' : sorted(septa_arrivals_data['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time']) }
     
@@ -133,7 +133,8 @@ def load_arrivals(request, station):
 
         all_arrivals[route_name_ctx] = north_data + south_data
         all_arrivals[route_name_ctx] = sorted(all_arrivals[route_name_ctx], key=lambda arrival: arrival['depart_time'])
-
+        all_arrivals[route_name_ctx] = all_arrivals[route_name_ctx][:4]
+        
     return render(request, 'info_board/arrivals.html', {
         **all_arrivals, 
         'station': station,
@@ -152,17 +153,19 @@ def update_arrivals_table(request, table_id):
 
     route_id = utils.extract_route_id(table_id)
     
+
     if route_id == 'ALL':
         septa_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
+        
+        if njt_context is not None:
+            if len(njt_context['N']) > 0 or len(njt_context['S']) > 0:
 
-        if len(njt_context['N']) > 0 or len(njt_context['S']) > 0:
+                njt_data = {
+                    'all_arrivals_ctx' : [njt_context[key] for key in ['N','S'] if njt_context.get(key)]
+                }
 
-            njt_data = {
-                'all_arrivals_ctx' : [njt_context[key] for key in ['N','S'] if njt_context.get(key)]
-            }
-
-            all_arrivals = { 'all_arrivals_ctx' : njt_data['all_arrivals_ctx'][0] }
-            all_arrivals['all_arrivals_ctx'] += septa_data['all_arrivals_ctx']
+                all_arrivals = { 'all_arrivals_ctx' : njt_data['all_arrivals_ctx'][0] }
+                all_arrivals['all_arrivals_ctx'] += septa_data['all_arrivals_ctx']
 
         else:
             all_arrivals = { 'all_arrivals_ctx' : septa_data['all_arrivals_ctx'] }
@@ -171,13 +174,14 @@ def update_arrivals_table(request, table_id):
 
         show_all_arrivals = True
         data = all_arrivals['all_arrivals_ctx'][:10]
-    
+        
     else:
         route_name = Route.get_route(route_id).route_long_name
 
         data = septa_context['N']['arrivals_by_line_ctx'][route_name]
         data += septa_context['S']['arrivals_by_line_ctx'][route_name]
         data = sorted(data, key=lambda arrival: arrival['depart_time'])
+        data = data[:4]
 
 
     return render(request, 'info_board/table_rows.html', {'arrivals': data, 'show_all_arrivals': show_all_arrivals})
