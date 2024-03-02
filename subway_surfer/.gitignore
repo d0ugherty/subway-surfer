@@ -139,6 +139,7 @@ GitHub.sublime-settings
 
 # etc
 sql
+media
 *.zip
 gtfs_data
 data
