@@ -1,10 +1,8 @@
-{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'subway_surfer/styles/select.css' %}">
 
-{% block content %}
-
-<form method = "post" action = "{% url 'train_info' %}"> 
+<form id="slct-station" class="flex-container" method = "post" action = "{% url 'train_info' %}"> 
     {% csrf_token %}
-    {{ form.as_p }} 
-    <button type = "submit" value = "Submit"> Get Arrivals </button>
+    {{ form }} 
+    <button id="btn-slct-station" type = "submit" value = "Submit"> Get Arrivals </button>
 </form> 
-{% endblock %}

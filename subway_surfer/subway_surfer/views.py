@@ -103,7 +103,7 @@ def load_arrivals(request, station):
     njt_context = NJ_Transit.get_departures(station)
     form = StationSlctForm() 
 
-    septa_routes = Agency.get_agency('SEPTA').get_routes() 
+    septa_routes = Agency.get_agency('SEPTA').get_routes()
 
     septa_arrivals_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
 
@@ -120,7 +120,7 @@ def load_arrivals(request, station):
             all_arrivals['all_arrivals_ctx'] = utils.sort_by_time(all_arrivals['all_arrivals_ctx'])
             all_arrivals['all_arrivals_ctx'] = all_arrivals['all_arrivals_ctx'][:10]
     else:
-        all_arrivals = { 'all_arrivals_ctx' : utils.sort_by_time(all_arrivals['all_arrivals_ctx'])}
+        all_arrivals = { 'all_arrivals_ctx' : utils.sort_by_time(septa_arrivals_data['all_arrivals_ctx'])}
     
     # For displaying arrivals/departures for SEPTA routes that service the station
     for route in septa_routes:
@@ -133,7 +133,7 @@ def load_arrivals(request, station):
         all_arrivals[route_name_ctx] = north_data + south_data
         all_arrivals[route_name_ctx] = utils.sort_by_time(all_arrivals[route_name_ctx])
         all_arrivals[route_name_ctx] = all_arrivals[route_name_ctx][:4]
-        
+
     return render(request, 'info_board/arrivals.html', {
         **all_arrivals, 
         'station': station,
@@ -143,7 +143,7 @@ def load_arrivals(request, station):
 """
     Update Arrivals
 """
-def update_arrivals_table(request, table_id):
+def update_arrivals_table(request, table_id, agency='septa'):
     station = request.POST.get('station', "30th Street Station") 
     septa_context = SEPTA.get_arrivals(station)
     njt_context = NJ_Transit.get_departures(station)
@@ -180,7 +180,8 @@ def update_arrivals_table(request, table_id):
         arrivals = utils.sort_by_time(arrivals)
         arrivals = arrivals[:4]
 
-    return render(request, 'info_board/table_rows.html', {'arrivals': arrivals, 'show_all_arrivals': show_all_arrivals})
+        
+    return render(request, 'info_board/table_rows.html', {'arrivals': arrivals, 'show_all_arrivals': show_all_arrivals, 'route_id': route_id.lower()})
 
 
 """

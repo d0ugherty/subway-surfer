@@ -1,23 +1,12 @@
 {% load static %}
-
+{% extends "base.html"}
 <title>Next to Arrive</title>
 
 {% block extra_head %}
-
-    <script src="https://unpkg.com/htmx.org"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{% static 'subway_surfer/js/update_time.js' %}"></script>
-    
 {% endblock %}
 
-<div id="time">
-    <script type="text/javascript">
-        update_time();
-    </script>
-
-    <h3 id="current-time">{{current_time}}</h3>
-
-</div>
+{% include "time.html" %}
 
 {% if station %}
     <h2>Next to Arrrive at {{ station }}</h2>

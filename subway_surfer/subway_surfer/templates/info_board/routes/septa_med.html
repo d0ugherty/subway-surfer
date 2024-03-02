@@ -1,0 +1,12 @@
+<h3 id="route-name">
+    MEDIA
+</h>
+<table id="tbl_med_arrivals">
+    <tbody id = "tbl_med_arrivals_body" 
+        hx-post="/update_arrivals_table/tbl_med_arrivals/" 
+        hx-trigger="every 5s" 
+        hx-swap="innerHTML" 
+        hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+        {% include 'info_board/table_rows.html' with arrivals=med_arrivals_ctx %}
+    </tbody>
+</table>
