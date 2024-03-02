@@ -28,7 +28,7 @@ def validate_station_name(station_name):
 def format_time(depart_time):
     depart_time = depart_time[:-4]
     depart_time_dt = datetime.strptime(depart_time, '%Y-%m-%d %H:%M:%S')
-    formatted_depart_time = depart_time_dt.strftime('%I:%M %p')
+    formatted_depart_time = depart_time_dt.strftime('%-I:%M %p')
     return formatted_depart_time
 
 def clean_string(s):
