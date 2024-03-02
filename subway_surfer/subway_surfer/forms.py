@@ -1,12 +1,14 @@
 from django import forms
 from .models import *
 
-
 class StationSlctForm(forms.Form):
-    stop_choice = forms.ModelChoiceField(queryset=Agency.get_agency('SEPTA').get_stops(), 
-                                         label = "Select Station ",
-                                         to_field_name='stop_name',
-                                         required=False)
+    stop_choice = forms.ModelChoiceField(
+        queryset=Agency.get_agency('SEPTA').get_stops(),
+        label="Select Station",
+        to_field_name='stop_name',
+        required=False,
+        widget=forms.Select(attrs={'class': 'round'})
+    )
 
 class AgencySlctForm(forms.Form):
     agency_choice = forms.ModelChoiceField(queryset=Agency.objects.all(),
