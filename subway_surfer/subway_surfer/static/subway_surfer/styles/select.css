@@ -1,0 +1,82 @@
+:root {
+    --font-family1: 'Courier New', Courier, monospace;
+    --font-family2: Helvetica, sans-serif;
+    --font-color: #cccccc;
+  }
+
+form, button {
+    font-family: var(--font-family2);
+    color: var(--font-color);
+    font-size: 12pt;
+    margin: 1rem;
+}
+
+button {
+    background-color: #161616;
+    appearance: auto;
+    width: 20%;
+}
+
+#slct-station {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 25%;
+}
+
+select {
+    background-color: #161616;
+    border: thin solid rgb(250, 250, 250);
+    border-radius: 4px;
+    display: inline-block;
+    font: inherit;
+    line-height: 1.5em;
+    padding: 0.5em 3.5em 0.5em 1em;
+    margin: 0;      
+    width: 40%;
+    font-family: var(--font-family2);
+    color: var(--font-color);
+    font-size: 12pt;
+    height: 2rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+
+/*button {
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #1A1A1A;
+  border-radius: 15px;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: var(--font-family2);
+  font-size: 16px;
+  font-weight: 600;
+  outline: none;
+  padding: 16px 24px;
+  text-align: center;
+  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+  touch-action: manipulation;
+  width: 10%;
+  will-change: transform;
+}
+
+button:disabled {
+  pointer-events: none;
+}
+
+button:hover {
+  color: #fff;
+  background-color: #1A1A1A;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+
+button:active {
+  box-shadow: none;
+  transform: translateY(0);
+}*/

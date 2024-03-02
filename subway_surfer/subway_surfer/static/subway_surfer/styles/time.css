@@ -1,0 +1,16 @@
+:root {
+    --font-family: 'Courier New', Courier, monospace;
+    --font-family2: Helvetica, sans-serif;
+    --font-color: #cccccc;
+    --bg-color: #0D1317;
+    --color1:  #161616;
+    --color2: #0000006b;
+}
+
+#time {
+    font-family: var(--font-family);
+    color: var(--font-color);
+    justify-content: center;
+    text-align: center;
+    font-size: 18pt;
+}

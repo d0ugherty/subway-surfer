@@ -1,21 +1,32 @@
+:root {
+    --font-family: 'Courier New', Courier, monospace;
+    --font-family2: Helvetica, sans-serif;
+    --font-color: #cccccc;
+    --bg-color: #0D1317;
+    --color1:  #161616;
+    --color2: #0000006b;
+}
+
+html {
+    background-color: #0D1317;
+  }
+
+#top-container {
+    flex-direction: row;
+    display: flex;
+}
+
 #station_name {
-    font-family: 'Courier New', Courier, monospace; 
-    color: #333; 
+    font-family: var(--font-family2); 
+    color: var(--font-color); 
     text-align: center; 
-    padding: 2rem 0; 
-    background-color: #f0f0f0; 
+    padding: 2rem 0;  
     font-size: 24pt;
 }
 
-#time {
-    font-family: 'Courier New', Courier, monospace;
-    justify-content: center;
-    text-align: center;
-    font-size: 18pt;
-}
-
 table {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--font-family);
+    color: var(--font-color);
     table-layout: auto;
     word-wrap: normal;
     margin: auto;
@@ -27,11 +38,11 @@ table {
 }
 
 table tr:nth-child(odd) {
-    background-color: #f2f2f2; 
+    background-color: var(--color1); 
 }
 
 table tr:nth-child(even) {
-    background-color: #e6e6e6;
+    background-color: var(--color2);
 }
 
 #tbl_all_arrivals th, #tbl_all_arrivals td {
@@ -47,8 +58,12 @@ table tr:nth-child(even) {
 }
 
 #info_by_route {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--font-family);
+    color: var(--font-color);
+    font-weight: lighter;
+    font-size: 12pt;
 }
+
 #info_by_route table {
     width: 100%;
     border-collapse: collapse;
