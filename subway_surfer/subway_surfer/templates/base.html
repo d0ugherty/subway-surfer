@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
     <head>
+        <title>{% block title %} Passenger Information {% endblock %}</title>
         <meta charset="UTF-8">
 
         <script src="https://unpkg.com/htmx.org"></script>
@@ -10,8 +11,8 @@
 
         <script src="https://unpkg.com/htmx.org"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        
-        {% block title %} Passenger Information {% endblock %}
+        {% block extra_head %}
+        {% endblock %}
     </head>
     <body>
         <header>
