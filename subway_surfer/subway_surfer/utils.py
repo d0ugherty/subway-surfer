@@ -62,3 +62,8 @@ def extract_route_id(html_table_id):
     if len(parts) > 2:
         return parts[1].upper()
     return None
+
+def sort_by_time(arrivals):
+    sorted_times = sorted(arrivals, 
+                          key=lambda train: datetime.strptime(train['depart_time'], '%I:%M %p'))
+    return sorted_times

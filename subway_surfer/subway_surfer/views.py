@@ -97,7 +97,6 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
 
     TO-DO: 
         Error handling or preventing on station == None
-        Display multiple NJT departures according to departure time
 """
 def load_arrivals(request, station):
     septa_context = SEPTA.get_arrivals(station,agency='SEPTA')
@@ -118,10 +117,10 @@ def load_arrivals(request, station):
             all_arrivals = { 'all_arrivals_ctx' : njt_arrivals_data['all_arrivals_ctx'][0] }
             all_arrivals['all_arrivals_ctx'] += septa_arrivals_data['all_arrivals_ctx'] 
             
-            all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
+            all_arrivals['all_arrivals_ctx'] = utils.sort_by_time(all_arrivals['all_arrivals_ctx'])
             all_arrivals['all_arrivals_ctx'] = all_arrivals['all_arrivals_ctx'][:10]
     else:
-        all_arrivals = { 'all_arrivals_ctx' : sorted(septa_arrivals_data['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time']) }
+        all_arrivals = { 'all_arrivals_ctx' : utils.sort_by_time(all_arrivals['all_arrivals_ctx'])}
     
     # For displaying arrivals/departures for SEPTA routes that service the station
     for route in septa_routes:
@@ -132,7 +131,7 @@ def load_arrivals(request, station):
         route_name_ctx = f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'
 
         all_arrivals[route_name_ctx] = north_data + south_data
-        all_arrivals[route_name_ctx] = sorted(all_arrivals[route_name_ctx], key=lambda arrival: arrival['depart_time'])
+        all_arrivals[route_name_ctx] = utils.sort_by_time(all_arrivals[route_name_ctx])
         all_arrivals[route_name_ctx] = all_arrivals[route_name_ctx][:4]
         
     return render(request, 'info_board/arrivals.html', {
@@ -148,12 +147,10 @@ def update_arrivals_table(request, table_id):
     station = request.POST.get('station', "30th Street Station") 
     septa_context = SEPTA.get_arrivals(station)
     njt_context = NJ_Transit.get_departures(station)
-    data = []
-    show_all_arrivals = False # controls which columns appear in the table header
-
+    arrivals = []
+    show_all_arrivals = False
     route_id = utils.extract_route_id(table_id)
     
-
     if route_id == 'ALL':
         septa_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
         
@@ -170,21 +167,20 @@ def update_arrivals_table(request, table_id):
         else:
             all_arrivals = { 'all_arrivals_ctx' : septa_data['all_arrivals_ctx'] }
 
-        all_arrivals['all_arrivals_ctx'] = sorted(all_arrivals['all_arrivals_ctx'], key=lambda arrival: arrival['depart_time'])
-
-        show_all_arrivals = True
-        data = all_arrivals['all_arrivals_ctx'][:10]
+        all_arrivals['all_arrivals_ctx'] = utils.sort_by_time(all_arrivals['all_arrivals_ctx'])
+        arrivals = all_arrivals['all_arrivals_ctx'][:10]
         
+        show_all_arrivals = True
+
     else:
         route_name = Route.get_route(route_id).route_long_name
 
-        data = septa_context['N']['arrivals_by_line_ctx'][route_name]
-        data += septa_context['S']['arrivals_by_line_ctx'][route_name]
-        data = sorted(data, key=lambda arrival: arrival['depart_time'])
-        data = data[:4]
+        arrivals = septa_context['N']['arrivals_by_line_ctx'][route_name]
+        arrivals += septa_context['S']['arrivals_by_line_ctx'][route_name]
+        arrivals = utils.sort_by_time(arrivals)
+        arrivals = arrivals[:4]
 
-
-    return render(request, 'info_board/table_rows.html', {'arrivals': data, 'show_all_arrivals': show_all_arrivals})
+    return render(request, 'info_board/table_rows.html', {'arrivals': arrivals, 'show_all_arrivals': show_all_arrivals})
 
 
 """
