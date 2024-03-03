@@ -4,6 +4,7 @@
 
 {% block extra_head %}
     <script src="{% static 'subway_surfer/js/update_time.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'subway_surfer/styles/nta/nta.css' %}">
 {% endblock %}
 
 
@@ -15,7 +16,8 @@
 {% endif %}
 
 {% include 'nta/select.html' with station=station %}
-{% include 'nta/tracks.html' with trains_by_track=trains_by_track station=station %}
-
+<div id="track_tbl_container" >
+    {% include 'nta/tracks.html' with trains_by_track=trains_by_track station=station %}
+</div>
 
 {% endblock %}

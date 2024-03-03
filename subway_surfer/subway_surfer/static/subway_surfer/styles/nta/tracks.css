@@ -1,0 +1,28 @@
+table {
+    font-family: var(--font-family);
+    color: var(--font-color);
+    border-radius: 4px;
+    table-layout: auto;
+    word-wrap: normal;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    width: 70%; 
+    border-collapse: collapse; 
+    
+}
+
+
+table tr:nth-child(odd) {
+    background-color: #161616; 
+}
+
+table tr:nth-child(even) {
+    background-color: #272727;
+}
+
+#track-container {
+    background: var(--color2);
+    width:50%;
+    padding:auto;
+    margin: auto;
+}
