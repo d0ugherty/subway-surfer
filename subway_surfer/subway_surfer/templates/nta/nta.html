@@ -1,28 +1,23 @@
+{% extends "base.html" %}
+{% block title %} Next To Arrive {% endblock %} 
 {% load static %}
-{% extends "base.html"}
-<title>Next to Arrive</title>
 
 {% block extra_head %}
     <script src="{% static 'subway_surfer/js/update_time.js' %}"></script>
 {% endblock %}
 
+
+{% block content %}
 {% include "time.html" %}
 
 {% if station %}
     <h2>Next to Arrrive at {{ station }}</h2>
 {% endif %}
 
-<form method = "post" action = "{% url 'next_to_arrive' station %}"> 
-    {% csrf_token %}
-    {{ stop_form }}
-    <button type = "submit" value = "Submit"> Submit </button>
-</form> 
 
-<div 
-    hx-post="/update_next_to_arrive/{{ station }}/" 
-    hx-trigger="every 5s" 
-    hx-swap="innerHTML" 
-    hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>
-    
-        {% include 'nta/tracks.html' with trains_by_track=trains_by_track%}
-</div>
+
+
+{% include 'nta/tracks.html' with trains_by_track=trains_by_track station=station %}
+
+
+{% endblock %}

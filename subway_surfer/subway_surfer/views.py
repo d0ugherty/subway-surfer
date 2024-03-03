@@ -77,8 +77,8 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
     # default
     station = "30th Street Station"
 
-    if request.method == 'POST':
-        form = StationSlctForm(request.POST)
+    if request.method == 'GET':
+        form = StationSlctForm(request.GET)
 
         if form.is_valid():
             selected_stop = form.cleaned_data['stop_choice']
@@ -153,7 +153,7 @@ def load_arrivals(request, station):
     Update Arrivals
 """
 def update_arrivals_table(request, table_id, agency='septa'):
-    station = request.POST.get('station', "30th Street Station") 
+    station = request.GET.get('station', "30th Street Station") 
     septa_context = SEPTA.get_arrivals(station)
     njt_context = NJ_Transit.get_departures(station)
     arrivals = []
@@ -190,7 +190,9 @@ def update_arrivals_table(request, table_id, agency='septa'):
         arrivals = arrivals[:4]
 
         
-    return render(request, 'info_board/table_rows.html', {'arrivals': arrivals, 'show_all_arrivals': show_all_arrivals, 'route_id': route_id.lower()})
+    return render(request, 'info_board/table_rows.html', {'arrivals': arrivals, 
+                                                          'show_all_arrivals': show_all_arrivals, 
+                                                          'route_id': route_id.lower()})
 
 
 """
@@ -279,8 +281,8 @@ def get_fare(request, origin, destination):
 def next_to_arrive(request, station):
     stops = Stop.objects.all()
 
-    if request.method == 'POST':
-        form = StationSlctForm(request.POST)
+    if request.method == 'GET':
+        form = StationSlctForm(request.GET)
 
         if form.is_valid():
 
@@ -301,6 +303,6 @@ def next_to_arrive(request, station):
     return render(request, 'nta/nta.html', context)
 
 def update_next_to_arrive(request, station):
-    station = request.POST.get('station', "30th Street Station") 
+    station = request.GET.get('station', "30th Street Station") 
     trains_by_track = SEPTA.arrivals_by_track(station)
     return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track})

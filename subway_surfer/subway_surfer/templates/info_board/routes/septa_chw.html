@@ -2,7 +2,7 @@
 <h3 id="route-name">CHESTNUT HILL WEST</h>
     <table id="tbl_chw_arrivals">
         <tbody id = "tbl_chw_arrivals_body" 
-            hx-post="/update_arrivals_table/tbl_chw_arrivals/" 
+            hx-get="/update_arrivals_table/tbl_chw_arrivals/" 
             hx-trigger="every 5s" 
             hx-swap="innerHTML" 
             hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>

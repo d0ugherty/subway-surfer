@@ -49,7 +49,7 @@ def current_time():
 
 def convert_twelve_hour(time):
     temp_time = datetime.strptime(time, '%H:%M:%S')
-    formatted = temp_time.strftime('%I:%M %p')
+    formatted = temp_time.strftime('%-I:%M %p')
     return formatted
 
 def time_to_datetime(time):

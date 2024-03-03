@@ -1,14 +1,19 @@
-{{trains_by_track.1.train_id}}
-
+<div 
+    hx-get="/update_next_to_arrive/{{ station }}/" 
+    hx-trigger="every 5s" 
+    hx-swap="innerHTML" 
+    hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>
 <!--track: key, train: value-->
-{% for track, train in trains_by_track.items %}
-    {% if train %}
-        <h2>Track {{ track }}</h2>
-        <table id="tbl_next">
-           {% include 'nta/header.html' %}
-            <tbody>
-                {% include 'nta/table_rows.html' with train=train %}
-            </tbody>
-        </table>
-    {% endif %}
-{% endfor %}
+    {% for track, train in trains_by_track.items %}
+        {% if train %}
+            <h2>Track {{ track }}</h2>
+            <table id="tbl_next">
+            {% include 'nta/header.html' %}
+                <tbody>
+                    {% include 'nta/table_rows.html' with train=train %}
+                </tbody>
+            </table>
+        {% endif %}
+    {% endfor %}
+
+</div>

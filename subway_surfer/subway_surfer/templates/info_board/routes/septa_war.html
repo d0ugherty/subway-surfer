@@ -4,7 +4,7 @@
 </h>
 <table id="tbl_war_arrivals">
     <tbody id = "tbl_war_arrivals_body" 
-        hx-post="/update_arrivals_table/tbl_war_arrivals/" 
+        hx-get="/update_arrivals_table/tbl_war_arrivals/" 
         hx-trigger="every 5s" 
         hx-swap="innerHTML" 
         hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>

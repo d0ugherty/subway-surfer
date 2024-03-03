@@ -1,6 +1,5 @@
 from .models import Stop
 from .utils import convert_twelve_hour
-
 """"""
 
 def get_next_departure(station):
