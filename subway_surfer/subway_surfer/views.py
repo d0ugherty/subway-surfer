@@ -102,7 +102,7 @@ def load_arrivals(request, station):
     septa_context = SEPTA.get_arrivals(station,agency='SEPTA')
     njt_context = NJ_Transit.get_departures(station)
     form = StationSlctForm() 
-
+    route_ids = []
     septa_routes = Agency.get_agency('SEPTA').get_routes()
 
     septa_arrivals_data = { 'all_arrivals_ctx': septa_context['N']['all_arrivals_ctx'][:5] + septa_context['S']['all_arrivals_ctx'][:5] }
@@ -128,14 +128,23 @@ def load_arrivals(request, station):
         north_data = septa_context['N']['arrivals_by_line_ctx'].get(route.route_long_name, [])
         south_data = septa_context['S']['arrivals_by_line_ctx'].get(route.route_long_name, [])
 
-        route_name_ctx = f'{route.route_id.lower().replace(" ", "_")}_arrivals_ctx'
+        route_id = route.route_id.lower()
+        route_ids.append(route_id)
+
+        route_name_ctx = f'{route_id.replace(" ", "_")}_arrivals_ctx'
 
         all_arrivals[route_name_ctx] = north_data + south_data
         all_arrivals[route_name_ctx] = utils.sort_by_time(all_arrivals[route_name_ctx])
         all_arrivals[route_name_ctx] = all_arrivals[route_name_ctx][:4]
 
+    route_templates = [
+        {'template_name': f'info_board/routes/septa_{id}.html', 'id_arrivals_ctx': f'{id}_arrivals_context'} 
+        for id in route_ids
+    ]
+
     return render(request, 'info_board/arrivals.html', {
-        **all_arrivals, 
+        **all_arrivals,
+        'route_templates': route_templates , 
         'station': station,
         'form': form
     })

@@ -1,3 +1,4 @@
+{% if chw_arrivals_ctx %}
 <h3 id="route-name">CHESTNUT HILL WEST</h>
     <table id="tbl_chw_arrivals">
         <tbody id = "tbl_chw_arrivals_body" 
@@ -7,4 +8,5 @@
             hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>
                 {% include 'info_board/table_rows.html' with arrivals=chw_arrivals_ctx %}
         </tbody>
-    </table>
+</table>
+{% endif %}

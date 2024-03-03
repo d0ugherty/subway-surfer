@@ -32,59 +32,12 @@
     
     </div>
 
-<!-- TO DO:  Make this dynamic instead of hard coding routes and relying on if statements -->
+
 <div id="info_by_route" class="flex-container">
-        {% if air_arrivals_ctx %}
-            {% include 'info_board/routes/septa_air.html' with station=station arrivals=air_arrivals_ctx %}
-        {% endif %}
-        
-        {% if che_arrivals_ctx %}
-            {% include 'info_board/routes/septa_che.html' with station=station arrivals=che_arrivals_ctx %}
-        {% endif %}
-    
-        {% if chw_arrivals_ctx %}
-            {% include 'info_board/routes/septa_chw.html' with station=station arrivals=chw_arrivals_ctx %}
-        {% endif %}
-    
-        {% if lan_arrivals_ctx %}
-            {% include 'info_board/routes/septa_lan.html' with station=station arrivals=chw_arrivals_ctx %}
-        {% endif %}
-   
-        {% if med_arrivals_ctx %}
-            {% include 'info_board/routes/septa_med.html' with station=station arrivals=med_arrivals_ctx %}
-        {% endif %}
-    
-        {% if fox_arrivals_ctx %}
-            {% include 'info_board/routes/septa_fox.html' with station=station arrivals=fox_arrivals_ctx %}
-        {% endif %}
-    
-        {% if nor_arrivals_ctx %}
-            {% include 'info_board/routes/septa_nor.html' with station=station arrivals=nor_arrivals_ctx %}
-        {% endif %}
-   
-        {% if pao_arrivals_ctx %}
-            {% include 'info_board/routes/septa_pao.html' with station=station arrivals=pao_arrivals_ctx %}
-        {% endif %}
-  
-        {% if cyn_arrivals_ctx %}
-            {% include 'info_board/routes/septa_cyn.html' with station=station arrivals=cyn_arrivals_ctx %}
-        {% endif %}
-    
-        {% if tre_arrivals_ctx %}
-            {% include 'info_board/routes/septa_tre.html' with station=station arrivals=tre_arrivals_ctx %}    
-        {% endif %}
- 
-        {% if war_arrivals_ctx %}
-            {% include 'info_board/routes/septa_war.html' with station=station arrivals=war_arrivals_ctx %}    
-        {% endif %}
-
-        {% if wil_arrivals_ctx %}
-            {% include 'info_board/routes/septa_wil.html' with station=station arrivals=wil_arrivals_ctx %}    
-        {% endif %}
-
-        {% if wtr_arrivals_ctx %}
-            {% include 'info_board/routes/septa_wil.html' with station=station arrivals=wil_arrivals_ctx %}    
-        {% endif %}
-    
+        {% for template in route_templates %}
+            {% with template_name=template.template_name id_arrivals_ctx=template.id_arrivals_ctx %}
+                {% include template_name with station=station arrivals=id_arrivals_ctx %}
+            {% endwith %}
+        {% endfor %}
 </div>
 {% endblock %}

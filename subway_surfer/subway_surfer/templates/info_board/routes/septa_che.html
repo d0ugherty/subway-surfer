@@ -1,3 +1,4 @@
+{% if che_arrivals_ctx %}
 <h3 id="route-name">CHESTNUT HILL EAST</h>
     <table id="tbl_che_arrivals">
         <tbody id = "tbl_che_arrivals_body" 
@@ -8,3 +9,4 @@
                 {% include 'info_board/table_rows.html' with arrivals=che_arrivals_ctx %}
         </tbody>
 </table>
+{% endif %}
