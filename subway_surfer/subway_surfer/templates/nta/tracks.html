@@ -1,5 +1,5 @@
 <div 
-    hx-get="/update_next_to_arrive/{{ station }}/" 
+    hx-post="/update_next_to_arrive/{{ station }}/" 
     hx-trigger="every 5s" 
     hx-swap="innerHTML" 
     hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>

@@ -204,4 +204,3 @@ def _get_headsign(train_info):
     else:
         return trip.trip_headsign
     
-

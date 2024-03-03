@@ -14,9 +14,7 @@
     <h2>Next to Arrrive at {{ station }}</h2>
 {% endif %}
 
-
-
-
+{% include 'nta/select.html' with station=station %}
 {% include 'nta/tracks.html' with trains_by_track=trains_by_track station=station %}
 
 

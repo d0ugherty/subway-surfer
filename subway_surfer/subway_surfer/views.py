@@ -90,6 +90,7 @@ def train_info(request, template_name='info_board/arrivals.html', redirect_dest=
         form = StationSlctForm()
 
     context = {'stop_form': form, 'station': station}
+
     return render(request, template_name, context)
 
 """
@@ -280,9 +281,9 @@ def get_fare(request, origin, destination):
 """
 def next_to_arrive(request, station):
     stops = Stop.objects.all()
-
-    if request.method == 'GET':
-        form = StationSlctForm(request.GET)
+    
+    if request.method == 'POST':
+        form = StationSlctForm(request.POST)
 
         if form.is_valid():
 
@@ -298,11 +299,17 @@ def next_to_arrive(request, station):
                 })
     else:
         form = StationSlctForm()
+        station = request.POST.get('station', "Gray 30th Street") 
+        trains_by_track = SEPTA.arrivals_by_track(station)
 
-    context = {'stop_form': form, 'stops': stops, 'station': station}
+    context = {'stop_form': form, 
+               'stops': stops, 
+               'station': station, 
+               'trains_by_track': trains_by_track}
+    
     return render(request, 'nta/nta.html', context)
 
 def update_next_to_arrive(request, station):
-    station = request.GET.get('station', "30th Street Station") 
+    station = request.POST.get('station', "30th Street Station") 
     trains_by_track = SEPTA.arrivals_by_track(station)
     return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track})

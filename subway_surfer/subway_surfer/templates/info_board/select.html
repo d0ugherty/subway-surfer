@@ -1,6 +1,6 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'subway_surfer/styles/select.css' %}">
-
+<!--- TO DO: make this more generic -->
 <form id="slct-station" class="flex-container" method = "get" action = "{% url 'train_info' %}"> 
     {% csrf_token %}
     {{ form }} 
