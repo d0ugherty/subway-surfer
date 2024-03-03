@@ -6,15 +6,15 @@ class StationSlctForm(forms.Form):
         queryset=Agency.get_agency('SEPTA').get_stops(),
         label="Select Station",
         to_field_name='stop_name',
-        required=False,
-        widget=forms.Select(attrs={'class': 'round'})
-    )
+        required=False)
+    
 
 class AgencySlctForm(forms.Form):
     agency_choice = forms.ModelChoiceField(queryset=Agency.objects.all(),
                                            label = "Select Agency",
                                            to_field_name='agency_name',
                                            required=False)
+    
     form_type = forms.CharField(widget=forms.HiddenInput(), initial='agency')
     
 class RouteSlctForm(forms.Form):

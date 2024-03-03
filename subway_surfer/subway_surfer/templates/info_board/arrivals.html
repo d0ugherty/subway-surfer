@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% block title %} {{ station }} {% endblock %}
 {% load static %}
@@ -13,24 +12,12 @@
 
     {% include "time.html" %}
 
-    {% include "info_board/select.html" %}
-
-<!-- TO DO:  Make this dynamic instead of hard-coding "all" -->
-    <div id="top-container" class="flex-container">
-        <table id="tbl_all_arrivals">
-
-                {% include 'info_board/header.html' with show_all_arrivals=True %}
-
-            <tbody hx-post="/update_arrivals_table/tbl_all_arrivals/" 
-                hx-trigger="every 5s" 
-                hx-swap="innerHTML" 
-                hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>
-                    {% include 'info_board/table_rows.html' with arrivals=all_arrivals_ctx show_all_arrivals=True %}
-            </tbody>
-
-        </table>
-    
-    </div>
+<div id="top-container" class="flex-container">
+  
+        {% include "info_board/select.html" %}
+ 
+        {% include 'info_board/all.html' with show_all_arrivals=show_all_arrivals all_arrivals_ctx=all_arrivals_ctx %}
+</div>
 
 
 <div id="info_by_route" class="flex-container">

@@ -4,16 +4,20 @@
     --font-color: #cccccc;
     --bg-color: #0D1317;
     --color1:  #161616;
-    --color2: #0000006b;
+    --color2: #272727;
 }
 
 html {
-    background-color: #0D1317;
+    background-color: #303952;
   }
+
+
 
 #top-container {
     flex-direction: row;
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
 }
 
 #station_name {
@@ -27,9 +31,11 @@ html {
 table {
     font-family: var(--font-family);
     color: var(--font-color);
+    border-radius: 4px;
     table-layout: auto;
     word-wrap: normal;
-    margin: auto;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
 #tbl_all_arrivals {
@@ -38,11 +44,11 @@ table {
 }
 
 table tr:nth-child(odd) {
-    background-color: var(--color1); 
+    background-color: #161616; 
 }
 
 table tr:nth-child(even) {
-    background-color: var(--color2);
+    background-color: #272727;
 }
 
 #tbl_all_arrivals th, #tbl_all_arrivals td {
@@ -60,8 +66,12 @@ table tr:nth-child(even) {
 #info_by_route {
     font-family: var(--font-family);
     color: var(--font-color);
-    font-weight: lighter;
-    font-size: 12pt;
+    font-weight: 400;
+    font-size: 16pt;
+}
+#info_by_route tr {
+    font-weight: 200;
+    font-size: 14pt;
 }
 
 #info_by_route table {
