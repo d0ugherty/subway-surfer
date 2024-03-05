@@ -9,7 +9,7 @@ def get_arrivals(station, results=50,agency='SEPTA', by_track=False):
         septa_base_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}'
 
         if by_track:
-
+            print(f'STATION: {station}')
             api_url = f'{septa_base_url}&results={results}'
             response = requests.get(api_url)
             context = { 'station' : station }
@@ -48,6 +48,7 @@ def arrivals_by_track(station):
     for track_number in track_dict:
 
         for arrival in arrivals['all_arrivals_ctx']:
+            
             arriving_track = get_digits(arrival['track'])
     
             if track_dict[track_number] == {} and track_number == arriving_track:

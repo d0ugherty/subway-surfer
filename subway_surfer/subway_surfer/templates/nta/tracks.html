@@ -2,11 +2,12 @@
 
 <link rel="stylesheet" href="{% static 'subway_surfer/styles/nta/tracks.css' %}">
 <div 
-    hx-post="/update_next_to_arrive/{{ station }}/" 
+    hx-post="/update_next_to_arrive/" 
     hx-trigger="every 5s" 
     hx-swap="innerHTML" 
     hx-vals='{"station": "{{ station }}", "csrfmiddlewaretoken": "{{ csrf_token }}"}'>
-<!--track: key, train: value-->
+<!--track: key, train: value--> 
+
     {% for track, train in trains_by_track.items %}
         {% if train %}
             <div id="track-container">

@@ -70,8 +70,6 @@ def map_markers(request, agency):
 
 """
     Renders form and redirects to the train information board
-
-    TO DO: Refactor this to make it work with next to arrive
 """
 def train_info(request, template_name='info_board/arrivals.html', redirect_dest='load_arrivals'):
     # default
@@ -153,7 +151,7 @@ def load_arrivals(request, station):
 """
     Update Arrivals
 """
-def update_arrivals_table(request, table_id, agency='septa'):
+def update_arrivals_table(request, table_id):
     station = request.GET.get('station', "30th Street Station") 
     septa_context = SEPTA.get_arrivals(station)
     njt_context = NJ_Transit.get_departures(station)
@@ -279,37 +277,35 @@ def get_fare(request, origin, destination):
     - Via
     - Current time
 """
-def next_to_arrive(request, station):
-    stops = Stop.objects.all()
-    
+def init_next_to_arrive(request, template_name='nta/nta.html', redirect_dest='next_to_arrive'):
+    station = "Gray 30th Street"
     if request.method == 'POST':
-        form = StationSlctForm(request.POST)
+        stop_form = StationSlctForm(request.POST)
 
-        if form.is_valid():
+        if stop_form.is_valid():
 
-            selected_stop = form.cleaned_data['stop_choice']
+            selected_stop = stop_form.cleaned_data['stop_choice']
             stop_name = utils.validate_station_name(selected_stop)
 
-            trains_by_track = SEPTA.arrivals_by_track(stop_name)
-
-            return render(request, 'nta/nta.html', { 
-                'stop_form' : form,
-                'station': stop_name,
-                'trains_by_track': trains_by_track
-                })
+            return redirect(redirect_dest, station=stop_name)
     else:
-        form = StationSlctForm()
-        station = request.POST.get('station', "Gray 30th Street") 
-        trains_by_track = SEPTA.arrivals_by_track(station)
+        stop_form = StationSlctForm()
 
-    context = {'stop_form': form, 
-               'stops': stops, 
-               'station': station, 
-               'trains_by_track': trains_by_track}
+    context = {'stop_form': stop_form,'station': station }
     
-    return render(request, 'nta/nta.html', context)
+    return render(request, template_name, context)
 
-def update_next_to_arrive(request, station):
-    station = request.POST.get('station', "30th Street Station") 
+def load_next_to_arrive(request, station):
+    stop_form = StationSlctForm()
+    septa_context = SEPTA.arrivals_by_track(station)
+    return render(request, 'nta/nta.html', {'trains_by_track': septa_context,
+                                            'station': station,
+                                            'stop_form': stop_form })
+
+
+def update_next_to_arrive(request):
+    station = request.POST.get('station', "Gray 30th Street") 
+    print(f'STATION: {station}')
     trains_by_track = SEPTA.arrivals_by_track(station)
-    return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track})
+    return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track, 
+                                               'station': station})

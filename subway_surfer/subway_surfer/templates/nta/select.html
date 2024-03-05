@@ -1,7 +1,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'subway_surfer/styles/select.css' %}">
 
-<form method = "POST" action = "{% url 'next_to_arrive' station %}"> 
+<form method = "POST" action = "{% url 'init_nta' %}"> 
     {% csrf_token %}
     {{ stop_form }}
     <button type = "submit" value = "Submit"> Submit </button>

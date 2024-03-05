@@ -6,9 +6,9 @@ table {
     word-wrap: normal;
     margin-left: 2rem;
     margin-right: 2rem;
+    
     width: 70%; 
     border-collapse: collapse; 
-    
 }
 
 
@@ -25,4 +25,5 @@ table tr:nth-child(even) {
     width:50%;
     padding:auto;
     margin: auto;
+    box-shadow: #574b90 8px 10px;
 }
