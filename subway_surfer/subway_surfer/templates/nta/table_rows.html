@@ -3,6 +3,12 @@
     <td>{{ train.depart_time}}</td>
     <td>{{ train.destination}}</td>
     <td>{{ train.headsign }}</td>
-    <td>{{ train.status }}</td>
+    <td style="{% if train.status != 'On Time' %}
+                color: yellow; 
+                {% else %} 
+                color: green;
+                {% endif %}">
+            {{ train.status }}
+        </td>
     <td>{{ train.eta }} mins</td>
 </tr>

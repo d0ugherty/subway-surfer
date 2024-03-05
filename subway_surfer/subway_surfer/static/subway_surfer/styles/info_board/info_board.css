@@ -2,13 +2,15 @@
     --font-family: 'Courier New', Courier, monospace;
     --font-family2: Helvetica, sans-serif;
     --font-color: #cccccc;
-    --bg-color: #0D1317;
-    --color1:  #161616;
-    --color2: #272727;
+    --bg-color: #35374B;
+    --color1:  #344955;
+    --color2: #50727B;
+    --color3: #78A083;
+    --color4: #7158e2;
 }
 
 html {
-    background-color: #303952;
+    background-color: #35374B;
   }
 
 
@@ -41,7 +43,9 @@ table {
 #tbl_all_arrivals {
     width: 50%; 
     border-collapse: collapse; 
+    box-shadow: rgba(17, 17, 17, 0.521) 8px 8px 15px;
 }
+
 
 table tr:nth-child(odd) {
     background-color: #161616; 
@@ -79,4 +83,5 @@ table tr:nth-child(even) {
     border-collapse: collapse;
     margin: 0.25rem;
     padding: .5rem;
+    box-shadow: rgba(17, 17, 17, 0.521) 8px 8px 15px;
 }

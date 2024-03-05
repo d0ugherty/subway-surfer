@@ -65,5 +65,5 @@ def extract_route_id(html_table_id):
 
 def sort_by_time(arrivals):
     sorted_times = sorted(arrivals, 
-                          key=lambda train: datetime.strptime(train['depart_time'], '%I:%M %p'))
+                          key=lambda train: datetime.strptime(train['depart_time'], '%H:%M %p'))
     return sorted_times

@@ -1,8 +1,13 @@
 :root {
-    --font-family1: 'Courier New', Courier, monospace;
-    --font-family2: 'Helvetica', sans-serif;
-    --font-color: #f5f3f3;
-  }
+    --font-family: 'Courier New', Courier, monospace;
+    --font-family2: Helvetica, sans-serif;
+    --font-color: #cccccc;
+    --bg-color:#1e272e;
+    --color1:  #3d3d3d;
+    --color2: #4b4b4b;
+    --color3: #574b9094;
+    --color4: #7158e2;
+}
 
 form {
     font-family: var(--font-family2);
@@ -13,8 +18,7 @@ form {
     margin-left: 1rem;
     margin-right: 1rem;
     padding: .5rem;
-    background-color: #596275;
-    border-radius: 4px;
+    background-color: var(--color1);
     box-shadow: rgba(17, 17, 17, 0.25) 0 8px 15px;
     
 }
@@ -33,11 +37,14 @@ form label {
     width: 25%;
     align-items: center;
     justify-content: center;
+    background: #344955;
+    box-shadow: #50727b79 8px 10px;
 }
 
+
 select {
-    background-color: #303952;
-    border: thin solid rgb(250, 250, 250);
+    background-color: #50727B;
+    border: none;
     border-radius: 4px;
     display: inline-block;
     width: auto;
@@ -54,7 +61,7 @@ select {
 
 
 button {
-    background-color: #546de5;
+    background-color: #35374B;
     width: auto;
     height: auto;
     padding: 1rem;

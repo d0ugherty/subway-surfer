@@ -305,7 +305,6 @@ def load_next_to_arrive(request, station):
 
 def update_next_to_arrive(request):
     station = request.POST.get('station', "Gray 30th Street") 
-    print(f'STATION: {station}')
     trains_by_track = SEPTA.arrivals_by_track(station)
     return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track, 
                                                'station': station})

@@ -8,18 +8,3 @@
     --color3: #78A083;
     --color4: #7158e2;
 }
-
-html {
-    background-color: var(--bg-color);
-  }
-
-h2 {
-    font-family: var(--font-family2);
-    color: var(--font-color);
-}
-
-#track_tbl_container {
-    display:grid;
-    gap: 1rem; 
-    
-}

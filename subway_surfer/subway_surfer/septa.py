@@ -9,7 +9,6 @@ def get_arrivals(station, results=50,agency='SEPTA', by_track=False):
         septa_base_url = f'https://www3.septa.org/api/Arrivals/index.php?station={station}'
 
         if by_track:
-            print(f'STATION: {station}')
             api_url = f'{septa_base_url}&results={results}'
             response = requests.get(api_url)
             context = { 'station' : station }
