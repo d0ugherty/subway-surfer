@@ -279,8 +279,8 @@ def get_fare(request, origin, destination):
 """
 def init_next_to_arrive(request, template_name='nta/nta.html', redirect_dest='next_to_arrive'):
     station = "Gray 30th Street"
-    if request.method == 'POST':
-        stop_form = StationSlctForm(request.POST)
+    if request.method == 'GET':
+        stop_form = StationSlctForm(request.GET)
 
         if stop_form.is_valid():
 
@@ -304,7 +304,7 @@ def load_next_to_arrive(request, station):
 
 
 def update_next_to_arrive(request):
-    station = request.POST.get('station', "Gray 30th Street") 
+    station = request.GET.get('station', "Gray 30th Street") 
     trains_by_track = SEPTA.arrivals_by_track(station)
     return render(request, 'nta/tracks.html', {'trains_by_track': trains_by_track, 
                                                'station': station})
