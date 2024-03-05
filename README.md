@@ -6,6 +6,8 @@ So far it includes train information boards, real-time locations, and fare calcu
 
 Services: SEPTA Regional Rail, SEPTA Subway-Surface Trolleys, and NJ Transit Commuter Rail*.
 
+I would like to extend this to other agencies with available data.
+
 *Real-time data for NJ Transit is currently unavailable so static GTFS data is used.
 
 # Why?
