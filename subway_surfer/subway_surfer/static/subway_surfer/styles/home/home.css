@@ -1,0 +1,25 @@
+:root {
+    --font-family: 'Courier New', Courier, monospace;
+    --font-family2: Helvetica, sans-serif;
+    --font-color: #cccccc;
+    --bg-color: #35374B;
+    --color1:  #344955;
+    --color2: #50727B;
+    --color3: #78A083;
+    --color4: #7158e2;
+}
+
+html {
+    background-color: #35374B;
+  }
+
+#btn-container {
+    display: grid;
+    flex-direction: row;
+    height: 100%;
+    width: 50%;
+    align-items: center;
+    justify-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}

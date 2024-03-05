@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+      <link rel="stylesheet" href="{% static 'subway_surfer/styles/home/home.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id = btn-container>
+            {% include 'home/buttons.html' %}
+    </div>
+{% endblock %}

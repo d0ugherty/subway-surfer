@@ -1,0 +1,50 @@
+:root {
+    --font-family: 'Courier New', Courier, monospace;
+    --font-family2: Helvetica, sans-serif;
+    --font-color: #cccccc;
+    --bg-color: #35374B;
+    --color1:  #344955;
+    --color2: #50727B;
+    --color3: #78A083;
+    --color4: #7158e2;
+}
+
+button {
+    width: 15rem;
+    height: 15rem;
+    
+    padding: 3rem;
+
+    margin:  2rem;
+    appearance: none;
+    color: var(--font-color);
+    font-size: 20pt;
+
+    background: #50727B;
+    border: 0px solid #f7f7f7;
+
+    font-weight: 600;
+    outline: none;
+    text-align: center;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    touch-action: manipulation;
+    will-change: transform;
+
+    box-shadow: rgba(17, 17, 17, 0.521) 8px 8px 15px;
+}
+
+button:disabled {
+    pointer-events: none;
+  }
+  
+  button:hover {
+    color: #fff;
+    background-color: #778beb;
+    box-shadow: rgba(201, 196, 196, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+  }
+  
+  button:active {
+    box-shadow: none;
+    transform: translateY(0);
+  }
