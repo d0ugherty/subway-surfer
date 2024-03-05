@@ -12,7 +12,7 @@ I would like to extend this to other agencies with available data.
 
 # Why?
 
-About a year and a half ago, I started a similar project using vanilla JS, HTML, and CSS. I really didn't know what I was doing when it came to setting up a database and ended up over engineering the whole thing. So built out and some C# models and controllers for the backend so I could use the GTFS data which I stored in a SQL database. I learned a lot, but it made the project bigger than it had to be.
+About a year and a half ago, I started a similar project using vanilla JS, HTML, and CSS. I really didn't know what I was doing when it came to setting up a database and ended up over engineering the whole thing. I built out C# models and controllers for the backend so I could use the GTFS data which I stored in a SQL database. I learned a lot, but it made the project bigger than it had to be and the relational database wasn't very...well, relational.
 
 After learning about Django, it seemed like an appropriate set of tools to build this with. Outside of school, this would be my first time using any sort of framework. 
 
