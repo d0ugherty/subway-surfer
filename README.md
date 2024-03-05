@@ -20,5 +20,5 @@ After learning about Django, it seemed like an appropriate set of tools to build
 
 This uses SEPTA's REST API for real-time information. For static information, it uses GTFS data stored in a SQLite database.
 
-Since this is a transactional application (retrieve objects, process the data, and render it), it uses the Django ORM for quering against the database. The queries are relatively simple so raw SQL doesn't seem necessary. However, I have been using SQL for troubleshooting inside the database.
+Since this is a transactional application (send request, retrieve objects, process the data, and render it), it uses the Django ORM for querying against the database. The queries are relatively simple so raw SQL doesn't seem necessary. However, I have been using SQL for troubleshooting inside the database.
 
