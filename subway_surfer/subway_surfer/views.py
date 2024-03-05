@@ -10,7 +10,7 @@ from subway_surfer import nj_transit as NJ_Transit
 
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'home/home.html')
 
 """
     Renders the map page elements - map and agency form
