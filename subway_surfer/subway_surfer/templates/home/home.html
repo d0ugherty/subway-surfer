@@ -3,10 +3,11 @@
 
 {% block extra_head %}
       <link rel="stylesheet" href="{% static 'subway_surfer/styles/home/home.css' %}">
+      
 {% endblock %}
 
 {% block content %}
-    <div id = btn-container>
+    <div id = btn-container class="flex-container">
             {% include 'home/buttons.html' %}
     </div>
 {% endblock %}

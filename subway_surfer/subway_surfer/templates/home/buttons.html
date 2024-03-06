@@ -4,34 +4,31 @@
       <link rel="stylesheet" href="{% static 'subway_surfer/styles/home/buttons.css' %}">
 {% endblock %}
 
-<div id="btn-row">
-    <a href="/arrivals/Gray 30th Street/">
-        <button id="btn-departures" >
-            Departures
-           <img src='static/subway_surfer/icons/timetable.png' id= "img-departure" class="icon">
-        </button>
-    </a>
-<a href="/next_to_arrive/Gray 30th Street/">
-    <button id="btn-nta">
-          <label>Next To Arrive</label>
-          <img src='static/subway_surfer/icons/train.png' id= "img-nta" class="icon">
+
+<a href="/arrivals/Gray 30th Street/">
+    <button id="btn-departures" class="btn" >
+        Departures
+        <img src='static/subway_surfer/icons/timetable.png' id= "img-departure" class="icon">
     </button>
 </a>
-</div>
+<a href="/next_to_arrive/Gray 30th Street/">
+    <button id="btn-nta" class="btn" >
+            <label>Next To Arrive</label>
+            <img src='static/subway_surfer/icons/train.png' id= "img-nta" class="icon">
+    </button>
+</a>
 
 
-<div id="btn-row">
-    <a href="/fare_calculator/">
-        <button id="btn-calc">
-            Fare Calculator
-            <img src='static/subway_surfer/icons/ticket.png' id= "img-fare" class="icon">
-        </button>
-    </a>
+<a href="/fare_calculator/">
+    <button id="btn-calc" class="btn" >
+        Fare Calculator
+        <img src='static/subway_surfer/icons/ticket.png' id= "img-fare" class="icon">
+    </button>
+</a>
 
-    <a href="/map/">
-        <button id="btn-map">
-            <label>Real-Time</label>
-            <img src='static/subway_surfer/icons/route.png' id= "img-route" class="icon">
-        </button>
-    </a>
-</div>
+<a href="/map/">
+    <button id="btn-map"class="btn" >
+        <label>Real-Time</label>
+        <img src='static/subway_surfer/icons/route.png' id= "img-route" class="icon">
+    </button>
+</a>

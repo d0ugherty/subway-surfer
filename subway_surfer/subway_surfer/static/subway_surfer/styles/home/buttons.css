@@ -9,34 +9,31 @@
     --color4: #7158e2;
 }
 
-#btn-row {
-    width:auto;
-}
 
 .icon{
     height: 80px;
     width: 80px;
 }
 
+img {
+  padding: .75rem;
+}
 
 
-button {
+/**button {
     width: 15rem;
     height: 15rem;
-    flex-wrap: wrap;
-    padding: 1rem;
     font-family: var(--font-family);
-    margin:  2rem;
+    margin:  1rem;
     appearance: none;
     color: var(--font-color);
     font-size: 20pt;
 
     background: #50727B;
     border: 0px solid #f7f7f7;
-    box-sizing: border-box;
+    box-sizing: content-box;
     font-weight: 600;
     outline: none;
-    text-align: center;
     transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
     touch-action: manipulation;
     will-change: transform;
@@ -48,14 +45,14 @@ button:disabled {
     pointer-events: none;
   }
   
-  button:hover {
+button:hover {
     color: #fff;
     background-color: #778beb;
     box-shadow: rgba(201, 196, 196, 0.25) 0 8px 15px;
     transform: translateY(-2px);
   }
   
-  button:active {
+button:active {
     box-shadow: none;
     transform: translateY(0);
-  }
+  }**/
