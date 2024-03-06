@@ -4,26 +4,34 @@
       <link rel="stylesheet" href="{% static 'subway_surfer/styles/home/buttons.css' %}">
 {% endblock %}
 
-<a href="/arrivals/Gray 30th Street/">
-    <button href="">
-          Arrivals & Departures
-    </button>
-</a>
-
+<div id="btn-row">
+    <a href="/arrivals/Gray 30th Street/">
+        <button id="btn-departures" >
+            Departures
+           <img src='static/subway_surfer/icons/timetable.png' id= "img-departure" class="icon">
+        </button>
+    </a>
 <a href="/next_to_arrive/Gray 30th Street/">
-    <button>
-          Next To Arrive
+    <button id="btn-nta">
+          <label>Next To Arrive</label>
+          <img src='static/subway_surfer/icons/train.png' id= "img-nta" class="icon">
     </button>
 </a>
+</div>
 
-<a href="/fare_calculator/">
-    <button>
-          Fare Calculator
-    </button>
-</a>
 
-<a href="/map/">
-    <button>
-          Real-Time Tracking
-    </button>
-</a>
+<div id="btn-row">
+    <a href="/fare_calculator/">
+        <button id="btn-calc">
+            Fare Calculator
+            <img src='static/subway_surfer/icons/ticket.png' id= "img-fare" class="icon">
+        </button>
+    </a>
+
+    <a href="/map/">
+        <button id="btn-map">
+            <label>Real-Time</label>
+            <img src='static/subway_surfer/icons/route.png' id= "img-route" class="icon">
+        </button>
+    </a>
+</div>

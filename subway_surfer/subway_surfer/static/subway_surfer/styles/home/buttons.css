@@ -9,12 +9,23 @@
     --color4: #7158e2;
 }
 
+#btn-row {
+    width:auto;
+}
+
+.icon{
+    height: 80px;
+    width: 80px;
+}
+
+
+
 button {
     width: 15rem;
     height: 15rem;
-    
-    padding: 3rem;
-
+    flex-wrap: wrap;
+    padding: 1rem;
+    font-family: var(--font-family);
     margin:  2rem;
     appearance: none;
     color: var(--font-color);
@@ -22,7 +33,7 @@ button {
 
     background: #50727B;
     border: 0px solid #f7f7f7;
-
+    box-sizing: border-box;
     font-weight: 600;
     outline: none;
     text-align: center;
