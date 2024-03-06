@@ -17,7 +17,7 @@ function displayMapMarkers() {
         })
         .catch(error => console.error('Error fetching train data:', error));
 }
-setInterval(displayLocation, 5000);
+setInterval(displayMapMarkers, 2000);
 
 function displayTrainCurrentLoc(item, trainLayer) {
     let trainNumber = item.trainno;
