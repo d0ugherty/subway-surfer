@@ -19,19 +19,9 @@
 
 
 <form id="form">
-{{ agency_check }}
-<button type="submit">Submit</button>
+    {{ agency_check }}
+    <button type="submit">Submit</button>
 </form>
-<h3>{{ agency }}</h3>
-<div id="data-fetcher"
-     data-trainInfo="{{ train_loc_data|safe }}"
-     hx-get="/map/{{ agency }}/"
-     hx-trigger="every 5s"
-     hx-target="#data-fetcher"
-     hx-swap="outerHTML"
-     hx-select="#data-fetcher"
-     hx-after-get="displayTrainMarkers">
-</div>
 
 
 <div id="map">Map<br>
