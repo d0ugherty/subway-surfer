@@ -19,8 +19,12 @@ def clear_existing_data():
     Trip.objects.all().delete()
     print('Clearing stop times...')
     Stop_Time.objects.all().delete()
-    print('Clearing shape data...')
-    Shape.objects.all().delete()
+    print('Clearing Calendar data...')
+    Calendar.objects.all().delete()
+    print('Clearing Calendar Dates data...')
+    Calendar_Date.objects.all().delete()
+    #print('Clearing shape data...')
+    #Shape.objects.all().delete()
     
 
 def import_stop_data(csv_file_path):
@@ -220,7 +224,8 @@ if __name__ == '__main__':
             print(f"File data/{agency}/fare_attributes.csv does not exist.")
         print("[5/10]\n")
 
-        import_shape_data(f'data/{agency}/shapes.csv')
+        #import_shape_data(f'data/{agency}/shapes.csv')
+        print("Shape Data already exists...")
         print("[6/10]\n")
     
         import_trip_data(f'data/{agency}/trips.csv')
