@@ -1,3 +1,12 @@
+# Train Information
+![traininfo](https://github.com/user-attachments/assets/15c8942c-7154-4c66-a771-1efcece8b2e1)
+
+# Next to Arrive
+![Screenshot from 2024-07-25 12-18-28](https://github.com/user-attachments/assets/cb26cc8c-1f30-4d9c-963f-c53c193d3a11)
+
+
+
+
 # What is this?
 
 A passenger information system built using the Django web framework. 
